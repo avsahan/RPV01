@@ -1,0 +1,76 @@
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 2rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+  color: var(--brand-primary);
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+.logo-icon {
+  font-size: 1.5rem;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #334155;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.nav-links a.active {
+  color: var(--brand-primary);
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btn-login {
+  text-decoration: none;
+  color: #1e293b;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 0.5rem 0.8rem;
+}
+
+.btn-signup {
+  text-decoration: none;
+  background-color: #1e293b;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 0.5rem 1.2rem;
+  border-radius: 20px;
+  transition: background-color 0.2s;
+}
+
+.brand-logo-image {
+  display: block;
+  width: 84px;
+  height: 84px;
+  object-fit: contain;
+}
