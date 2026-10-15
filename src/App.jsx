@@ -3,6 +3,9 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import Login from './pages/Login';
 import Home from './pages/Home';
+import TravelHome from './pages/travel-Home';
+import AddDate from './pages/Add-date';
+import GuideSelect from './pages/guide-select';
 import './styles/App.css';
 
 const featureCards = [
@@ -142,8 +145,22 @@ function App() {
   const [activePage, setActivePage] = useState('landing');
   const [selectedRole, setSelectedRole] = useState(null);
   const [destinationSearch, setDestinationSearch] = useState('');
+  const [tripDetails, setTripDetails] = useState({});
 
   const handleStartPlanning = () => {
+    setActivePage('planner');
+  };
+
+  const handleStartTrip = (details) => {
+    setTripDetails(details);
+    setActivePage('itinerary');
+  };
+
+  const handleFindGuides = () => {
+    setActivePage('guides');
+  };
+
+  const handleAuthClick = () => {
     setActivePage('login');
   };
 
@@ -164,13 +181,25 @@ function App() {
 
   return (
     <div className="app-main">
-      <Header onAuthClick={handleStartPlanning} onSearch={handleDestinationSearch} />
+      <Header onAuthClick={handleAuthClick} onSearch={handleDestinationSearch} />
       <main className="content-body">
         {activePage === 'landing' && (
           <LandingView onStartPlanning={handleStartPlanning} destinationSearch={destinationSearch} />
         )}
         {activePage === 'login' && <Login onRoleSelect={handleRoleSelect} />}
         {activePage === 'registration' && <Home role={selectedRole} onBack={handleBackToLogin} />}
+        {activePage === 'planner' && <TravelHome onStartTrip={handleStartTrip} />}
+        {activePage === 'itinerary' && (
+          <AddDate
+            tripDetails={tripDetails}
+            onBack={() => setActivePage('planner')}
+            onHome={() => setActivePage('landing')}
+            onContinue={handleFindGuides}
+          />
+        )}
+        {activePage === 'guides' && (
+          <GuideSelect tripDetails={tripDetails} onBack={() => setActivePage('itinerary')} />
+        )}
       </main>
       <Footer />
     </div>
