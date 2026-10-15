@@ -1,5 +1,6 @@
 import "../styles/Home.css"
 import Header from "../components/Header.jsx"
+import Footer from "../components/Footer.jsx"
 
 function Home() {
   return (
@@ -13,7 +14,8 @@ function Home() {
                     <a className="btn-primary" href="/login">Start planning</a>
                 </div>
             </section>
-    </main>
+        </main>
+        <Footer />
     </>
     
   );

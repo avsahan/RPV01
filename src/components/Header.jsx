@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "../styles/Header.css"
 import VLogo from "../assets/VLogo.png"
 
@@ -8,13 +9,12 @@ function Header() {
                 <img src={VLogo} alt="Logo" className="brand-logo-image" />
                 <nav className="nav-links">
                     <a href="#" className="active">Home</a>
-                    <a href="#">Permission</a>
-                    <a href="#">Hotels</a>
+                    {/* <a href="#">Permission</a>
+                    <a href="#">Hotels</a> */}
                 </nav>
             </div>
             <div className="nav-right">
-                <a href="#" className="btn-login">Log in</a>
-                <a href="#" className="btn-signup">Sign up</a>
+                <Link to="/login" className="btn-login">Log in</Link>
             </div>
         </header>   
     );
