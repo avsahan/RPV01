@@ -163,7 +163,7 @@ body {
 }
 
 .review-rating {
-  color: #f0ad4e;
+  color: #17679d;
   letter-spacing: 0.14em;
   font-size: 0.7rem;
 }
@@ -308,7 +308,7 @@ body {
 .download-buttons button {
   min-width: 150px;
   padding: 0.75rem 1rem;
-  background: #0f172a;
+  background: #0758a6;
   color: #fff;
   font-size: 0.8rem;
   font-weight: 600;

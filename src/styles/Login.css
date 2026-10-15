@@ -151,15 +151,15 @@
 }
 
 .btn-traveler {
-  background-color: #e6fffa;
-  color: #234e52;
-  border: 1px solid #b2f5ea;
+  background-color: #eaf4fc;
+  color: #174f78;
+  border: 1px solid #c8e0f2;
 }
 
 .btn-guide {
-  background-color: #feebc8;
-  color: #744210;
-  border: 1px solid #fbd38d;
+  background-color: #dcecf8;
+  color: #123f64;
+  border: 1px solid #b8d4e9;
 }
 
 .btn-role:hover {
