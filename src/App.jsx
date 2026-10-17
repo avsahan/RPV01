@@ -6,6 +6,9 @@ import Home from './pages/Home';
 import TravelHome from './pages/travel-Home';
 import AddDate from './pages/Add-date';
 import GuideSelect from './pages/guide-select';
+import TravelerDashboard from './pages/TravelerDashboard';
+import GuideDashboard from './pages/GuideDashboard';
+import Permission from './pages/Permission';
 import './styles/App.css';
 
 const featureCards = [
@@ -181,7 +184,16 @@ function App() {
 
   return (
     <div className="app-main">
-      <Header onAuthClick={handleAuthClick} onSearch={handleDestinationSearch} />
+      <Header
+        onAuthClick={handleAuthClick}
+        onSearch={handleDestinationSearch}
+        onDashboardClick={() => setActivePage('dashboard')}
+        isDashboard={activePage === 'dashboard'}
+        onGuideDashboardClick={() => setActivePage('guide-dashboard')}
+        isGuideDashboard={activePage === 'guide-dashboard'}
+        onPermissionClick={() => setActivePage('permission')}
+        isPermission={activePage === 'permission'}
+      />
       <main className="content-body">
         {activePage === 'landing' && (
           <LandingView onStartPlanning={handleStartPlanning} destinationSearch={destinationSearch} />
@@ -199,6 +211,13 @@ function App() {
         )}
         {activePage === 'guides' && (
           <GuideSelect tripDetails={tripDetails} onBack={() => setActivePage('itinerary')} />
+        )}
+        {activePage === 'dashboard' && (
+          <TravelerDashboard onPlanTrip={() => setActivePage('planner')} />
+        )}
+        {activePage === 'guide-dashboard' && <GuideDashboard />}
+        {activePage === 'permission' && (
+          <Permission onCancel={() => setActivePage('landing')} />
         )}
       </main>
       <Footer />

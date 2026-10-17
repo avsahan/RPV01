@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../styles/Header.css';
 import VLogo from '../assets/VLogo.png';
 
-const Header = ({ onAuthClick, onSearch }) => {
+const Header = ({ onAuthClick, onSearch, onDashboardClick, isDashboard, onGuideDashboardClick, isGuideDashboard, onPermissionClick, isPermission }) => {
   const [destination, setDestination] = useState('');
 
   const handleSearch = (event) => {
@@ -20,8 +20,28 @@ const Header = ({ onAuthClick, onSearch }) => {
 
           <nav className="main-nav" aria-label="Main navigation">
             <a href="#home" className="nav-link active">Home</a>
-            <a href="#features" className="nav-link">Permission</a>
+            <button
+              type="button"
+              className={`nav-link nav-dashboard-link${isPermission ? ' active' : ''}`}
+              onClick={onPermissionClick}
+            >
+              Permission
+            </button>
             <a href="#hotels" className="nav-link">Hotels</a>
+            <button
+              type="button"
+              className={`nav-link nav-dashboard-link${isDashboard ? ' active' : ''}`}
+              onClick={onDashboardClick}
+            >
+              My trips
+            </button>
+            <button
+              type="button"
+              className={`nav-link nav-dashboard-link${isGuideDashboard ? ' active' : ''}`}
+              onClick={onGuideDashboardClick}
+            >
+              For guides
+            </button>
           </nav>
         </div>
 
