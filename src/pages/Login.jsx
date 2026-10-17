@@ -10,7 +10,7 @@ return (
                 <img src={VLogo} alt="Logo" className="brandlogoimage" />
             </a>
 
-            <h2>Log in to view this page</h2>
+            {/* <h2>Log in to view this page</h2>
 
             <div className="social-login">
                 <button className="btn-social btn-facebook">
@@ -29,7 +29,7 @@ return (
 
             <div className="divider">
                 <span>or</span>
-            </div>
+            </div> */}
 
             <form id="loginForm" className="login-form">
                 <div className="input-group">
@@ -40,9 +40,9 @@ return (
                     {/* <i className="fa-regular fa-eye-slash toggle-password" id="togglePassword"></i> */}
                 </div>
             </form>
-            <div className="forgot-password">
+            {/* <div className="forgot-password">
                 <a href="#">Forgot password</a>
-            </div>
+            </div> */}
 
             <button type="submit" id="loginButton" className="btn-submit">Log in</button>
     

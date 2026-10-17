@@ -159,7 +159,7 @@
   text-decoration: underline;
 }
 
-.btn-submit {
+.login-card .btn-submit {
     width: 100%;
     padding: 12px;
     background-color: #2b6cb0;
@@ -169,7 +169,7 @@
     font-weight: 600;
     font-size: 15px;
     cursor: pointer;
-    margin-top: 20px;
+    margin-top: 30px;
 }
 
 .btn-submit:hover {
