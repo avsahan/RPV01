@@ -4,6 +4,12 @@ body {
   background-color: #f7fafc;
   color: #2d3748;
 }
+.log{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
 
 .app-main {
   min-height: 100vh;

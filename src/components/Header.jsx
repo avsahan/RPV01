@@ -19,7 +19,6 @@ const Header = ({ onAuthClick, onHomeClick, onHotelsClick, onDashboardClick, isD
             >
               Permission
             </button>
-            <a href="#hotels" className="nav-link" onClick={(event) => { event.preventDefault(); onHotelsClick(); }}>Hotels</a>
             <button
               type="button"
               className={`nav-link nav-dashboard-link${isDashboard ? ' active' : ''}`}

@@ -22,16 +22,10 @@ const featureCards = [
 ];
 
 const adventures = [
-  { title: 'Paris 1 Day Tour', image: 'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?auto=format&fit=crop&w=900&q=80' },
-  { title: 'Lake Cabin Retreat', image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80' },
-  { title: 'Swiss Alps Escape', image: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=900&q=80' },
-  { title: 'Island Weekend', image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80' },
-];
-
-const footerColumns = [
-  { heading: 'Travel', links: ['Discover', 'Plan trips', 'Popular guides', 'Itineraries'] },
-  { heading: 'Company', links: ['About', 'Careers', 'Press', 'Support'] },
-  { heading: 'Resources', links: ['Blog', 'Travel tips', 'Community', 'FAQs'] },
+  {image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsMhsuEB_mpPtDszSbu4H-RVuGIXh3JkvaMkFQdizkAQ&s=10' },
+  {image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR72h8mpsUmRITVruu60U8iIL5ZOtr2-9sqlp3k9pqeZQ&s=10' },
+  {image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwvJjSEl6y4XNHWoFIycLQYmTr7H0wZpDj_5K-gZ4qGg&s=10' },
+  {image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcReGuQdUPlcHfGozoYYi27akjfwD4wicql4otwjhlvCBw&s=10' },
 ];
 
 function LandingView({ onStartPlanning }) {
@@ -75,43 +69,6 @@ function LandingView({ onStartPlanning }) {
           </div>
         </section>
       </main>
-
-      <footer className="site-footer">
-        <div className="footer-top">
-          <div className="brand-block">
-            <div className="footer-logo">V</div>
-            <p>Plan every step of your journey with clarity and confidence.</p>
-          </div>
-
-          {footerColumns.map((group) => (
-            <div key={group.heading} className="footer-column">
-              <h4>{group.heading}</h4>
-              <ul>
-                {group.links.map((link) => (
-                  <li key={link}><a href="#">{link}</a></li>
-                ))}
-              </ul>
-            </div>
-          ))}
-
-          <div className="newsletter">
-            <h4>Get the app</h4>
-            <div className="download-buttons">
-              <button type="button">App Store</button>
-              <button type="button">Google Play</button>
-            </div>
-          </div>
-        </div>
-
-        <div className="footer-bottom">
-          <span>© 2026 Velo. All rights reserved.</span>
-          <div className="legal-links">
-            <a href="#">Privacy</a>
-            <a href="#">Terms</a>
-            <a href="#">Cookie</a>
-          </div>
-        </div>
-      </footer>
     </>
   );
 }
@@ -153,9 +110,15 @@ function App() {
 
   const handleStartTrip = async (details) => {
     if (!currentUser) {
-      setPendingTrip(details);
-      setAuthMessage('Log in as a traveler to save and plan your trip.');
-      setActivePage('login');
+      setTripDetails({
+        ...details,
+        destination: details.destination.trim(),
+        startDate: details.startDate || null,
+        endDate: details.endDate || null,
+        visibility: details.visibility || 'friends',
+      });
+      setAuthMessage('');
+      setActivePage('itinerary');
       return;
     }
     if (currentUser.role !== 'traveler') {
@@ -174,6 +137,12 @@ function App() {
   };
 
   const handleSaveTrip = async (details) => {
+    if (!tripDetails.id && !currentUser) {
+      setPendingTrip(details);
+      setAuthMessage('Log in as a traveler to save your trip.');
+      setActivePage('login');
+      throw new Error('Log in as a traveler to save your trip.');
+    }
     if (!tripDetails.id) throw new Error('Start a trip before saving the itinerary.');
     const { trip } = await updateTrip(tripDetails.id, tripPayload(details));
     setTripDetails((current) => ({ ...current, ...trip }));
