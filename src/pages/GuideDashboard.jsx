@@ -1,364 +1,705 @@
 import { useState } from 'react';
 import '../styles/GuideDashboard.css';
 
-const guideTrips = [
+/* ---------- Data ---------- */
+
+const upcomingTrips = [
   {
-    id: 'GT-2081',
-    traveler: 'Emma Wilson',
-    initials: 'EW',
-    destination: 'Kandy Heritage & Lake Walks',
-    location: 'Kandy, Central Province',
-    date: '18 Oct 2026',
-    time: '9:00 AM - 1:00 PM',
-    travelers: '2 travelers',
-    amount: 'LKR 12,000',
-    status: 'Confirmed',
-    image: 'https://images.unsplash.com/photo-1588598198321-9735fd5c9e0b?auto=format&fit=crop&w=500&q=80',
+    id: 'RL-26481',
+    region: 'Galle · Unawatuna · Mirissa',
+    title: 'Galle & the slow south',
+    dates: '18-21 Oct 2026',
+    duration: '4 days · 2 travelers',
+    stops: ['Galle Fort walk', 'Unawatuna beach', 'Mirissa coast'],
+    guide: 'Nimal Perera',
+    guideInitials: 'NP',
+    contactId: 'nimal',
+    status: 'confirmed',
+    statusLabel: 'Confirmed',
+    note: 'Meet Nimal at Fort Bazaar, Galle · 18 Oct, 9:00 AM',
+    noteIcon: '⌖',
+    image:
+      'https://th.bing.com/th/id/OIP.eHDIU8q7JSGIfn8qC3H_hgHaE8?w=277&h=185&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3',
   },
   {
-    id: 'GT-2088',
-    traveler: 'Oliver Chen',
-    initials: 'OC',
-    destination: 'Temple, Market & Local Flavors',
-    location: 'Kandy, Central Province',
-    date: '20 Oct 2026',
-    time: '10:30 AM - 2:30 PM',
-    travelers: '3 travelers',
-    amount: 'LKR 15,500',
-    status: 'Awaiting response',
-    image: 'https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=500&q=80',
+    id: 'RL-26502',
+    region: 'Ella · Haputale',
+    title: 'Ella, above the clouds',
+    dates: '25-27 Oct 2026',
+    duration: '3 days · 2 travelers',
+    stops: ['Nine Arch Bridge', "Little Adam's Peak", 'Tea country'],
+    guide: 'Kasun Silva',
+    guideInitials: 'KS',
+    contactId: 'kasun',
+    status: 'pending',
+    statusLabel: 'Awaiting confirmation',
+    note: 'Kasun will confirm your pickup details by 17 Oct.',
+    noteIcon: '◷',
+    image:
+      'https://th.bing.com/th/id/OIP.7aL5EWCGxgBk4D11TUNuMQHaId?w=168&h=193&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3',
   },
 ];
 
 const completedTrips = [
   {
-    id: 'GT-1942',
-    traveler: 'Maya Thompson',
-    initials: 'MT',
-    destination: 'Tea Country & Scenic Train',
-    location: 'Nuwara Eliya, Central Province',
-    date: '12 Oct 2026',
-    time: 'Full day · 8 hours',
-    travelers: '2 travelers',
-    amount: 'LKR 24,000',
-    status: 'Completed',
-    image: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=500&q=80',
-    rating: '5.0',
+    id: 'RL-25310',
+    region: 'Kandy · Sigiriya',
+    title: 'Kandy & the cultural heart',
+    dates: '12-15 Sep 2026',
+    duration: '4 days · 2 travelers',
+    guide: 'Dinesh Fernando',
+    image:
+      'https://th.bing.com/th/id/OIP.8Xm_q9vdITO_Eg5CLQpyhQHaE8?w=258&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3',
   },
   {
-    id: 'GT-1896',
-    traveler: 'Daniel Park',
-    initials: 'DP',
-    destination: 'Kandy Old Town & Lake',
-    location: 'Kandy, Central Province',
-    date: '08 Oct 2026',
-    time: 'Half day · 4 hours',
-    travelers: '4 travelers',
-    amount: 'LKR 18,000',
-    status: 'Completed',
-    image: 'https://images.unsplash.com/photo-1562602833-0f4ab2fc46e3?auto=format&fit=crop&w=500&q=80',
-    rating: '4.9',
+    id: 'RL-24977',
+    region: 'Yala · Tissamaharama',
+    title: 'Wild mornings in Yala',
+    dates: '06-08 Jun 2026',
+    duration: '3 days · 2 travelers',
+    guide: 'Sahan Jayawardhana',
+    image:
+      'https://th.bing.com/th/id/OIP.jxVb-5bC4IFzRLFTp_o4lQHaEK?w=276&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3',
   },
 ];
 
 const initialContacts = [
   {
-    id: 'emma',
-    name: 'Emma Wilson',
-    initials: 'EW',
-    trip: 'Kandy Heritage Walk',
-    time: '2 min ago',
+    id: 'nimal',
+    name: 'Nimal Perera',
+    initials: 'NP',
+    trip: 'Galle & the slow south',
+    tripDates: '18-21 Oct 2026',
+    tripTravelers: '2 travelers',
+    tripId: 'RL-26481',
+    tripImage:
+      'https://th.bing.com/th/id/OIP.eHDIU8q7JSGIfn8qC3H_hgHaE8?w=277&h=185&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3',
+    time: '10:24 AM',
     unread: 2,
+    online: true,
     messages: [
-      { from: 'traveler', text: 'Hi Nuwan! We are looking forward to the walk tomorrow.', time: '10:42 AM' },
-      { from: 'guide', text: 'Hello Emma, I’m looking forward to meeting you both. We’ll start by the lake entrance.', time: '10:46 AM' },
-      { from: 'traveler', text: 'Perfect. Is there anything we should bring?', time: '10:51 AM' },
+      {
+        from: 'guide',
+        text: "Ayubowan, Emma! Looking forward to showing you the south coast. We'll meet at Fort Bazaar in Galle at 9:00 AM on the 18th.",
+        time: '10:18 AM',
+      },
+      {
+        from: 'me',
+        text: 'Hi Nimal! That sounds lovely. Could we include a stop for some local vegetarian food?',
+        time: '10:21 AM',
+        read: true,
+      },
+      {
+        from: 'guide',
+        text: "Of course! I know a wonderful family-run rice and curry spot. I've pinned our meeting point below.",
+        time: '10:24 AM',
+        location: {
+          name: 'Fort Bazaar, Galle Fort',
+          address: '26 Church Street · 18 Oct, 9:00 AM',
+        },
+      },
     ],
   },
   {
-    id: 'oliver',
-    name: 'Oliver Chen',
-    initials: 'OC',
-    trip: 'Temple & Market Tour',
+    id: 'kasun',
+    name: 'Kasun Silva',
+    initials: 'KS',
+    trip: 'Ella, above the clouds',
+    tripDates: '25-27 Oct 2026',
+    tripTravelers: '2 travelers',
+    tripId: 'RL-26502',
+    tripImage:
+      'https://th.bing.com/th/id/OIP.7aL5EWCGxgBk4D11TUNuMQHaId?w=168&h=193&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3',
     time: 'Yesterday',
     unread: 0,
+    online: true,
     messages: [
-      { from: 'traveler', text: 'Could we start the tour a little later on Monday?', time: 'Yesterday' },
-      { from: 'guide', text: 'Of course. What time works best for your group?', time: 'Yesterday' },
-    ],
-  },
-  {
-    id: 'maya',
-    name: 'Maya Thompson',
-    initials: 'MT',
-    trip: 'Tea Country & Scenic Train',
-    time: 'Mon',
-    unread: 0,
-    messages: [
-      { from: 'traveler', text: 'Thank you for a wonderful day in the hills!', time: 'Monday' },
-      { from: 'guide', text: 'It was a pleasure showing you around. Safe travels!', time: 'Monday' },
+      {
+        from: 'guide',
+        text: "Hi Emma! I'll share the pickup details shortly.",
+        time: 'Yesterday',
+      },
     ],
   },
 ];
 
-const guideTabs = [
-  { id: 'upcoming', label: 'Upcoming trips', count: '2' },
-  { id: 'completed', label: 'Past completed', count: '12' },
-  { id: 'chat', label: 'Live guide chat', count: '2' },
+const tabs = [
+  { id: 'upcoming', label: 'Upcoming Trips', icon: '▦', count: 2 },
+  { id: 'completed', label: 'Past Completed Trips', icon: '✓', count: 2 },
+  { id: 'chat', label: 'Live Guide Chat & Communication', icon: '▢', count: 2 },
 ];
 
-function GuideTripRow({ trip, completed, onMessage }) {
+const preferenceChips = ['Coastal escapes', 'Local food', 'Nature'];
+
+/* ---------- Small components ---------- */
+
+function Navbar() {
   return (
-    <article className="guide-trip-row">
-      <img className="guide-trip-row__image" src={trip.image} alt="" />
-      <div className="guide-trip-row__details">
-        <div className="guide-trip-row__eyebrow">
-          <span className="guide-trip-row__id">{trip.id}</span>
-          <span className={`guide-trip-status${completed ? ' guide-trip-status--complete' : trip.status === 'Confirmed' ? ' guide-trip-status--confirmed' : ' guide-trip-status--pending'}`}>
-            <span aria-hidden="true" />{trip.status}
-          </span>
+    <header className="rl-navbar">
+      <a className="rl-logo" href="/">
+        <span className="rl-logo__mark" aria-hidden="true">◎</span>
+        <span className="rl-logo__text">roam<strong>lanka</strong></span>
+      </a>
+
+      <nav className="rl-navbar__links" aria-label="Main">
+        <a href="/explore">Explore Sri Lanka</a>
+        <a href="/guides">Find a local guide</a>
+        <a className="is-active" href="/dashboard">My dashboard</a>
+      </nav>
+
+      <div className="rl-navbar__actions">
+        <button className="rl-icon-button" type="button" aria-label="Help">?</button>
+        <button className="rl-icon-button rl-icon-button--dot" type="button" aria-label="Notifications">🔔︎</button>
+        <span className="rl-navbar__divider" aria-hidden="true" />
+        <button className="rl-user-menu" type="button">
+          <span className="rl-avatar rl-avatar--sm">EW</span>
+          <span>Emma</span>
+          <span aria-hidden="true">⌄</span>
+        </button>
+      </div>
+    </header>
+  );
+}
+
+function ProfileCard({ profile, onChange, onSave, saved }) {
+  const fields = [
+    { key: 'name', label: 'Full name', type: 'text' },
+    { key: 'country', label: 'Country', type: 'select' },
+    { key: 'email', label: 'Email address', type: 'email' },
+    { key: 'phone', label: 'Phone number', type: 'tel' },
+    { key: 'passport', label: 'Passport number', type: 'text' },
+  ];
+
+  return (
+    <aside className="rl-profile" aria-label="My profile">
+      <div className="rl-profile__header">
+        <h2>My profile</h2>
+        <button className="rl-icon-button" type="button" aria-label="Profile settings">⚙</button>
+      </div>
+
+      <div className="rl-profile__identity">
+        <div className="rl-profile__photo-wrap">
+          <img
+            className="rl-profile__photo"
+            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=85"
+            alt="Emma Wilson"
+          />
+          <button className="rl-profile__camera" type="button" aria-label="Change photo">◉</button>
         </div>
-        <h3>{trip.destination}</h3>
-        <p className="guide-trip-row__location">{trip.location}</p>
-        <div className="guide-trip-row__facts">
-          <span><span aria-hidden="true">▦</span>{trip.date}</span>
-          <span><span aria-hidden="true">◷</span>{trip.time}</span>
-          <span><span aria-hidden="true">♧</span>{trip.travelers}</span>
+        <h3>{profile.name}</h3>
+        <p>Curious traveler · Member since 2025</p>
+      </div>
+
+      <form
+        className="rl-profile__form"
+        onSubmit={(event) => {
+          event.preventDefault();
+          onSave();
+        }}
+      >
+        {fields.map((field) => (
+          <label className="rl-field" key={field.key}>
+            <span className="rl-field__label">{field.label}</span>
+            <span className="rl-field__control">
+              {field.type === 'select' ? (
+                <>
+                  <select value={profile.country} onChange={(e) => onChange('country', e.target.value)}>
+                    <option>United Kingdom</option>
+                    <option>United States</option>
+                    <option>Australia</option>
+                    <option>Germany</option>
+                    <option>India</option>
+                  </select>
+                  <span className="rl-field__icon" aria-hidden="true">⌄</span>
+                </>
+              ) : (
+                <>
+                  <input
+                    type={field.type}
+                    value={profile[field.key]}
+                    onChange={(e) => onChange(field.key, e.target.value)}
+                  />
+                  <span className="rl-field__icon" aria-hidden="true">✎</span>
+                </>
+              )}
+            </span>
+          </label>
+        ))}
+
+        <div className="rl-prefs">
+          <div className="rl-prefs__header">
+            <strong>Travel preferences</strong>
+            <button className="rl-icon-button rl-icon-button--accent" type="button" aria-label="Edit preferences">✎</button>
+          </div>
+          <div className="rl-prefs__chips">
+            {preferenceChips.map((chip) => (
+              <span className="rl-chip" key={chip}>{chip}</span>
+            ))}
+          </div>
+          <p className="rl-prefs__text">
+            Relaxed pace · English-speaking guides
+            <br />
+            Vegetarian-friendly experiences
+          </p>
+        </div>
+
+        <button className="rl-button rl-button--primary rl-button--block" type="submit">
+          {saved ? 'Changes saved ✓' : 'Save profile changes'}
+        </button>
+        <p className="rl-profile__secure">
+          <span aria-hidden="true">⛨</span> Your personal details stay private and secure.
+        </p>
+      </form>
+    </aside>
+  );
+}
+
+function UpcomingTripCard({ trip, onMessage, onItinerary }) {
+  return (
+    <article className="rl-trip-card">
+      <div className="rl-trip-card__main">
+        <div className="rl-trip-card__media">
+          <img src={trip.image} alt="" />
+          <span className="rl-trip-card__badge">{trip.duration.replace(' · ', ' · ')}</span>
+        </div>
+
+        <div className="rl-trip-card__body">
+          <div className="rl-trip-card__top">
+            <span className="rl-eyebrow">{trip.region}</span>
+            <span className={`rl-status rl-status--${trip.status}`}>
+              <span aria-hidden="true">{trip.status === 'confirmed' ? '✓' : '◷'}</span>
+              {trip.statusLabel}
+            </span>
+          </div>
+
+          <h3>{trip.title}</h3>
+          <p className="rl-trip-card__meta">
+            <span aria-hidden="true">▦</span> {trip.dates} <span aria-hidden="true">·</span> {trip.id}
+          </p>
+
+          <ol className="rl-trip-card__stops">
+            {trip.stops.map((stop, index) => (
+              <li key={stop}>
+                <b>{String(index + 1).padStart(2, '0')}</b> {stop}
+              </li>
+            ))}
+          </ol>
+
+          <div className="rl-trip-card__footer">
+            <div className="rl-guide-mini">
+              <span className="rl-avatar rl-avatar--sm">{trip.guideInitials}</span>
+              <span>
+                <small>Your local guide</small>
+                <strong>{trip.guide}</strong>
+              </span>
+            </div>
+            <div className="rl-trip-card__actions">
+              <button className="rl-button rl-button--outline" type="button" onClick={() => onMessage(trip)}>
+                <span aria-hidden="true">💬︎</span> Message
+              </button>
+              <button className="rl-button rl-button--primary" type="button" onClick={() => onItinerary(trip)}>
+                View itinerary
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-      <div className="guide-trip-row__traveler">
-        <span className="guide-avatar-initials">{trip.initials}</span>
-        <div><span>Traveler</span><strong>{trip.traveler}</strong></div>
-      </div>
-      <div className="guide-trip-row__amount">
-        <span>{completed ? 'Earned' : 'Trip total'}</span>
-        <strong>{trip.amount}</strong>
-        {completed && <span className="guide-trip-row__rating">★ {trip.rating} review</span>}
-      </div>
-      <div className="guide-trip-row__actions">
-        {completed ? (
-          <span className="guide-completed-label">Trip complete</span>
-        ) : (
-          <>
-            <button className="guide-quiet-button" type="button" onClick={() => onMessage(trip)}>
-              Message
-            </button>
-            <button className="guide-primary-button" type="button" onClick={() => onMessage(trip)}>
-              View details
-            </button>
-          </>
-        )}
+
+      <div className="rl-trip-card__note">
+        <span aria-hidden="true">{trip.noteIcon}</span> {trip.note}
       </div>
     </article>
   );
 }
 
-function GuideDashboard() {
+function CompletedTripCard({ trip, onView, onBookAgain }) {
+  return (
+    <article className="rl-trip-card rl-trip-card--completed">
+      <div className="rl-trip-card__main">
+        <div className="rl-trip-card__media rl-trip-card__media--small">
+          <img src={trip.image} alt="" />
+        </div>
+
+        <div className="rl-trip-card__body">
+          <div className="rl-trip-card__top">
+            <span className="rl-eyebrow">{trip.region}</span>
+            <span className="rl-status rl-status--completed">
+              <span aria-hidden="true">✓</span> Completed
+            </span>
+          </div>
+
+          <h3>{trip.title}</h3>
+          <p className="rl-trip-card__meta">
+            {trip.dates} <span aria-hidden="true">·</span> {trip.duration.replace(' · ', ' · ')}
+          </p>
+
+          <div className="rl-trip-card__footer">
+            <p className="rl-with-guide">
+              <span aria-hidden="true">☺</span> With {trip.guide}
+            </p>
+            <div className="rl-trip-card__actions">
+              <button className="rl-button rl-button--outline" type="button" onClick={() => onView(trip)}>
+                View trip
+              </button>
+              <button className="rl-button rl-button--primary" type="button" onClick={() => onBookAgain(trip)}>
+                <span aria-hidden="true">↻</span> Book again
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+/* ---------- Main component ---------- */
+
+function TravelerDashboard() {
   const [activeTab, setActiveTab] = useState('upcoming');
-  const [selectedContactId, setSelectedContactId] = useState('emma');
   const [contacts, setContacts] = useState(initialContacts);
+  const [selectedContactId, setSelectedContactId] = useState('nimal');
   const [draft, setDraft] = useState('');
   const [contactQuery, setContactQuery] = useState('');
-  const [isAvailable, setIsAvailable] = useState(true);
   const [notice, setNotice] = useState('');
+  const [saved, setSaved] = useState(false);
+  const [profile, setProfile] = useState({
+    name: 'Emma Wilson',
+    country: 'United Kingdom',
+    email: 'emma.wilson@gmail.com',
+    phone: '+44 7700 900 218',
+    passport: 'GBR •••••• 4821',
+  });
 
-  const selectedContact = contacts.find((contact) => contact.id === selectedContactId) || contacts[0];
+  const selectedContact =
+    contacts.find((contact) => contact.id === selectedContactId) || contacts[0];
+
   const visibleContacts = contacts.filter((contact) =>
-    `${contact.name} ${contact.trip}`.toLowerCase().includes(contactQuery.trim().toLowerCase()),
+    `${contact.name} ${contact.trip}`
+      .toLowerCase()
+      .includes(contactQuery.trim().toLowerCase()),
   );
 
+  const showNotice = (text) => {
+    setNotice(text);
+    window.setTimeout(() => setNotice(''), 3500);
+  };
+
+  const updateProfile = (key, value) => {
+    setProfile((current) => ({ ...current, [key]: value }));
+    setSaved(false);
+  };
+
+  const saveProfile = () => {
+    setSaved(true);
+    showNotice('Your profile changes have been saved.');
+    window.setTimeout(() => setSaved(false), 2500);
+  };
+
   const openChat = (trip) => {
-    const contact = contacts.find((item) => item.name === trip.traveler);
+    const contact = contacts.find((item) => item.id === trip.contactId);
     if (contact) {
       setSelectedContactId(contact.id);
-    } else {
-      setNotice(`A conversation with ${trip.traveler} will appear here when they message you.`);
-      window.setTimeout(() => setNotice(''), 3500);
+      setContacts((current) =>
+        current.map((item) => (item.id === contact.id ? { ...item, unread: 0 } : item)),
+      );
     }
     setActiveTab('chat');
   };
 
+  const selectContact = (contactId) => {
+    setSelectedContactId(contactId);
+    setContacts((current) =>
+      current.map((item) => (item.id === contactId ? { ...item, unread: 0 } : item)),
+    );
+  };
+
   const sendMessage = (event) => {
     event.preventDefault();
-    const message = draft.trim();
-    if (!message) return;
+    const text = draft.trim();
+    if (!text) return;
 
-    setContacts((currentContacts) => currentContacts.map((contact) => (
-      contact.id === selectedContactId
-        ? { ...contact, messages: [...contact.messages, { from: 'guide', text: message, time: 'Now' }], time: 'Now' }
-        : contact
-    )));
+    setContacts((current) =>
+      current.map((contact) =>
+        contact.id === selectedContactId
+          ? {
+              ...contact,
+              time: 'Now',
+              messages: [...contact.messages, { from: 'me', text, time: 'Now' }],
+            }
+          : contact,
+      ),
+    );
     setDraft('');
   };
 
   return (
-    <main className="guide-dashboard">
-      <div className="guide-dashboard__layout">
-        <aside className="guide-sidebar" aria-label="Guide account">
-          <div className="guide-sidebar__profile">
-            <div className="guide-sidebar__cover" />
-            <img
-              className="guide-sidebar__photo"
-              src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=180&q=85"
-              alt=""
-            />
-            <h2>Nuwan Jayawardena</h2>
-            <p>Local guide · Kandy</p>
-            <div className="guide-sidebar__rating"><span>★</span> 4.9 <span>·</span> 28 reviews</div>
-            <span className="guide-verified"><span aria-hidden="true">✓</span> Approved guide</span>
-          </div>
+    <div className="rl-page">
+      <div className="rl-shell">
+        <Navbar />
 
-          <div className="guide-sidebar__availability">
-            <div><strong>Availability</strong><span>{isAvailable ? 'Accepting new trips' : 'Not accepting trips'}</span></div>
-            <button
-              className={`guide-toggle${isAvailable ? ' is-on' : ''}`}
-              type="button"
-              role="switch"
-              aria-checked={isAvailable}
-              aria-label="Toggle guide availability"
-              onClick={() => setIsAvailable((available) => !available)}
-            ><span /></button>
-          </div>
-
-          <div className="guide-sidebar__up-next">
-            <p className="guide-sidebar__label">Next trip</p>
-            <div className="guide-sidebar__next-date"><strong>18</strong><span>OCT<br />SUN</span></div>
-            <strong className="guide-sidebar__next-title">Kandy Heritage Walk</strong>
-            <span className="guide-sidebar__next-time">9:00 AM · Emma Wilson</span>
-            <button type="button" onClick={() => setActiveTab('upcoming')}>See trip details <span aria-hidden="true">→</span></button>
-          </div>
-
-          <div className="guide-sidebar__help">
-            <span aria-hidden="true">?</span>
-            <div><strong>Need a hand?</strong><p>Our guide support team is here for you.</p></div>
-          </div>
-        </aside>
-
-        <section className="guide-workspace">
-          <header className="guide-welcome">
+        <main className="rl-main">
+          <section className="rl-hero">
             <div>
-              <p className="guide-eyebrow">Guide workspace</p>
-              <h1>Welcome back, Nuwan<span>.</span></h1>
-              <p>Keep your trips, travelers, and conversations moving.</p>
+              <p className="rl-eyebrow rl-eyebrow--accent">Your Sri Lanka, your way</p>
+              <h1>Welcome back, Emma.</h1>
+              <p className="rl-hero__sub">
+                A little planning. A lot to look forward to. Your next chapter starts here.
+              </p>
             </div>
-            <div className="guide-welcome__destination">
-              <img src="https://images.unsplash.com/photo-1588598198321-9735fd5c9e0b?auto=format&fit=crop&w=280&q=80" alt="Kandy lake and temple" />
-              <span><strong>Kandy, Sri Lanka</strong><small>Your home base</small></span>
+            <div className="rl-hero__banner">
+              <img
+                src="https://images.unsplash.com/photo-1588598198321-9735fd5c9e0b?auto=format&fit=crop&w=400&q=80"
+                alt=""
+              />
+              <span>
+                <span aria-hidden="true">⌖</span> Slow days, south coast
+              </span>
             </div>
-          </header>
-
-          <section className="guide-metrics" aria-label="Guide performance">
-            <div><span className="guide-metric__icon guide-metric__icon--teal" aria-hidden="true">↗</span><span>This month<strong>LKR 84,500</strong></span><small>+12% vs last month</small></div>
-            <div><span className="guide-metric__icon guide-metric__icon--gold" aria-hidden="true">★</span><span>Average rating<strong>4.9 / 5.0</strong></span><small>From 28 reviews</small></div>
-            <div><span className="guide-metric__icon guide-metric__icon--blue" aria-hidden="true">♧</span><span>Trips completed<strong>12 trips</strong></span><small>Since joining</small></div>
           </section>
 
-          <div className="guide-tabs" role="tablist" aria-label="Guide dashboard views">
-            {guideTabs.map((tab) => (
-              <button
-                className={`guide-tab${activeTab === tab.id ? ' is-active' : ''}`}
-                id={`guide-tab-${tab.id}`}
-                key={tab.id}
-                type="button"
-                role="tab"
-                aria-selected={activeTab === tab.id}
-                aria-controls={`guide-panel-${tab.id}`}
-                onClick={() => setActiveTab(tab.id)}
-              >
-                {tab.label}
-                <span className="guide-tab__count">{tab.count}</span>
-              </button>
-            ))}
-          </div>
+          <div className="rl-layout">
+            <ProfileCard
+              profile={profile}
+              onChange={updateProfile}
+              onSave={saveProfile}
+              saved={saved}
+            />
 
-          {activeTab === 'upcoming' && (
-            <section className="guide-panel" id="guide-panel-upcoming" role="tabpanel" aria-labelledby="guide-tab-upcoming">
-              <div className="guide-panel__heading">
-                <div><p className="guide-eyebrow">The next chapter</p><h2>Upcoming trips</h2></div>
-                <button className="guide-filter-button" type="button" onClick={() => setNotice('Showing all upcoming trips.')}>All trips <span aria-hidden="true">⌄</span></button>
+            <section className="rl-content">
+              <div className="rl-tabs" role="tablist" aria-label="Dashboard views">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    id={`rl-tab-${tab.id}`}
+                    className={`rl-tab${activeTab === tab.id ? ' is-active' : ''}`}
+                    type="button"
+                    role="tab"
+                    aria-selected={activeTab === tab.id}
+                    aria-controls={`rl-panel-${tab.id}`}
+                    onClick={() => setActiveTab(tab.id)}
+                  >
+                    <span aria-hidden="true">{tab.icon}</span>
+                    {tab.label}
+                    <span className="rl-tab__count">{tab.count}</span>
+                  </button>
+                ))}
               </div>
-              {notice && <p className="guide-notice" role="status">{notice}</p>}
-              <div className="guide-trip-list">
-                {guideTrips.map((trip) => <GuideTripRow key={trip.id} trip={trip} onMessage={openChat} />)}
-              </div>
-              <div className="guide-tip"><span aria-hidden="true">✦</span><p><strong>A little preparation goes a long way.</strong> Send your travelers a quick note before the trip to make meeting up easy.</p><button type="button" onClick={() => setActiveTab('chat')}>Open messages <span aria-hidden="true">→</span></button></div>
-            </section>
-          )}
 
-          {activeTab === 'completed' && (
-            <section className="guide-panel" id="guide-panel-completed" role="tabpanel" aria-labelledby="guide-tab-completed">
-              <div className="guide-panel__heading">
-                <div><p className="guide-eyebrow">Good memories, well earned</p><h2>Past completed trips</h2></div>
-                <span className="guide-completed-total">12 completed</span>
-              </div>
-              <div className="guide-trip-list">
-                {completedTrips.map((trip) => <GuideTripRow key={trip.id} trip={trip} completed onMessage={openChat} />)}
-              </div>
-              <p className="guide-history-note">Your trip history and traveler reviews are kept here for easy reference.</p>
-            </section>
-          )}
+              {notice && (
+                <p className="rl-notice" role="status">{notice}</p>
+              )}
 
-          {activeTab === 'chat' && (
-            <section className="guide-panel guide-chat-panel" id="guide-panel-chat" role="tabpanel" aria-labelledby="guide-tab-chat">
-              <div className="guide-panel__heading guide-chat-heading">
-                <div><p className="guide-eyebrow">Keep the conversation going</p><h2>Live guide chat</h2></div>
-                <label className="guide-chat-search">
-                  <span aria-hidden="true">⌕</span>
-                  <span className="guide-visually-hidden">Search conversations</span>
-                  <input value={contactQuery} onChange={(event) => setContactQuery(event.target.value)} placeholder="Search conversations" />
-                </label>
-              </div>
-              {notice && <p className="guide-notice" role="status">{notice}</p>}
-              <div className="guide-chat">
-                <div className="guide-chat__contacts" aria-label="Conversations">
-                  {visibleContacts.map((contact) => (
+              {/* ---------- Upcoming ---------- */}
+              {activeTab === 'upcoming' && (
+                <section
+                  className="rl-panel"
+                  id="rl-panel-upcoming"
+                  role="tabpanel"
+                  aria-labelledby="rl-tab-upcoming"
+                >
+                  <div className="rl-panel__heading">
+                    <h2>Your next adventures</h2>
                     <button
-                      className={`guide-contact${selectedContactId === contact.id ? ' is-active' : ''}`}
-                      key={contact.id}
+                      className="rl-button rl-button--outline"
                       type="button"
-                      aria-pressed={selectedContactId === contact.id}
-                      onClick={() => setSelectedContactId(contact.id)}
+                      onClick={() => showNotice('Trip planning is coming soon.')}
                     >
-                      <span className="guide-avatar-initials">{contact.initials}</span>
-                      <span className="guide-contact__text"><strong>{contact.name}</strong><small>{contact.trip}</small><span>{contact.messages.at(-1)?.text}</span></span>
-                      <span className="guide-contact__meta"><small>{contact.time}</small>{contact.unread > 0 && <b>{contact.unread}</b>}</span>
+                      <span aria-hidden="true">+</span> Plan a new trip
                     </button>
-                  ))}
-                  {visibleContacts.length === 0 && <p className="guide-chat__empty">No conversations found.</p>}
-                </div>
-
-                <div className="guide-conversation">
-                  <div className="guide-conversation__header">
-                    <span className="guide-avatar-initials">{selectedContact.initials}</span>
-                    <div><strong>{selectedContact.name}</strong><span>{selectedContact.trip}</span></div>
-                    <span className="guide-conversation__online"><span /> Trip confirmed</span>
                   </div>
-                  <div className="guide-conversation__messages" aria-live="polite">
-                    <p className="guide-chat-date">Today</p>
-                    {selectedContact.messages.map((message, index) => (
-                      <div className={`guide-message guide-message--${message.from}`} key={`${selectedContact.id}-${index}`}>
-                        <p>{message.text}</p><time>{message.time}</time>
-                      </div>
+
+                  <div className="rl-trip-list">
+                    {upcomingTrips.map((trip) => (
+                      <UpcomingTripCard
+                        key={trip.id}
+                        trip={trip}
+                        onMessage={openChat}
+                        onItinerary={(t) => showNotice(`Opening the itinerary for ${t.title}…`)}
+                      />
                     ))}
                   </div>
-                  <form className="guide-message-form" onSubmit={sendMessage}>
-                    <input
-                      value={draft}
-                      onChange={(event) => setDraft(event.target.value)}
-                      placeholder={`Message ${selectedContact.name.split(' ')[0]}...`}
-                      aria-label={`Message ${selectedContact.name}`}
-                    />
-                    <button type="submit" aria-label="Send message" disabled={!draft.trim()}><span aria-hidden="true">↑</span></button>
-                  </form>
-                  <p className="guide-chat-safety">Keep your trip details and payments on VentureVista.</p>
-                </div>
-              </div>
+                </section>
+              )}
+
+              {/* ---------- Completed ---------- */}
+              {activeTab === 'completed' && (
+                <section
+                  className="rl-panel"
+                  id="rl-panel-completed"
+                  role="tabpanel"
+                  aria-labelledby="rl-tab-completed"
+                >
+                  <div className="rl-trip-list">
+                    {completedTrips.map((trip) => (
+                      <CompletedTripCard
+                        key={trip.id}
+                        trip={trip}
+                        onView={(t) => showNotice(`Opening ${t.title}…`)}
+                        onBookAgain={(t) => showNotice(`Let's plan another trip like ${t.title}.`)}
+                      />
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {/* ---------- Chat ---------- */}
+              {activeTab === 'chat' && (
+                <section
+                  className="rl-panel rl-chat"
+                  id="rl-panel-chat"
+                  role="tabpanel"
+                  aria-labelledby="rl-tab-chat"
+                >
+                  <aside className="rl-chat__sidebar" aria-label="Your guides">
+                    <div className="rl-chat__sidebar-head">
+                      <h3>Your guides</h3>
+                      <span className="rl-pill">{contacts.length} active</span>
+                    </div>
+
+                    <label className="rl-search">
+                      <span aria-hidden="true">⌕</span>
+                      <span className="rl-visually-hidden">Search conversations</span>
+                      <input
+                        value={contactQuery}
+                        onChange={(e) => setContactQuery(e.target.value)}
+                        placeholder="Search conversations"
+                      />
+                    </label>
+
+                    <div className="rl-contact-list">
+                      {visibleContacts.map((contact) => (
+                        <button
+                          key={contact.id}
+                          className={`rl-contact${selectedContactId === contact.id ? ' is-active' : ''}`}
+                          type="button"
+                          aria-pressed={selectedContactId === contact.id}
+                          onClick={() => selectContact(contact.id)}
+                        >
+                          <span className="rl-avatar rl-avatar--sm rl-avatar--status">
+                            {contact.initials}
+                            {contact.online && <i aria-hidden="true" />}
+                          </span>
+                          <span className="rl-contact__text">
+                            <strong>{contact.name}</strong>
+                            <small>{contact.trip}</small>
+                            <span>{contact.messages[contact.messages.length - 1]?.text}</span>
+                            <time>{contact.time}</time>
+                          </span>
+                          {contact.unread > 0 && <b className="rl-contact__unread">{contact.unread}</b>}
+                        </button>
+                      ))}
+                      {visibleContacts.length === 0 && (
+                        <p className="rl-chat__empty">No conversations found.</p>
+                      )}
+                    </div>
+
+                    <div className="rl-help-block">
+                      <p className="rl-eyebrow">Here when you need us</p>
+                      <p>Your guides usually reply within an hour, 8 AM–8 PM Sri Lanka time.</p>
+                      <small><span aria-hidden="true">◷</span> Sri Lanka · UTC +5:30</small>
+                    </div>
+
+                    <div className="rl-help-block">
+                      <strong>Need extra support?</strong>
+                      <p>Our local team is here for booking questions and urgent travel help.</p>
+                      <button
+                        className="rl-button rl-button--outline rl-button--sm"
+                        type="button"
+                        onClick={() => showNotice('Connecting you with the Roam Lanka team…')}
+                      >
+                        <span aria-hidden="true">☎</span> Contact Roam Lanka
+                      </button>
+                    </div>
+                  </aside>
+
+                  <div className="rl-conversation">
+                    <header className="rl-conversation__header">
+                      <span className="rl-avatar">{selectedContact.initials}</span>
+                      <div>
+                        <strong>{selectedContact.name}</strong>
+                        <span>
+                          <i className="rl-online-dot" aria-hidden="true" />
+                          Online now · Verified local guide
+                        </span>
+                      </div>
+                      <div className="rl-conversation__tools">
+                        <button className="rl-icon-button rl-icon-button--boxed" type="button" aria-label="Call guide">☎</button>
+                        <button className="rl-icon-button" type="button" aria-label="More options">⋯</button>
+                      </div>
+                    </header>
+
+                    <div className="rl-trip-banner">
+                      <img src={selectedContact.tripImage} alt="" />
+                      <div>
+                        <strong>{selectedContact.trip}</strong>
+                        <small>
+                          {selectedContact.tripDates} · {selectedContact.tripTravelers} · {selectedContact.tripId}
+                        </small>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => showNotice(`Opening the itinerary for ${selectedContact.trip}…`)}
+                      >
+                        View itinerary <span aria-hidden="true">↗</span>
+                      </button>
+                    </div>
+
+                    <div className="rl-messages" aria-live="polite">
+                      <p className="rl-messages__date">Today, 15 October 2026</p>
+                      {selectedContact.messages.map((message, index) => (
+                        <div
+                          className={`rl-message rl-message--${message.from}`}
+                          key={`${selectedContact.id}-${index}`}
+                        >
+                          <p>{message.text}</p>
+                          {message.location && (
+                            <div className="rl-location-card">
+                              <span aria-hidden="true">⌖</span>
+                              <div>
+                                <strong>{message.location.name}</strong>
+                                <small>{message.location.address}</small>
+                              </div>
+                              <span aria-hidden="true">↗</span>
+                            </div>
+                          )}
+                          <time>
+                            {message.time}
+                            {message.from === 'me' && message.read ? ' · Read ✓✓' : ''}
+                          </time>
+                        </div>
+                      ))}
+                    </div>
+
+                    <form className="rl-composer" onSubmit={sendMessage}>
+                      <button className="rl-icon-button" type="button" aria-label="Attach a file">⌁</button>
+                      <input
+                        value={draft}
+                        onChange={(e) => setDraft(e.target.value)}
+                        placeholder={`Write a message to ${selectedContact.name.split(' ')[0]}...`}
+                        aria-label={`Message ${selectedContact.name}`}
+                      />
+                      <button className="rl-icon-button" type="button" aria-label="Add emoji">☺</button>
+                      <button
+                        className="rl-send"
+                        type="submit"
+                        aria-label="Send message"
+                        disabled={!draft.trim()}
+                      >
+                        ➤
+                      </button>
+                    </form>
+                    <p className="rl-chat__safety">
+                      Keep conversations and payments on Roam Lanka for a safer journey.
+                    </p>
+                  </div>
+                </section>
+              )}
             </section>
-          )}
-        </section>
+          </div>
+        </main>
       </div>
-    </main>
+    </div>
   );
 }
 
-export default GuideDashboard;
+export default TravelerDashboard;
