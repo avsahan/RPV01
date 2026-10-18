@@ -600,3 +600,62 @@
 .itinerary-btn-primary:hover {
   background-color: #275246;
 }
+
+.itinerary-page > .itinerary-btn-quiet {
+  margin: 0 0 14px;
+  padding: 8px 0;
+}
+
+.itinerary-add-activity-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-top: 0;
+  background: #fff;
+}
+
+.itinerary-add-activity-form label {
+  display: grid;
+  gap: 6px;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.itinerary-add-activity-form input,
+.itinerary-add-activity-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 9px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #fbfcfd;
+  color: #1f2937;
+  font: inherit;
+  font-size: 13px;
+}
+
+.itinerary-add-activity-form__wide,
+.itinerary-add-activity-form__actions {
+  grid-column: 1 / -1;
+}
+
+.itinerary-add-activity-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 2px;
+}
+
+@media (max-width: 560px) {
+  .itinerary-add-activity-form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .itinerary-add-activity-form__wide,
+  .itinerary-add-activity-form__actions {
+    grid-column: 1;
+  }
+}

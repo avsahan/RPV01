@@ -15,10 +15,18 @@ const initialExpenses = [
   { name: 'Meals', detail: '3 days × LKR 2,000', amount: 6000, icon: '🍽️' },
 ];
 
-function AddDate({ tripDetails = {}, onBack, onHome, onContinue }) {
+function AddDate({ tripDetails = {}, onBack, onHome, onContinue, onSaveTrip }) {
   const [activeDay, setActiveDay] = useState(0);
   const [activities, setActivities] = useState(starterActivities);
   const [budget, setBudget] = useState(60000);
+  const [showActivityForm, setShowActivityForm] = useState(false);
+  const destination = tripDetails.destination?.trim() || 'Ella';
+  const tripDateRange = [tripDetails.startDate, tripDetails.endDate]
+    .filter(Boolean)
+    .map((date) => new Intl.DateTimeFormat('en', { month: 'short', day: 'numeric' }).format(new Date(`${date}T00:00:00`)))
+    .join(' – ');
+  const [saveMessage, setSaveMessage] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
   const days = [
     { label: 'Day 1 · GUIDED', date: 'Thu, Nov 12', cost: 'LKR 3,000 activities' },
@@ -29,6 +37,50 @@ function AddDate({ tripDetails = {}, onBack, onHome, onContinue }) {
   const currentDayActivities = activities.filter((act) => act.day === activeDay);
   const daySubtotal = currentDayActivities.reduce((sum, act) => sum + act.cost, 0);
 
+  const addActivity = (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    setActivities((current) => [...current, {
+      id: Date.now(),
+      day: activeDay,
+      time: formData.get('time'),
+      duration: formData.get('duration'),
+      title: formData.get('title').trim(),
+      desc: formData.get('description').trim(),
+      location: formData.get('location').trim() || destination,
+      tag: 'Personal plan',
+      cost: Number(formData.get('cost')) || 0,
+    }]);
+    setShowActivityForm(false);
+  };
+
+  const saveTrip = async () => {
+    if (!onSaveTrip) return true;
+    setIsSaving(true);
+    setSaveMessage('');
+    try {
+      await onSaveTrip({
+        destination,
+        startDate: tripDetails.startDate || null,
+        endDate: tripDetails.endDate || null,
+        visibility: tripDetails.visibility || 'friends',
+        budget,
+        activities,
+      });
+      setSaveMessage('Trip saved');
+      return true;
+    } catch (error) {
+      setSaveMessage(error.message);
+      return false;
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const continueToGuides = async () => {
+    if (await saveTrip()) onContinue();
+  };
+
   
   const totalEstimatedCost = initialExpenses.reduce((sum, exp) => sum + exp.amount, 0);
   const budgetUsedPercent = Math.min(Math.round((totalEstimatedCost / budget) * 100), 100);
@@ -36,15 +88,19 @@ function AddDate({ tripDetails = {}, onBack, onHome, onContinue }) {
 
   return (
     <section className="itinerary-page">
-      
+      <button type="button" className="itinerary-btn-quiet" onClick={onBack}>← Back to trip details</button>
       <header className="itinerary-trip-header">
         <div className="itinerary-header-left">
-          <h1>Your Ella escape, thoughtfully planned.</h1>
+          <h1>Your {destination} escape, thoughtfully planned.</h1>
           <p className="itinerary-trip-header__meta">
-            <span>📍 Ella, Sri Lanka</span>
-            <span>📅 Nov 12–14, 2026 · 3 days</span>
+            <span>📍 {destination}</span>
+            <span>📅 {tripDateRange || 'Choose your travel dates'}</span>
           </p>
+          {saveMessage && <p className="itinerary-save-message" role="status">{saveMessage}</p>}
         </div>
+        <button type="button" className="itinerary-button itinerary-button--primary" onClick={saveTrip} disabled={isSaving}>
+          {isSaving ? 'Saving…' : 'Save trip'}
+        </button>
         <img
           className="itinerary-trip-header__image"
           src="https://d1ynolcus8dvgv.cloudfront.net/2019/01/nine-arch-2-5.jpg"
@@ -60,8 +116,8 @@ function AddDate({ tripDetails = {}, onBack, onHome, onContinue }) {
             <div>
               <h2>Day-by-Day Activity Planner</h2>
             </div>
-            <button type="button" className="itinerary-button itinerary-button--primary">
-              + Add Activity
+            <button type="button" className="itinerary-button itinerary-button--primary" onClick={() => setShowActivityForm((visible) => !visible)}>
+              {showActivityForm ? 'Cancel activity' : '+ Add Activity'}
             </button>
           </div>
 
@@ -88,9 +144,24 @@ function AddDate({ tripDetails = {}, onBack, onHome, onContinue }) {
             <span className="itinerary-day-tag">DAY 1 OF 3</span>
           </div>
 
-          <button type="button" className="itinerary-add-day-btn">
+          <button type="button" className="itinerary-add-day-btn" onClick={() => setShowActivityForm(true)}>
             + Add Activity to Day {activeDay + 1}
           </button>
+
+          {showActivityForm && (
+            <form className="itinerary-add-activity-form" onSubmit={addActivity}>
+              <label>Activity<input name="title" maxLength="100" placeholder="Activity name" required /></label>
+              <label>Time<input name="time" type="time" defaultValue="16:00" required /></label>
+              <label>Duration<input name="duration" placeholder="1 hour" maxLength="30" required /></label>
+              <label>Estimated cost (LKR)<input name="cost" type="number" min="0" step="100" defaultValue="0" /></label>
+              <label className="itinerary-add-activity-form__wide">Location<input name="location" placeholder={destination} maxLength="150" /></label>
+              <label className="itinerary-add-activity-form__wide">Notes<textarea name="description" rows="2" maxLength="300" placeholder="What would you like to do?" /></label>
+              <div className="itinerary-add-activity-form__actions">
+                <button type="button" className="itinerary-btn-quiet" onClick={() => setShowActivityForm(false)}>Cancel</button>
+                <button type="submit" className="itinerary-btn-primary">Add activity</button>
+              </div>
+            </form>
+          )}
 
         
           <div className="itinerary-activity-list">
@@ -200,7 +271,7 @@ function AddDate({ tripDetails = {}, onBack, onHome, onContinue }) {
         <button type="button" className="itinerary-btn-quiet" onClick={onHome}>
           ← Back to Home Page
         </button>
-        <button type="button" className="itinerary-btn-primary" onClick={onContinue}>
+        <button type="button" className="itinerary-btn-primary" onClick={continueToGuides} disabled={isSaving}>
           Continue / Find the Guides →
         </button>
       </footer>

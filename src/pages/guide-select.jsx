@@ -2,63 +2,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { getGuides } from '../api/auth';
 import '../styles/GuideSelect.css';
 
-const sampleGuides = [
-  {
-    name: 'Ishani Perera',
-    location: 'Kandy, Sri Lanka',
-    specialty: 'Culture & temple walks',
-    description: 'Explore sacred temples, lakeside lanes and Kandyan traditions at an easy pace.',
-    price: 10500,
-    rating: '4.9',
-    image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=900&q=85',
-  },
-  {
-    name: 'Kasun Dissanayake',
-    location: 'Sigiriya, Sri Lanka',
-    specialty: 'Ancient sites & heritage',
-    description: 'Uncover the stories of Lion Rock, ancient gardens and the Cultural Triangle.',
-    price: 13500,
-    rating: '5.0',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=85',
-  },
-  {
-    name: 'Nuwan Jayawardena',
-    location: 'Ella, Sri Lanka',
-    specialty: 'Hiking & tea country',
-    description: 'Walk misty ridgelines, visit tea estates and discover quieter trails around Ella.',
-    price: 12000,
-    rating: '4.9',
-    image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=900&q=85',
-  },
-  {
-    name: 'Anjali Fernando',
-    location: 'Ella, Sri Lanka',
-    specialty: 'Nature & local food',
-    description: 'Find local kitchens, waterfall paths and relaxed viewpoints beyond the main route.',
-    price: 11000,
-    rating: '4.8',
-    image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=85',
-  },
-  {
-    name: 'Ravi Senanayake',
-    location: 'Nuwara Eliya, Sri Lanka',
-    specialty: 'Tea & scenic routes',
-    description: 'Discover highland tea estates, colonial landmarks and memorable train stops.',
-    price: 12500,
-    rating: '4.9',
-    image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=900&q=85',
-  },
-  {
-    name: 'Madu Silva',
-    location: 'Galle, Sri Lanka',
-    specialty: 'Coastal history',
-    description: 'Explore the fort, coastal villages and the island’s southern food traditions.',
-    price: 10000,
-    rating: '4.8',
-    image: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=900&q=85',
-  },
-];
-
 const formatMoney = (amount) => `LKR ${amount.toLocaleString('en-LK')}`;
 
 function GuideProfileDialog({ guide, onClose, onRequest }) {
@@ -76,7 +19,7 @@ function GuideProfileDialog({ guide, onClose, onRequest }) {
           <p>{guide.description}</p>
           <div className="guide-dialog__footer">
             <strong>{formatMoney(guide.price)} <span>/ day</span></strong>
-            <button type="button" className="guide-button guide-button--primary" onClick={() => onRequest(guide.name)}>
+            <button type="button" className="guide-button guide-button--primary" onClick={() => onRequest(guide)}>
               Request guide
             </button>
           </div>
@@ -86,8 +29,8 @@ function GuideProfileDialog({ guide, onClose, onRequest }) {
   );
 }
 
-function GuideSelect({ tripDetails = {}, onBack }) {
-  const [guides, setGuides] = useState(sampleGuides);
+function GuideSelect({ tripDetails = {}, onBack, onRequestGuide }) {
+  const [guides, setGuides] = useState([]);
   const [query, setQuery] = useState('');
   const [specialty, setSpecialty] = useState('all');
   const [selectedGuide, setSelectedGuide] = useState(null);
@@ -101,7 +44,7 @@ function GuideSelect({ tripDetails = {}, onBack }) {
     let isMounted = true;
     getGuides()
       .then(({ guides: registeredGuides }) => {
-        if (isMounted) setGuides([...registeredGuides, ...sampleGuides]);
+        if (isMounted) setGuides(registeredGuides);
       })
       .catch((error) => {
         if (isMounted) setGuideLoadError(error.message);
@@ -122,11 +65,17 @@ function GuideSelect({ tripDetails = {}, onBack }) {
       const matchesSpecialty = specialty === 'all' || guide.specialty === specialty;
       return matchesQuery && matchesSpecialty;
     });
-  }, [query, specialty]);
+  }, [guides, query, specialty]);
 
-  const requestGuide = (name) => {
-    setNotice(`Your request for ${name} is ready. The guide will contact you to confirm availability.`);
-    setSelectedGuide(null);
+  const requestGuide = async (guide) => {
+    setNotice('');
+    try {
+      await onRequestGuide(guide);
+      setNotice(`Your request for ${guide.name} was sent.`);
+      setSelectedGuide(null);
+    } catch (error) {
+      setNotice(error.message);
+    }
   };
 
   return (
@@ -199,7 +148,7 @@ function GuideSelect({ tripDetails = {}, onBack }) {
                       <button type="button" className="guide-button guide-button--quiet" onClick={() => setSelectedGuide(guide)}>
                         View profile
                       </button>
-                      <button type="button" className="guide-button guide-button--primary" onClick={() => requestGuide(guide.name)}>
+                      <button type="button" className="guide-button guide-button--primary" onClick={() => requestGuide(guide)}>
                         Request guide
                       </button>
                     </div>

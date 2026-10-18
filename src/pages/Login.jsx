@@ -16,7 +16,7 @@ const Login = ({ onRoleSelect, onLoginSuccess }) => {
 
     try {
       const response = await login({ email, password });
-      onLoginSuccess(response.user);
+      await onLoginSuccess(response.user);
     } catch (loginError) {
       setError(loginError.message);
     } finally {

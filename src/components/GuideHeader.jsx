@@ -2,7 +2,15 @@ import '../styles/Header.css';
 import '../styles/GuideHeader.css';
 import VLogo from '../assets/VLogo.png';
 
-function GuideHeader() {
+function GuideHeader({ currentUser, onLogout }) {
+  const initials = (currentUser?.fullName || 'Guide')
+    .trim()
+    .split(/\s+/)
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
+
   return (
     <header className="app-header">
       <div className="header-shell gd-header-shell">
@@ -26,8 +34,8 @@ function GuideHeader() {
               <path d="M13.7 21a2 2 0 0 1-3.4 0" />
             </svg>
           </button>
-          <span className="gd-header__avatar" aria-hidden="true">NJ</span>
-          <span className="gd-header__chevron" aria-hidden="true">⌄</span>
+          <span className="gd-header__avatar" aria-label={currentUser?.fullName || 'Guide'}>{initials}</span>
+          <button className="gd-header__logout" type="button" onClick={onLogout}>Log out</button>
         </div>
       </div>
     </header>

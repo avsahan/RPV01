@@ -9,7 +9,7 @@ import GuideSelect from './pages/guide-select';
 import TravelerDashboard from './pages/TravelerDashboard';
 import GuideDashboard from './pages/GuideDashboard';
 import Permission from './pages/Permission';
-import { getCurrentUser, logout } from './api/auth';
+import { createBooking, createTrip, getCurrentUser, logout, updateTrip } from './api/auth';
 import './styles/App.css';
 
 const featureCards = [
@@ -19,13 +19,6 @@ const featureCards = [
   { icon: '🗺', title: 'Discover routes', text: 'Map scenic drives, train rides, and local experiences with ease.' },
   { icon: '🧾', title: 'Manage budgets', text: 'Track spending and compare costs before finalizing a trip.' },
   { icon: '💬', title: 'Stay inspired', text: 'Browse ideas, stories, and tips shared by fellow travelers.' },
-];
-
-const reviews = [
-  { name: 'Nadia', text: 'Everything stayed organized from flight to hotel without any stress.' },
-  { name: 'Marcus', text: 'The trip plans were simple, visual, and easy to share with friends.' },
-  { name: 'Aisha', text: 'I found hidden places and made better route decisions with this app.' },
-  { name: 'Liam', text: 'It made our family trip easier to plan and more enjoyable to enjoy.' },
 ];
 
 const adventures = [
@@ -41,11 +34,7 @@ const footerColumns = [
   { heading: 'Resources', links: ['Blog', 'Travel tips', 'Community', 'FAQs'] },
 ];
 
-function LandingView({ onStartPlanning, destinationSearch }) {
-  const matchingAdventures = adventures.filter((item) =>
-    item.title.toLowerCase().includes(destinationSearch.toLowerCase()),
-  );
-
+function LandingView({ onStartPlanning }) {
   return (
     <>
       <main className="home-page" id="home">
@@ -71,23 +60,10 @@ function LandingView({ onStartPlanning, destinationSearch }) {
           <button className="secondary-button" onClick={onStartPlanning}>Start planning</button>
         </section>
 
-        <section className="reviews-section">
-          <h2>What travelers are saying about</h2>
-          <div className="review-grid">
-            {reviews.map((review) => (
-              <article key={review.name} className="review-card">
-                <span className="review-rating">★★★★★</span>
-                <p>{review.text}</p>
-                <strong>{review.name}</strong>
-              </article>
-            ))}
-          </div>
-        </section>
-
         <section className="adventure-section" id="hotels">
           <h2>Find your next adventure</h2>
           <div className="adventure-grid">
-            {matchingAdventures.map((item) => (
+            {adventures.map((item) => (
               <article key={item.title} className="adventure-card">
                 <img src={item.image} alt={item.title} />
                 <div className="adventure-copy">
@@ -97,11 +73,6 @@ function LandingView({ onStartPlanning, destinationSearch }) {
               </article>
             ))}
           </div>
-          {destinationSearch && matchingAdventures.length === 0 && (
-            <p className="search-empty-state" role="status">
-              No destinations match “{destinationSearch}”. Try another search.
-            </p>
-          )}
         </section>
       </main>
 
@@ -148,8 +119,8 @@ function LandingView({ onStartPlanning, destinationSearch }) {
 function App() {
   const [activePage, setActivePage] = useState('landing');
   const [selectedRole, setSelectedRole] = useState(null);
-  const [destinationSearch, setDestinationSearch] = useState('');
   const [tripDetails, setTripDetails] = useState({});
+  const [pendingTrip, setPendingTrip] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
   const [authMessage, setAuthMessage] = useState('');
 
@@ -171,9 +142,53 @@ function App() {
     setActivePage('planner');
   };
 
-  const handleStartTrip = (details) => {
-    setTripDetails(details);
-    setActivePage('itinerary');
+  const tripPayload = (details) => ({
+    destination: details.destination,
+    startDate: details.startDate || null,
+    endDate: details.endDate || null,
+    visibility: details.visibility || 'friends',
+    budget: Number(details.budget) || 60000,
+    activities: details.activities || [],
+  });
+
+  const handleStartTrip = async (details) => {
+    if (!currentUser) {
+      setPendingTrip(details);
+      setAuthMessage('Log in as a traveler to save and plan your trip.');
+      setActivePage('login');
+      return;
+    }
+    if (currentUser.role !== 'traveler') {
+      setAuthMessage('Only traveler accounts can create trips.');
+      return;
+    }
+
+    try {
+      const { trip } = await createTrip(tripPayload(details));
+      setTripDetails({ ...details, ...trip });
+      setAuthMessage('');
+      setActivePage('itinerary');
+    } catch (error) {
+      setAuthMessage(error.message);
+    }
+  };
+
+  const handleSaveTrip = async (details) => {
+    if (!tripDetails.id) throw new Error('Start a trip before saving the itinerary.');
+    const { trip } = await updateTrip(tripDetails.id, tripPayload(details));
+    setTripDetails((current) => ({ ...current, ...trip }));
+    return trip;
+  };
+
+  const handleRequestGuide = async (guide) => {
+    if (!tripDetails.id || !guide.id) {
+      throw new Error('Save your trip and choose a registered guide to send a request.');
+    }
+    return createBooking(tripDetails.id, {
+      guideId: guide.id,
+      offeredBudget: guide.price || 0,
+      message: `Please guide me in ${tripDetails.destination}.`,
+    });
   };
 
   const handleFindGuides = () => {
@@ -185,10 +200,54 @@ function App() {
     setActivePage('login');
   };
 
-  const handleLoginSuccess = (user) => {
+  const navigateToLandingSection = (sectionId) => {
+    setActivePage('landing');
+    window.setTimeout(() => {
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+    }, 0);
+  };
+
+  const handleLoginSuccess = async () => {
+    const { user } = await getCurrentUser();
     setCurrentUser(user);
     setAuthMessage('');
+    if (pendingTrip) {
+      if (user.role !== 'traveler') {
+        setAuthMessage('Sign in with a traveler account to save your trip.');
+        setActivePage('guide-dashboard');
+        return;
+      }
+      const { trip } = await createTrip(tripPayload(pendingTrip));
+      setTripDetails({ ...pendingTrip, ...trip });
+      setPendingTrip(null);
+      setActivePage('itinerary');
+      return;
+    }
     setActivePage(user.role === 'guide' ? 'guide-dashboard' : 'dashboard');
+  };
+
+  const handleDashboardNavigation = () => {
+    if (!currentUser) {
+      setAuthMessage('Log in to view your dashboard.');
+      setActivePage('login');
+      return;
+    }
+
+    setAuthMessage('');
+    setActivePage(currentUser.role === 'guide' ? 'guide-dashboard' : 'dashboard');
+  };
+
+  const handleGuideDashboardNavigation = () => {
+    if (currentUser?.role !== 'guide') {
+      setAuthMessage(currentUser
+        ? 'The guide dashboard is only available to guide accounts.'
+        : 'Log in with a guide account to open the guide dashboard.');
+      setActivePage(currentUser ? 'dashboard' : 'login');
+      return;
+    }
+
+    setAuthMessage('');
+    setActivePage('guide-dashboard');
   };
 
   const handleLogout = async () => {
@@ -212,29 +271,25 @@ function App() {
     setSelectedRole(null);
   };
 
-  const handleDestinationSearch = (query) => {
-    setDestinationSearch(query);
-    setActivePage('landing');
-  };
-
   return (
     <div className="app-main">
       <Header
         onAuthClick={handleAuthClick}
+        onHomeClick={() => navigateToLandingSection('home')}
+        onHotelsClick={() => navigateToLandingSection('hotels')}
         currentUser={currentUser}
         onLogout={handleLogout}
         authMessage={authMessage}
-        onSearch={handleDestinationSearch}
-        onDashboardClick={() => setActivePage('dashboard')}
+        onDashboardClick={handleDashboardNavigation}
         isDashboard={activePage === 'dashboard'}
-        onGuideDashboardClick={() => setActivePage('guide-dashboard')}
+        onGuideDashboardClick={handleGuideDashboardNavigation}
         isGuideDashboard={activePage === 'guide-dashboard'}
         onPermissionClick={() => setActivePage('permission')}
         isPermission={activePage === 'permission'}
       />
       <main className="content-body">
         {activePage === 'landing' && (
-          <LandingView onStartPlanning={handleStartPlanning} destinationSearch={destinationSearch} />
+          <LandingView onStartPlanning={handleStartPlanning} />
         )}
         {activePage === 'login' && <Login onRoleSelect={handleRoleSelect} onLoginSuccess={handleLoginSuccess} />}
         {activePage === 'registration' && <Home role={selectedRole} onBack={handleBackToLogin} />}
@@ -245,10 +300,11 @@ function App() {
             onBack={() => setActivePage('planner')}
             onHome={() => setActivePage('landing')}
             onContinue={handleFindGuides}
+            onSaveTrip={handleSaveTrip}
           />
         )}
         {activePage === 'guides' && (
-          <GuideSelect tripDetails={tripDetails} onBack={() => setActivePage('itinerary')} />
+          <GuideSelect tripDetails={tripDetails} onBack={() => setActivePage('itinerary')} onRequestGuide={handleRequestGuide} />
         )}
         {activePage === 'dashboard' && (
           <TravelerDashboard currentUser={currentUser} onPlanTrip={() => setActivePage('planner')} />

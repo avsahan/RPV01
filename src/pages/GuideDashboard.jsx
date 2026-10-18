@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../styles/GuideDashboard.css';
-import GuideHeader from '../components/GuideHeader';
+import { getBookings, updateBooking } from '../api/auth';
+import BookingChat from '../components/BookingChat';
 
 /* ---------- Icons ---------- */
 const Icon = ({ children, size = 16 }) => (
@@ -63,93 +64,9 @@ const ChevronRightIcon = (props) => (
 );
 
 /* ---------- Data ---------- */
-const guide = {
-  name: 'Nuwan Jayawardena',
-  title: 'Hiking & Tea Country Specialist • Ella & Central Highlands',
-  bio: 'I help travelers discover Sri Lanka at a gentler pace — from hidden tea trails to local flavors and unforgettable hill-country views.',
-  photo: '/image/guide-nuwan.png',
-  dailyFee: 12000,
-  baseLocation: 'Ella, Sri Lanka',
-  experience: '8+ Years',
-  phone: '+94 77 123 4567',
-  license: 'SLTDA/G/8942',
-};
-
-const initialRequests = [
-  {
-    id: 'BKG-1001',
-    title: 'Ella Rock Sunrise Hike',
-    location: 'Ella, Sri Lanka',
-    traveler: 'Liam Chen',
-    budget: 10000,
-    date: 'Nov 10, 2026',
-    dateLong: 'Tue, Nov 10, 2026',
-    travelers: 1,
-    duration: '6 hours',
-    message: 'Looking for a sunrise hike up Ella Rock.',
-    status: 'declined',
-    image: '/image/ella-rock.jpeg',
-  },
-  {
-    id: 'BKG-1002',
-    title: 'A Gentle Day in Ella & Tea Plantations',
-    location: 'Ella, Sri Lanka',
-    traveler: 'Alex Morgan',
-    travelerNote: 'First-time visitor',
-    budget: 12000,
-    date: 'Nov 12, 2026',
-    dateLong: 'Thu, Nov 12, 2026',
-    travelers: 2,
-    duration: '1 Full Day (8 Hours)',
-    message:
-      'Hi Nuwan! We are looking for a gentle hike through the tea fields (Little Adam’s Peak), local tea tasting, and visit to Nine Arch Bridge. We want to take it slow and enjoy local cuisine.',
-    status: 'pending',
-    image: '/image/ella_tea.jpeg',
-  },
-  {
-    id: 'BKG-1003',
-    title: 'Early Morning Sigiriya & Pidurangala Climb',
-    location: 'Sigiriya, Sri Lanka',
-    traveler: 'Sarah & Daniel',
-    budget: 15000,
-    date: 'Nov 15, 2026',
-    dateLong: 'Sun, Nov 15, 2026',
-    travelers: 2,
-    duration: 'Sunrise Tour (6 Hours)',
-    message:
-      'Looking for an experienced local guide for sunrise hike up Pidurangala followed by Sigiriya Fortress history tour. Need transportation guidance from Dambulla.',
-    status: 'pending',
-    image: '/image/sigiriya.jpeg',
-  },
-  {
-    id: 'BKG-1004',
-    title: 'Kandy Heritage & Lake Walk',
-    location: 'Kandy, Sri Lanka',
-    traveler: 'Emma & James Wilson',
-    travelerInitials: 'EJ',
-    travelerNote: 'United Kingdom · 2 adults',
-    travelerAbout: 'Interested in culture, local food, and gentle walks. This is their first visit to Kandy.',
-    messageFrom: 'Emma',
-    messageDate: 'Oct 13, 2026',
-    budget: 12000,
-    date: 'Nov 20, 2026',
-    dateLong: 'Fri, Nov 20, 2026',
-    travelers: 2,
-    duration: '1 Full Day (8 Hours)',
-    message: 'Looking forward to meeting you! Is the hotel entrance the best place to meet?',
-    status: 'accepted',
-    image: '/image/kandy.jpeg',
-    itinerary: [
-      { time: '08:30', title: 'Welcome & lakeside walk', text: 'Meet Emma and James, then take a relaxed walk around Kandy Lake.' },
-      { time: '10:00', title: 'Temple of the Sacred Tooth Relic', text: 'Discover the temple’s history and local traditions. Modest clothing required.' },
-      { time: '12:30', title: 'Local lunch & market visit', text: 'Explore Sri Lankan flavors and browse the city’s colorful market.' },
-      { time: '14:30', title: 'Royal Botanical Gardens', text: 'Easy afternoon visit in Peradeniya, return to Kandy by 4:30 PM.' },
-    ],
-  },
-];
-
 const statusLabels = {
   pending: 'Pending decision',
+  countered: 'Counter offer sent',
   accepted: 'Confirmed',
   declined: 'Declined',
 };
@@ -164,33 +81,55 @@ function GuideStatus({ status }) {
   );
 }
 
-function GuideDashboard() {
-  const [requests, setRequests] = useState(initialRequests);
+function GuideDashboard({ currentUser }) {
+  const [requests, setRequests] = useState([]);
   const [activeTab, setActiveTab] = useState('pending');
   const [counterId, setCounterId] = useState(null);
   const [counterValue, setCounterValue] = useState('');
-  const [messagedIds, setMessagedIds] = useState([]);
+  const [chatBookingId, setChatBookingId] = useState(null);
+  const [loadError, setLoadError] = useState('');
+  const guideName = currentUser?.fullName || 'Local guide';
+  const guideLocation = currentUser?.baseLocation || 'Sri Lanka';
+  const guidePhoto = currentUser?.profilePhotoPath || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=180&q=85';
+  const verificationStatus = currentUser?.verificationStatus || 'pending';
 
-  const pending = requests.filter((request) => request.status === 'pending');
+  useEffect(() => {
+    getBookings()
+      .then(({ bookings }) => setRequests(bookings.filter((booking) => Number(booking.guideId) === Number(currentUser?.id))))
+      .catch((error) => setLoadError(error.message));
+  }, [currentUser?.id]);
+
+  const pending = requests.filter((request) => ['pending', 'countered'].includes(request.status));
   const accepted = requests.filter((request) => request.status === 'accepted');
 
   const tabs = [
     { id: 'pending', label: 'Pending Requests', icon: <ClockIcon />, count: pending.length },
     { id: 'accepted', label: 'Accepted Trips', icon: <CircleCheckIcon />, count: accepted.length },
     { id: 'all', label: 'All Requests', icon: <FilterIcon />, count: requests.length },
+    { id: 'chat', label: 'Messages', icon: <ChatIcon />, count: requests.filter((request) => request.status === 'accepted').length },
   ];
 
-  const updateStatus = (id, status) => {
-    setRequests((current) => current.map((request) => (request.id === id ? { ...request, status } : request)));
-    setCounterId(null);
+  const updateStatus = async (id, status) => {
+    try {
+      const { booking } = await updateBooking(id, { status });
+      setRequests((current) => current.map((request) => (request.id === id ? { ...request, ...booking } : request)));
+      setCounterId(null);
+    } catch (error) {
+      setLoadError(error.message);
+    }
   };
 
-  const sendCounter = (id) => {
+  const sendCounter = async (id) => {
     const amount = Number(counterValue);
     if (!amount || amount <= 0) return;
-    setRequests((current) => current.map((request) => (request.id === id ? { ...request, budget: amount } : request)));
-    setCounterId(null);
-    setCounterValue('');
+    try {
+      const { booking } = await updateBooking(id, { status: 'countered', counterOffer: amount });
+      setRequests((current) => current.map((request) => (request.id === id ? { ...request, ...booking } : request)));
+      setCounterId(null);
+      setCounterValue('');
+    } catch (error) {
+      setLoadError(error.message);
+    }
   };
 
   const openCounter = (id) => {
@@ -199,37 +138,40 @@ function GuideDashboard() {
   };
 
   const messageTraveler = (id) => {
-    setMessagedIds((current) => (current.includes(id) ? current : [...current, id]));
+    setChatBookingId(id);
+    setActiveTab('chat');
   };
 
   return (
     <>
-      <GuideHeader />
       <main className="gd-dashboard">
         <div className="gd-dashboard__inner">
           {/* ---------- Profile ---------- */}
           <section className="gd-profile" aria-label="Guide profile">
             <div className="gd-profile__top">
-              <img className="gd-profile__photo" src={guide.photo} alt={guide.name} />
+              <img className="gd-profile__photo" src={guidePhoto} alt={guideName} />
               <div className="gd-profile__info">
                 <h1>
-                  {guide.name}
-                  <span className="gd-verified"><CircleCheckIcon size={14} /> Verified Guide</span>
+                  {guideName}
+                  <span className="gd-verified">
+                    <CircleCheckIcon size={14} />
+                    {verificationStatus === 'approved' ? 'Verified Guide' : 'Pending Verification'}
+                  </span>
                 </h1>
-                <p className="gd-profile__title">{guide.title}</p>
-                <p className="gd-profile__bio">{guide.bio}</p>
+                <p className="gd-profile__title">Local guide · {guideLocation}</p>
+                <p className="gd-profile__bio">{currentUser?.shortBio || 'Your guide profile and local expertise.'}</p>
               </div>
               <div className="gd-fee">
                 <span>Standard Daily Fee</span>
-                <p><strong>{formatMoney(guide.dailyFee)}</strong> / day</p>
-                <small><span aria-hidden="true" /> Available for Instant Booking</small>
+                <p><strong>{formatMoney(Number(currentUser?.dailyRateLkr) || 0)}</strong> / day</p>
+                <small><span aria-hidden="true" /> {verificationStatus === 'approved' ? 'Available for booking' : 'Profile awaiting review'}</small>
               </div>
             </div>
             <div className="gd-profile__bottom">
-              <div className="gd-detail"><span>Base location</span><strong>{guide.baseLocation}</strong></div>
-              <div className="gd-detail"><span>Experience</span><strong>{guide.experience}</strong></div>
-              <div className="gd-detail"><span>Contact phone</span><strong>{guide.phone}</strong></div>
-              <div className="gd-detail"><span>License no.</span><strong>{guide.license}</strong></div>
+              <div className="gd-detail"><span>Base location</span><strong>{guideLocation}</strong></div>
+              <div className="gd-detail"><span>Experience</span><strong>{currentUser?.yearsExperience || 0} years</strong></div>
+              <div className="gd-detail"><span>Contact phone</span><strong>{currentUser?.telephoneNumber || 'Not provided'}</strong></div>
+              <div className="gd-detail"><span>License no.</span><strong>{currentUser?.sltdaLicenseNumber || 'Not provided'}</strong></div>
               <button className="gd-button" type="button"><PencilIcon size={14} /> Edit Profile &amp; Details</button>
             </div>
           </section>
@@ -256,6 +198,8 @@ function GuideDashboard() {
               </button>
             ))}
           </div>
+
+          {loadError && <p className="gd-empty" role="alert">{loadError}</p>}
 
           {/* ---------- Pending ---------- */}
           {activeTab === 'pending' && (
@@ -390,7 +334,7 @@ function GuideDashboard() {
                           onClick={() => messageTraveler(trip.id)}
                         >
                           <ChatIcon size={15} />
-                          {messagedIds.includes(trip.id) ? 'Message sent' : 'Message Traveler'}
+                          Message Traveler
                         </button>
 
                         <small className="gd-travelers__hint">
@@ -460,6 +404,29 @@ function GuideDashboard() {
                   <button type="button" aria-label="Next page" disabled><ChevronRightIcon size={14} /></button>
                 </div>
               </div>
+            </section>
+          )}
+
+          {activeTab === 'chat' && (
+            <section className="gd-panel" id="gd-panel-chat" role="tabpanel" aria-labelledby="gd-tab-chat">
+              {requests.filter((request) => request.status === 'accepted').length === 0
+                ? <p className="gd-empty">Accept a booking before messaging a traveler.</p>
+                : <div className="gd-chat-list">
+                  {requests.filter((request) => request.status === 'accepted').map((booking) => (
+                    <article className="gd-chat-item" key={booking.id}>
+                      <div><strong>{booking.traveler}</strong><span>{booking.title}</span></div>
+                      <button className="gd-button gd-button--primary" type="button" onClick={() => setChatBookingId(booking.id)}>Open chat</button>
+                    </article>
+                  ))}
+                  {chatBookingId && (
+                    <BookingChat
+                      key={chatBookingId}
+                      bookingId={chatBookingId}
+                      currentUser={currentUser}
+                      otherName={requests.find((booking) => booking.id === chatBookingId)?.traveler || 'Traveler'}
+                    />
+                  )}
+                </div>}
             </section>
           )}
         </div>
