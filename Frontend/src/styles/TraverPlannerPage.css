@@ -1,0 +1,203 @@
+.itinerary-trip-header {
+  padding: 2.5rem 1.5rem;
+  background: var(--primary-dark);
+  color: #fff;
+}
+
+.itinerary-trip-header > div {
+  max-width: var(--content-width);
+  margin: 0 auto;
+}
+
+.itinerary-eyebrow {
+  margin: 0 0 0.5rem;
+  color: #f6d98b;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.itinerary-trip-header h1 {
+  max-width: 22ch;
+  font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/* Layout */
+.itinerary-layout {
+  width: 100%;
+  max-width: 880px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+}
+
+.itinerary-schedule {
+  padding: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}
+
+.itinerary-section-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.itinerary-section-heading h2 {
+  font-size: 1.25rem;
+}
+
+/* Buttons */
+.itinerary-button {
+  padding: 0.6rem 1.25rem;
+  border: 1.5px solid transparent;
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.itinerary-button--primary {
+  background: var(--primary);
+  color: #fff;
+}
+
+.itinerary-button--primary:hover {
+  background: var(--primary-dark);
+}
+
+.itinerary-button--quiet {
+  background: transparent;
+  color: var(--text-soft);
+  border-color: var(--border-strong);
+}
+
+.itinerary-button--quiet:hover {
+  background: var(--bg);
+}
+
+/* Add-activity form */
+.itinerary-add-form {
+  margin-bottom: 1.25rem;
+  padding: 1.25rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.itinerary-add-form__heading h3 {
+  margin-bottom: 1rem;
+  font-size: 1.05rem;
+}
+
+.itinerary-add-form__fields {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 1rem;
+}
+
+.itinerary-add-form__fields label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.itinerary-add-form__fields input {
+  width: 100%;
+  padding: 0.65rem 0.8rem;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  font-weight: 400;
+}
+
+.itinerary-add-form__fields input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+
+.itinerary-add-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+/* Activity rows */
+.itinerary-activity {
+  display: grid;
+  grid-template-columns: 100px 1fr 1fr 1fr 1fr;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.itinerary-activity__time {
+  color: var(--primary);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.itinerary-activity__main h3 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.itinerary-activity__cost {
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.itinerary-icon-button {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: var(--surface);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.itinerary-icon-button:hover {
+  background: #fff5f5;
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+/* The un-classed wrapper around "Continue / Find the Guides" */
+.itinerary-schedule > div > div:last-child {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .itinerary-layout {
+    padding: 0 1rem;
+  }
+  .itinerary-schedule {
+    padding: 1rem;
+  }
+  .itinerary-add-form__fields {
+    grid-template-columns: 1fr;
+  }
+  .itinerary-activity {
+    grid-template-columns: 56px 1fr auto auto;
+    gap: 0.6rem;
+  }
+}
