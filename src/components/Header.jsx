@@ -10,6 +10,8 @@ const Header = ({ onAuthClick, onSearch, onDashboardClick, isDashboard, onGuideD
     onSearch(destination.trim());
   };
 
+    if (isGuideDashboard) return null;
+
   return (
     <header className="app-header">
       <div className="header-shell">
