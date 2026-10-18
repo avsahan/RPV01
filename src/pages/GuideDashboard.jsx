@@ -153,7 +153,7 @@ function GuideTripRow({ trip, completed, onMessage }) {
   );
 }
 
-function GuideDashboard() {
+function GuideDashboard({ currentUser }) {
   const [activeTab, setActiveTab] = useState('upcoming');
   const [selectedContactId, setSelectedContactId] = useState('emma');
   const [contacts, setContacts] = useState(initialContacts);
@@ -202,10 +202,13 @@ function GuideDashboard() {
               src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=180&q=85"
               alt=""
             />
-            <h2>Nuwan Jayawardena</h2>
-            <p>Local guide · Kandy</p>
+            <h2>{currentUser?.fullName || 'Local guide'}</h2>
+            <p>Local guide{currentUser?.baseLocation ? ` · ${currentUser.baseLocation}` : ''}</p>
             <div className="guide-sidebar__rating"><span>★</span> 4.9 <span>·</span> 28 reviews</div>
-            <span className="guide-verified"><span aria-hidden="true">✓</span> Approved guide</span>
+            <span className="guide-verified">
+              <span aria-hidden="true">✓</span>
+              {currentUser?.verificationStatus === 'approved' ? 'Approved guide' : 'Pending verification'}
+            </span>
           </div>
 
           <div className="guide-sidebar__availability">

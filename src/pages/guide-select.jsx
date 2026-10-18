@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { getGuides } from '../api/auth';
 import '../styles/GuideSelect.css';
 
-const guides = [
+const sampleGuides = [
   {
     name: 'Ishani Perera',
     location: 'Kandy, Sri Lanka',
@@ -86,17 +87,38 @@ function GuideProfileDialog({ guide, onClose, onRequest }) {
 }
 
 function GuideSelect({ tripDetails = {}, onBack }) {
+  const [guides, setGuides] = useState(sampleGuides);
   const [query, setQuery] = useState('');
   const [specialty, setSpecialty] = useState('all');
   const [selectedGuide, setSelectedGuide] = useState(null);
   const [notice, setNotice] = useState('');
+  const [isLoadingGuides, setIsLoadingGuides] = useState(true);
+  const [guideLoadError, setGuideLoadError] = useState('');
   const destination = tripDetails.destination?.trim() || 'Ella';
   const specialties = [...new Set(guides.map((guide) => guide.specialty))];
+
+  useEffect(() => {
+    let isMounted = true;
+    getGuides()
+      .then(({ guides: registeredGuides }) => {
+        if (isMounted) setGuides([...registeredGuides, ...sampleGuides]);
+      })
+      .catch((error) => {
+        if (isMounted) setGuideLoadError(error.message);
+      })
+      .finally(() => {
+        if (isMounted) setIsLoadingGuides(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const visibleGuides = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
     return guides.filter((guide) => {
-      const matchesQuery = `${guide.name} ${guide.location} ${guide.specialty}`.toLowerCase().includes(normalizedQuery);
+      const matchesQuery = `${guide.name} ${guide.location} ${guide.specialty} ${guide.description} ${(guide.languages || []).join(' ')}`.toLowerCase().includes(normalizedQuery);
       const matchesSpecialty = specialty === 'all' || guide.specialty === specialty;
       return matchesQuery && matchesSpecialty;
     });
@@ -149,19 +171,25 @@ function GuideSelect({ tripDetails = {}, onBack }) {
           </div>
 
           {notice && <p className="guide-notice" role="status">{notice}</p>}
+          {guideLoadError && <p className="guide-notice" role="status">Showing featured guides. Registered guides could not be loaded: {guideLoadError}</p>}
+          {isLoadingGuides && <p className="guide-notice" role="status">Loading registered guides…</p>}
 
           <div className="guide-grid">
             {visibleGuides.map((guide) => (
-              <article className="guide-card" key={guide.name}>
+              <article className="guide-card" key={guide.id || guide.name}>
                 <div className="guide-card__photo-wrap">
                   <img className="guide-card__photo" src={guide.image} alt={guide.name} loading="lazy" />
-                  <span className="guide-card__badge">Vetted local guide</span>
+                  <span className="guide-card__badge">
+                    {guide.verificationStatus === 'pending' ? 'Pending verification' : 'Vetted local guide'}
+                  </span>
                 </div>
                 <div className="guide-card__body">
                   <p className="guide-card__location"><span aria-hidden="true">●</span> {guide.location}</p>
                   <div className="guide-card__name-row">
                     <h3>{guide.name}</h3>
-                    <span className="guide-card__rating" aria-label={`${guide.rating} out of 5 stars`}>★ {guide.rating}</span>
+                    {guide.rating
+                      ? <span className="guide-card__rating" aria-label={`${guide.rating} out of 5 stars`}>★ {guide.rating}</span>
+                      : <span className="guide-card__rating">New</span>}
                   </div>
                   <p className="guide-card__specialty">{guide.specialty}</p>
                   <p className="guide-card__description">{guide.description}</p>
