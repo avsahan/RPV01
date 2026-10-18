@@ -1,9 +1,15 @@
 import "../styles/TraverHomePage.css"
-import Header from "../components/Header";
+import Header from "../components/Navbar";
 import Footer from "../components/Footer";
+import { useNavigate } from "react-router-dom";
 
 function TraverHomePage () {
-	
+	const navigate = useNavigate();
+
+	function navigateToPlanner() {
+		navigate("/Login/TravelHomePage/TraverPlannerPage");
+	}
+
     return (
         <>
             <Header />
@@ -35,7 +41,7 @@ function TraverHomePage () {
 					</div>
 
 					<div className="travel-planner__actions">
-						<button className="travel-planner__submit" type="submit">Start planning</button>
+						<button className="travel-planner__submit" onClick={navigateToPlanner}>Start planning</button>
 					</div>
 				</form>
 			</div>

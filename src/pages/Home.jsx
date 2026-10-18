@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import "../styles/Home.css"
-import Header from "../components/Header.jsx"
+import Header from "../components/Navbar.jsx"
 import Footer from "../components/Footer.jsx"
+import "../styles/Home.css"
 
 function Home() {
   return (

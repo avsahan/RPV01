@@ -6,6 +6,8 @@ import GuideSignup from './pages/GuideSignup.jsx'
 import TraverHomePage from "./pages/TraverHomePage.jsx";
 import TraverPlannerPage from "./pages/TraverPlannerPage.jsx";
 import GuiderSelection from "./pages/GuiderSelection.jsx";
+import TraverDashboard from "./pages/TraverDashboard.jsx";
+import GuideDashboard from "./pages/GuideDashboard.jsx";
 import './styles/App.css'
 
 function App() {
@@ -20,6 +22,8 @@ function App() {
           <Route path="/Login/TravelHomePage" element={<TraverHomePage />} />
           <Route path="/Login/TravelHomePage/TraverPlannerPage" element={<TraverPlannerPage />} />
           <Route path="/Login/TravelHomePage/TraverPlannerPage/GudiderSelection" element={<GuiderSelection />} />
+          <Route path="/Login/TraverDashboard" element={<TraverDashboard />} />
+          <Route path="/Login/GuideDashboard" element={<GuideDashboard />} />
         </Routes>
       </BrowserRouter>
     </>
