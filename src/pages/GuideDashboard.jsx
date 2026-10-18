@@ -133,34 +133,6 @@ const preferenceChips = ['Coastal escapes', 'Local food', 'Nature'];
 
 /* ---------- Small components ---------- */
 
-function Navbar() {
-  return (
-    <header className="rl-navbar">
-      <a className="rl-logo" href="/">
-        <span className="rl-logo__mark" aria-hidden="true">◎</span>
-        <span className="rl-logo__text">roam<strong>lanka</strong></span>
-      </a>
-
-      <nav className="rl-navbar__links" aria-label="Main">
-        <a href="/explore">Explore Sri Lanka</a>
-        <a href="/guides">Find a local guide</a>
-        <a className="is-active" href="/dashboard">My dashboard</a>
-      </nav>
-
-      <div className="rl-navbar__actions">
-        <button className="rl-icon-button" type="button" aria-label="Help">?</button>
-        <button className="rl-icon-button rl-icon-button--dot" type="button" aria-label="Notifications">🔔︎</button>
-        <span className="rl-navbar__divider" aria-hidden="true" />
-        <button className="rl-user-menu" type="button">
-          <span className="rl-avatar rl-avatar--sm">EW</span>
-          <span>Emma</span>
-          <span aria-hidden="true">⌄</span>
-        </button>
-      </div>
-    </header>
-  );
-}
-
 function ProfileCard({ profile, onChange, onSave, saved }) {
   const fields = [
     { key: 'name', label: 'Full name', type: 'text' },
@@ -312,7 +284,6 @@ function UpcomingTripCard({ trip, onMessage, onItinerary }) {
   );
 }
 
-<<<<<<< HEAD
 function CompletedTripCard({ trip, onView, onBookAgain }) {
   return (
     <article className="rl-trip-card rl-trip-card--completed">
@@ -355,10 +326,7 @@ function CompletedTripCard({ trip, onView, onBookAgain }) {
 
 /* ---------- Main component ---------- */
 
-function TravelerDashboard() {
-=======
-function GuideDashboard({ currentUser }) {
->>>>>>> 608859118ca8270630fd4df5ba0497f03dbbabfb
+function GuideDashboard() {
   const [activeTab, setActiveTab] = useState('upcoming');
   const [contacts, setContacts] = useState(initialContacts);
   const [selectedContactId, setSelectedContactId] = useState('nimal');
@@ -437,31 +405,8 @@ function GuideDashboard({ currentUser }) {
   };
 
   return (
-<<<<<<< HEAD
     <div className="rl-page">
       <div className="rl-shell">
-        <Navbar />
-=======
-    <main className="guide-dashboard">
-      <div className="guide-dashboard__layout">
-        <aside className="guide-sidebar" aria-label="Guide account">
-          <div className="guide-sidebar__profile">
-            <div className="guide-sidebar__cover" />
-            <img
-              className="guide-sidebar__photo"
-              src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=180&q=85"
-              alt=""
-            />
-            <h2>{currentUser?.fullName || 'Local guide'}</h2>
-            <p>Local guide{currentUser?.baseLocation ? ` · ${currentUser.baseLocation}` : ''}</p>
-            <div className="guide-sidebar__rating"><span>★</span> 4.9 <span>·</span> 28 reviews</div>
-            <span className="guide-verified">
-              <span aria-hidden="true">✓</span>
-              {currentUser?.verificationStatus === 'approved' ? 'Approved guide' : 'Pending verification'}
-            </span>
-          </div>
->>>>>>> 608859118ca8270630fd4df5ba0497f03dbbabfb
-
         <main className="rl-main">
           <section className="rl-hero">
             <div>
@@ -727,4 +672,4 @@ function GuideDashboard({ currentUser }) {
   );
 }
 
-export default TravelerDashboard;
+export default GuideDashboard;
