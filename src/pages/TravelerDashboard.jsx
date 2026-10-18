@@ -17,7 +17,7 @@ function ProfileCard({ profile, onChange, onSave, saved }) {
     { key: 'country', label: 'Country', type: 'select' },
     { key: 'email', label: 'Email address', type: 'email' },
     { key: 'phone', label: 'Phone number', type: 'tel' },
-    { key: 'passport', label: 'Passport number', type: 'text' },
+    // { key: 'passport', label: 'Passport number', type: 'text' },
   ];
 
   return (
@@ -33,7 +33,7 @@ function ProfileCard({ profile, onChange, onSave, saved }) {
             src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=85"
             alt={profile.name}
           />
-          <button className="rl-profile__camera" type="button" aria-label="Change photo">◉</button>
+          {/* <button className="rl-profile__camera" type="button" aria-label="Change photo"></button> */}
         </div>
         <h3>{profile.name}</h3>
         <p>Curious traveler · Member since 2025</p>
@@ -62,7 +62,7 @@ function ProfileCard({ profile, onChange, onSave, saved }) {
                     <option>Germany</option>
                     <option>India</option>
                   </select>
-                  <span className="rl-field__icon" aria-hidden="true">⌄</span>
+                  {/* <span className="rl-field__icon" aria-hidden="true">⌄</span> */}
                 </>
               ) : (
                 <>
@@ -81,26 +81,26 @@ function ProfileCard({ profile, onChange, onSave, saved }) {
         <div className="rl-prefs">
           <div className="rl-prefs__header">
             <strong>Travel preferences</strong>
-            <button className="rl-icon-button rl-icon-button--accent" type="button" aria-label="Edit preferences">✎</button>
+            <button className="rl-icon-button rl-icon-button--accent" type="button" aria-label="Edit preferences"></button>
           </div>
           <div className="rl-prefs__chips">
             {profile.travelInterests.map((chip) => (
               <span className="rl-chip" key={chip}>{chip}</span>
             ))}
           </div>
-          <p className="rl-prefs__text">
+          {/* <p className="rl-prefs__text">
             {profile.travelInterests.length
               ? profile.travelInterests.join(' · ')
               : 'No travel preferences added yet.'}
-          </p>
+          </p> */}
         </div>
 
         <button className="rl-button rl-button--primary rl-button--block" type="submit">
           {saved ? 'Changes saved ✓' : 'Save profile changes'}
         </button>
-        <p className="rl-profile__secure">
+        {/* <p className="rl-profile__secure">
           <span aria-hidden="true">⛨</span> Your personal details stay private and secure.
-        </p>
+        </p> */}
       </form>
     </aside>
   );
@@ -329,18 +329,18 @@ function TravelerDashboard({ currentUser, onPlanTrip }) {
             <div>
               <p className="rl-eyebrow rl-eyebrow--accent">Your Sri Lanka, your way</p>
               <h1>Welcome back, {currentUser?.fullName || 'traveler'}.</h1>
-              <p className="rl-hero__sub">
+              {/* <p className="rl-hero__sub">
                 A little planning. A lot to look forward to. Your next chapter starts here.
-              </p>
+              </p> */}
             </div>
             <div className="rl-hero__banner">
               <img
-                src="https://images.unsplash.com/photo-1588598198321-9735fd5c9e0b?auto=format&fit=crop&w=400&q=80"
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSG6UlIo022RZ9TYwvUSJ3qmwNo-t9ACtyZbLkONkpJ3g&s=10"
                 alt=""
               />
-              <span>
+              {/* <span>
                 <span aria-hidden="true">⌖</span> Slow days, south coast
-              </span>
+              </span> */}
             </div>
           </section>
 

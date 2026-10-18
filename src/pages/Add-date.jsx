@@ -9,10 +9,10 @@ const starterActivities = [
 
 const initialExpenses = [
   { name: 'Tour guide', detail: '1 day × LKR 12,000', amount: 12000, icon: '👤' },
-  { name: 'Hotel', detail: '2 nights × LKR 9,000', amount: 18000, icon: '🏨' },
-  { name: 'Travel vehicle', detail: '3 days × LKR 3,000', amount: 9000, icon: '🚗' },
+  // { name: 'Hotel', detail: '2 nights × LKR 9,000', amount: 18000, icon: '🏨' },
+  // { name: 'Travel vehicle', detail: '3 days × LKR 3,000', amount: 9000, icon: '🚗' },
   { name: 'Activities', detail: '3,000 + 2,000 + 1,000', amount: 6000, icon: '⛰️' },
-  { name: 'Meals', detail: '3 days × LKR 2,000', amount: 6000, icon: '🍽️' },
+  // { name: 'Meals', detail: '3 days × LKR 2,000', amount: 6000, icon: '🍽️' },
 ];
 
 function AddDate({ tripDetails = {}, onBack, onHome, onContinue, onSaveTrip }) {
@@ -203,8 +203,7 @@ function AddDate({ tripDetails = {}, onBack, onHome, onContinue, onSaveTrip }) {
         <aside className="itinerary-budget-sidebar">
           <div className="itinerary-budget-card">
             <div className="itinerary-budget-header">
-              <h3>🧮 Live Budget Calculator</h3>
-              <p>Whole trip · 3 days · 2 travelers</p>
+              <h3>Live Budget Calculator</h3>
             </div>
 
             <div className="itinerary-budget-input-group">

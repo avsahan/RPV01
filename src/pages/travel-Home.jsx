@@ -2,7 +2,7 @@ import { useState } from 'react';
 import '../styles/TravelHome.css';
 
 const TravelHome = ({ onStartTrip }) => {
-	const [inviteOpen, setInviteOpen] = useState(false);
+	const [inviteOpen] = useState(false);
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
@@ -25,19 +25,20 @@ const TravelHome = ({ onStartTrip }) => {
 									id="trip-destination"
 									name="destination"
 									type="text"
-									placeholder="e.g. Paris, Hawaii, Sri Lanka"
+									placeholder="e.g. Ella, Haputhale, Sri Lanka"
 									required
 								/>
 							</div>
 						</div>
 
 						<fieldset className="travel-planner__dates">
-							<legend>Dates (optional)</legend>
+								<legend>Start Dates (optional)</legend>
 							<label className="travel-planner__date-input">
 								<span className="travel-planner__calendar" aria-hidden="true">▦</span>
 								<span className="visually-hidden">Trip start date</span>
 								<input name="startDate" type="date" />
 							</label>
+							
 							<label className="travel-planner__date-input">
 								<span className="travel-planner__calendar" aria-hidden="true">▦</span>
 								<span className="visually-hidden">Trip end date</span>
@@ -48,7 +49,7 @@ const TravelHome = ({ onStartTrip }) => {
 
 					<div className="travel-planner__actions">
 						<div className="travel-planner__sharing">
-							<button
+							{/* <button
 								className="travel-planner__invite"
 								type="button"
 								aria-expanded={inviteOpen}
@@ -63,7 +64,7 @@ const TravelHome = ({ onStartTrip }) => {
 								<option value="friends">Friends</option>
 								<option value="private">Only me</option>
 								<option value="public">Everyone</option>
-							</select>
+							</select> */}
 						</div>
 
 						<button className="travel-planner__submit" type="submit">Start planning</button>
@@ -76,10 +77,6 @@ const TravelHome = ({ onStartTrip }) => {
 						</div>
 					)}
 				</form>
-
-				<p className="travel-planner__guide-copy">
-					Or <a href="#new-guide">write a new guide</a> to share your recommendations.
-				</p>
 			</div>
 		</section>
 	);

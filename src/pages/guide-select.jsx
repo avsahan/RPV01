@@ -31,14 +31,13 @@ function GuideProfileDialog({ guide, onClose, onRequest }) {
 
 function GuideSelect({ tripDetails = {}, onBack, onRequestGuide }) {
   const [guides, setGuides] = useState([]);
-  const [query, setQuery] = useState('');
-  const [specialty, setSpecialty] = useState('all');
+  const [query] = useState('');
+  const [specialty] = useState('all');
   const [selectedGuide, setSelectedGuide] = useState(null);
   const [notice, setNotice] = useState('');
   const [isLoadingGuides, setIsLoadingGuides] = useState(true);
   const [guideLoadError, setGuideLoadError] = useState('');
   const destination = tripDetails.destination?.trim() || 'Ella';
-  const specialties = [...new Set(guides.map((guide) => guide.specialty))];
 
   useEffect(() => {
     let isMounted = true;
@@ -90,7 +89,6 @@ function GuideSelect({ tripDetails = {}, onBack, onRequestGuide }) {
           <div>
             <p className="guide-eyebrow">Find your local expert</p>
             <h1>Make your {destination} escape unforgettable.</h1>
-            <p>Meet trusted local guides who can make every day feel like your own.</p>
           </div>
           <img
             className="guide-page__destination-image"
@@ -103,10 +101,9 @@ function GuideSelect({ tripDetails = {}, onBack, onRequestGuide }) {
           <div className="guide-results__heading">
             <div>
               <p className="guide-eyebrow">Curated for your trip</p>
-              <h2 id="guide-results-title">Guides near {destination}</h2>
             </div>
             <div className="guide-filters">
-              <label className="guide-search">
+              {/* <label className="guide-search">
                 <span aria-hidden="true">⌕</span>
                 <span className="visually-hidden">Search guides</span>
                 <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search guides or places" />
@@ -115,7 +112,7 @@ function GuideSelect({ tripDetails = {}, onBack, onRequestGuide }) {
               <select id="guide-specialty" value={specialty} onChange={(event) => setSpecialty(event.target.value)}>
                 <option value="all">All specialties</option>
                 {specialties.map((item) => <option key={item} value={item}>{item}</option>)}
-              </select>
+              </select> */}
             </div>
           </div>
 
@@ -128,17 +125,17 @@ function GuideSelect({ tripDetails = {}, onBack, onRequestGuide }) {
               <article className="guide-card" key={guide.id || guide.name}>
                 <div className="guide-card__photo-wrap">
                   <img className="guide-card__photo" src={guide.image} alt={guide.name} loading="lazy" />
-                  <span className="guide-card__badge">
+                  {/* <span className="guide-card__badge">
                     {guide.verificationStatus === 'pending' ? 'Pending verification' : 'Vetted local guide'}
-                  </span>
+                  </span> */}
                 </div>
                 <div className="guide-card__body">
                   <p className="guide-card__location"><span aria-hidden="true">●</span> {guide.location}</p>
                   <div className="guide-card__name-row">
                     <h3>{guide.name}</h3>
-                    {guide.rating
+                    {/* {guide.rating
                       ? <span className="guide-card__rating" aria-label={`${guide.rating} out of 5 stars`}>★ {guide.rating}</span>
-                      : <span className="guide-card__rating">New</span>}
+                      : <span className="guide-card__rating">New</span>} */}
                   </div>
                   <p className="guide-card__specialty">{guide.specialty}</p>
                   <p className="guide-card__description">{guide.description}</p>

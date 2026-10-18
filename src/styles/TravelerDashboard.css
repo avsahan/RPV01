@@ -36,7 +36,7 @@
 
 .traveler-eyebrow {
   margin: 0 0 7px;
-  color: #548278;
+  color: #0758a6;
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.11em;
@@ -45,7 +45,7 @@
 
 .traveler-welcome h1 {
   margin: 0;
-  color: #173a34;
+  color: #0758a6;
   font-size: clamp(1.8rem, 3vw, 2.45rem);
   line-height: 1.14;
   font-weight: 750;
@@ -86,7 +86,7 @@
 
 .traveler-profile strong,
 .traveler-guide-mini strong {
-  color: #283936;
+  color: #0758a6;
   font-size: 0.8rem;
 }
 
@@ -137,7 +137,7 @@
 }
 
 .traveler-summary__item strong {
-  color: #263a36;
+  color: #0758a6;
   font-size: 1.05rem;
 }
 
@@ -155,7 +155,7 @@
   padding: 0 16px;
   border: 0;
   border-radius: 6px;
-  background: #245e51;
+  background: #0758a6;
   color: #fff;
   font: inherit;
   font-size: 0.82rem;

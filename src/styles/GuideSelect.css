@@ -3,7 +3,7 @@
   padding: 28px clamp(18px, 4vw, 56px) 38px;
   box-sizing: border-box;
   background: #f7f9fc;
-  color: #172a3d;
+  color: #0758a6;
 }
 
 .guide-page__container {
@@ -23,7 +23,7 @@
   padding: 8px 0;
   border: 0;
   background: transparent;
-  color: #07558e;
+  color: #0758a6;
   font: inherit;
   font-size: 0.86rem;
   font-weight: 700;
@@ -31,12 +31,12 @@
 }
 
 .guide-back:hover {
-  color: #043f6d;
+  color: #0758a6;
   text-decoration: underline;
 }
 
 .guide-trip-label {
-  color: #63778c;
+  color:#0758a6;
   font-size: 0.82rem;
   font-weight: 650;
 }
@@ -51,7 +51,7 @@
 
 .guide-eyebrow {
   margin: 0 0 7px;
-  color: #17699e;
+  color: #0758a6;
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -61,7 +61,7 @@
 .guide-page__heading h1 {
   max-width: 760px;
   margin: 0;
-  color: #102c47;
+  color: #0758a6;
   font-size: clamp(1.8rem, 3.2vw, 2.5rem);
   line-height: 1.14;
   font-weight: 800;
@@ -145,8 +145,8 @@
 
 .guide-search:focus-within,
 .guide-filters select:focus-visible {
-  border-color: #2679b6;
-  outline: 3px solid rgba(38, 121, 182, 0.14);
+  border-color: #0758a6;
+  outline: 3px solid rgba(7, 88, 166, 0.14);
 }
 
 .guide-filters select {
@@ -215,7 +215,7 @@
 }
 
 .guide-card__location span {
-  color: #1673b5;
+  color: #0758a6;
   font-size: 0.56rem;
 }
 
@@ -242,12 +242,12 @@
 }
 
 .guide-card__rating::first-letter {
-  color: #1673b5;
+  color: #0758a6;
 }
 
 .guide-card__specialty {
   margin: 4px 0 6px;
-  color: #17699e;
+  color: #0758a6;
   font-size: 0.69rem;
   font-weight: 700;
 }
@@ -294,7 +294,7 @@
   border: 1px solid #b7d1e4;
   border-radius: 6px;
   background: #fff;
-  color: #07558e;
+  color: #0758a6;
   font: inherit;
   font-size: 0.68rem;
   font-weight: 700;
@@ -311,20 +311,20 @@
 }
 
 .guide-button--primary {
-  border-color: #0872ba;
-  background: #0872ba;
+  border-color: #0758a6;
+  background: #0758a6;
   color: #fff;
 }
 
 .guide-button--primary:hover {
-  border-color: #075b96;
-  background: #075b96;
+  border-color: #043f6d;
+  background: #043f6d;
 }
 
 .guide-button:focus-visible,
 .guide-back:focus-visible,
 .guide-dialog__close:focus-visible {
-  outline: 3px solid rgba(38, 121, 182, 0.28);
+  outline: 3px solid rgba(7, 88, 166, 0.28);
   outline-offset: 2px;
 }
 

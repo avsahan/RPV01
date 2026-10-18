@@ -283,7 +283,7 @@ function App() {
           <Permission onCancel={() => setActivePage('landing')} />
         )}
       </main>
-      <Footer />
+      {activePage === 'landing' && <Footer />}
     </div>
   );
 }

@@ -1,4 +1,8 @@
+
 .itinerary-page {
+  --itinerary-primary: #0758a6;
+  --itinerary-primary-hover: #043f7a;
+
   background-color: #f7f6f2;
   color: #1a1a1a;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -6,7 +10,6 @@
   padding: 24px 40px 100px 40px;
   box-sizing: border-box;
 }
-
 
 .itinerary-trip-header {
   background: #ffffff;
@@ -23,7 +26,7 @@
 .itinerary-header-left h1 {
   font-size: 32px;
   font-weight: 800;
-  color: #1b3b32;
+  color: var(--itinerary-primary);
   margin: 0 0 12px 0;
 }
 
@@ -41,9 +44,8 @@
   height: 140px;
   object-fit: cover;
   border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
 
 .itinerary-layout {
   display: grid;
@@ -51,7 +53,6 @@
   gap: 30px;
   align-items: start;
 }
-
 
 .itinerary-schedule {
   background: transparent;
@@ -72,20 +73,19 @@
 }
 
 .itinerary-button--primary {
-  background-color: #1b3b32;
+  background-color: var(--itinerary-primary);
   color: white;
   border: none;
   padding: 10px 18px;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background-color 0.2s;
 }
 
 .itinerary-button--primary:hover {
-  background-color: #275246;
+  background-color: var(--itinerary-primary-hover);
 }
-
 
 .itinerary-day-tabs {
   display: grid;
@@ -108,10 +108,10 @@
 }
 
 .itinerary-day-tab.is-active {
-  background: #1b3b32;
+  background: var(--itinerary-primary);
   color: #ffffff;
-  border-color: #1b3b32;
-  box-shadow: 0 4px 12px rgba(27, 59, 50, 0.2);
+  border-color: var(--itinerary-primary);
+  box-shadow: 0 4px 12px rgba(7, 88, 166, 0.2);
 }
 
 .itinerary-day-label {
@@ -123,7 +123,7 @@
 }
 
 .itinerary-day-tab.is-active .itinerary-day-label {
-  color: #a3e6d5;
+  color: #c6e2ff;
 }
 
 .itinerary-day-date {
@@ -144,7 +144,6 @@
 .itinerary-day-tab.is-active .itinerary-day-cost {
   color: #e2e8f0;
 }
-
 
 .itinerary-section-subheading {
   display: flex;
@@ -187,16 +186,15 @@
   border-bottom: 1px solid #e2e8f0;
   padding: 12px;
   font-weight: 600;
-  color: #1b3b32;
+  color: var(--itinerary-primary);
   cursor: pointer;
   text-align: center;
-  transition: background 0.2s;
+  transition: background-color 0.2s;
 }
 
 .itinerary-add-day-btn:hover {
   background: #f1f5f9;
 }
-
 
 .itinerary-activity-list {
   display: flex;
@@ -295,7 +293,6 @@
   border-radius: 4px;
 }
 
-
 .itinerary-day-subtotal-box {
   background: #ffffff;
   border: 1px solid #e2e8f0;
@@ -324,9 +321,8 @@
 .itinerary-subtotal-amount {
   font-size: 18px;
   font-weight: 800;
-  color: #1b3b32;
+  color: var(--itinerary-primary);
 }
-
 
 .itinerary-budget-sidebar {
   position: sticky;
@@ -407,13 +403,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s;
+  transition: background-color 0.2s;
 }
 
 .btn-step:hover {
   background: #cbd5e1;
 }
-
 
 .itinerary-budget-progress-block {
   margin-bottom: 24px;
@@ -444,7 +439,7 @@
 }
 
 .itinerary-progress-fill {
-  background: #1b3b32;
+  background: var(--itinerary-primary);
   height: 100%;
   border-radius: 4px;
   transition: width 0.3s ease;
@@ -461,10 +456,9 @@
 }
 
 .itinerary-spare-text strong {
-  color: #1b3b32;
+  color: var(--itinerary-primary);
   font-weight: 700;
 }
-
 
 .itinerary-expenses-list h5 {
   font-size: 11px;
@@ -518,9 +512,8 @@
   color: #1a1a1a;
 }
 
-
 .itinerary-total-footer-card {
-  background: #1b3b32;
+  background: var(--itinerary-primary);
   color: #ffffff;
   border-radius: 12px;
   padding: 16px 20px;
@@ -553,9 +546,8 @@
   display: flex;
   justify-content: space-between;
   font-size: 11px;
-  color: #94a3b8;
+  color: #d5e5f5;
 }
-
 
 .itinerary-bottom-bar {
   position: fixed;
@@ -582,11 +574,11 @@
 }
 
 .itinerary-btn-quiet:hover {
-  color: #1a1a1a;
+  color: var(--itinerary-primary);
 }
 
 .itinerary-btn-primary {
-  background-color: #1b3b32;
+  background-color: var(--itinerary-primary);
   color: #ffffff;
   border: none;
   padding: 12px 24px;
@@ -594,11 +586,11 @@
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background-color 0.2s;
 }
 
 .itinerary-btn-primary:hover {
-  background-color: #275246;
+  background-color: var(--itinerary-primary-hover);
 }
 
 .itinerary-page > .itinerary-btn-quiet {
@@ -637,6 +629,12 @@
   font-size: 13px;
 }
 
+.itinerary-add-activity-form input:focus,
+.itinerary-add-activity-form textarea:focus {
+  border-color: var(--itinerary-primary);
+  outline: 2px solid rgba(7, 88, 166, 0.14);
+}
+
 .itinerary-add-activity-form__wide,
 .itinerary-add-activity-form__actions {
   grid-column: 1 / -1;
@@ -649,7 +647,72 @@
   padding-top: 2px;
 }
 
+@media (max-width: 900px) {
+  .itinerary-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .itinerary-budget-sidebar {
+    position: static;
+  }
+
+  .itinerary-trip-header__image {
+    width: 220px;
+  }
+}
+
 @media (max-width: 560px) {
+  .itinerary-page {
+    padding: 18px 14px 100px;
+  }
+
+  .itinerary-trip-header {
+    padding: 20px;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .itinerary-trip-header__image {
+    width: 100%;
+    height: 150px;
+  }
+
+  .itinerary-header-left h1 {
+    font-size: 26px;
+  }
+
+  .itinerary-trip-header__meta {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .itinerary-day-tabs {
+    grid-template-columns: 1fr;
+  }
+
+  .itinerary-activity-card {
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .itinerary-activity-time {
+    min-width: 60px;
+  }
+
+  .itinerary-activity-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .itinerary-bottom-bar {
+    padding: 12px 14px;
+  }
+
+  .itinerary-btn-primary {
+    padding: 11px 16px;
+  }
+
   .itinerary-add-activity-form {
     grid-template-columns: minmax(0, 1fr);
   }
