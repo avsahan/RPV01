@@ -1,363 +1,367 @@
 import { useState } from 'react';
 import '../styles/GuideDashboard.css';
+import GuideHeader from '../components/GuideHeader';
 
-const guideTrips = [
-  {
-    id: 'GT-2081',
-    traveler: 'Emma Wilson',
-    initials: 'EW',
-    destination: 'Kandy Heritage & Lake Walks',
-    location: 'Kandy, Central Province',
-    date: '18 Oct 2026',
-    time: '9:00 AM - 1:00 PM',
-    travelers: '2 travelers',
-    amount: 'LKR 12,000',
-    status: 'Confirmed',
-    image: 'https://images.unsplash.com/photo-1588598198321-9735fd5c9e0b?auto=format&fit=crop&w=500&q=80',
-  },
-  {
-    id: 'GT-2088',
-    traveler: 'Oliver Chen',
-    initials: 'OC',
-    destination: 'Temple, Market & Local Flavors',
-    location: 'Kandy, Central Province',
-    date: '20 Oct 2026',
-    time: '10:30 AM - 2:30 PM',
-    travelers: '3 travelers',
-    amount: 'LKR 15,500',
-    status: 'Awaiting response',
-    image: 'https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=500&q=80',
-  },
-];
+const guide = {
+  name: 'Nuwan Jayawardena',
+  initials: 'NJ',
+  title: 'Hiking & Tea Country Specialist • Ella & Central Highlands',
+  bio: 'I help travelers discover Sri Lanka at a gentler pace — from hidden tea trails to local flavors and unforgettable hill-country views.',
+  photo: '/image/guide-nuwan.png',
+  dailyFee: 12000,
+  baseLocation: 'Ella, Sri Lanka',
+  experience: '8+ Years',
+  phone: '+94 77 123 4567',
+  license: 'SLTDA/G/8942',
+};
 
-const completedTrips = [
+const initialRequests = [
   {
-    id: 'GT-1942',
-    traveler: 'Maya Thompson',
-    initials: 'MT',
-    destination: 'Tea Country & Scenic Train',
-    location: 'Nuwara Eliya, Central Province',
-    date: '12 Oct 2026',
-    time: 'Full day · 8 hours',
-    travelers: '2 travelers',
-    amount: 'LKR 24,000',
-    status: 'Completed',
-    image: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=500&q=80',
-    rating: '5.0',
+    id: 'BKG-1001',
+    title: 'Ella Rock Sunrise Hike',
+    location: 'Ella, Sri Lanka',
+    traveler: 'Liam Chen',
+    budget: 10000,
+    date: 'Nov 10, 2026',
+    dateLong: 'Tue, Nov 10, 2026',
+    travelers: 1,
+    duration: '6 hours',
+    message: 'Looking for a sunrise hike up Ella Rock.',
+    status: 'declined',
+    image: '.image/ella-rock.jpeg',
   },
   {
-    id: 'GT-1896',
-    traveler: 'Daniel Park',
-    initials: 'DP',
-    destination: 'Kandy Old Town & Lake',
-    location: 'Kandy, Central Province',
-    date: '08 Oct 2026',
-    time: 'Half day · 4 hours',
-    travelers: '4 travelers',
-    amount: 'LKR 18,000',
-    status: 'Completed',
-    image: 'https://images.unsplash.com/photo-1562602833-0f4ab2fc46e3?auto=format&fit=crop&w=500&q=80',
-    rating: '4.9',
-  },
-];
-
-const initialContacts = [
-  {
-    id: 'emma',
-    name: 'Emma Wilson',
-    initials: 'EW',
-    trip: 'Kandy Heritage Walk',
-    time: '2 min ago',
-    unread: 2,
-    messages: [
-      { from: 'traveler', text: 'Hi Nuwan! We are looking forward to the walk tomorrow.', time: '10:42 AM' },
-      { from: 'guide', text: 'Hello Emma, I’m looking forward to meeting you both. We’ll start by the lake entrance.', time: '10:46 AM' },
-      { from: 'traveler', text: 'Perfect. Is there anything we should bring?', time: '10:51 AM' },
-    ],
+    id: 'BKG-1002',
+    title: 'A Gentle Day in Ella & Tea Plantations',
+    location: 'Ella, Sri Lanka',
+    traveler: 'Alex Morgan',
+    travelerNote: 'First-time visitor',
+    budget: 12000,
+    date: 'Nov 12, 2026',
+    dateLong: 'Thu, Nov 12, 2026',
+    travelers: 2,
+    duration: '1 Full Day (8 Hours)',
+    message:
+      'Hi Nuwan! We are looking for a gentle hike through the tea fields (Little Adam’s Peak), local tea tasting, and visit to Nine Arch Bridge. We want to take it slow and enjoy local cuisine.',
+    status: 'pending',
+    image: '/image/ella_tea.jpeg',
   },
   {
-    id: 'oliver',
-    name: 'Oliver Chen',
-    initials: 'OC',
-    trip: 'Temple & Market Tour',
-    time: 'Yesterday',
-    unread: 0,
-    messages: [
-      { from: 'traveler', text: 'Could we start the tour a little later on Monday?', time: 'Yesterday' },
-      { from: 'guide', text: 'Of course. What time works best for your group?', time: 'Yesterday' },
-    ],
+    id: 'BKG-1003',
+    title: 'Early Morning Sigiriya & Pidurangala Climb',
+    location: 'Sigiriya, Sri Lanka',
+    traveler: 'Sarah & Daniel',
+    budget: 15000,
+    date: 'Nov 15, 2026',
+    dateLong: 'Sun, Nov 15, 2026',
+    travelers: 2,
+    duration: 'Sunrise Tour (6 Hours)',
+    message:
+      'Looking for an experienced local guide for sunrise hike up Pidurangala followed by Sigiriya Fortress history tour. Need transportation guidance from Dambulla.',
+    status: 'pending',
+    image: '/image/sigiriya.jpeg',
   },
   {
-    id: 'maya',
-    name: 'Maya Thompson',
-    initials: 'MT',
-    trip: 'Tea Country & Scenic Train',
-    time: 'Mon',
-    unread: 0,
-    messages: [
-      { from: 'traveler', text: 'Thank you for a wonderful day in the hills!', time: 'Monday' },
-      { from: 'guide', text: 'It was a pleasure showing you around. Safe travels!', time: 'Monday' },
+    id: 'BKG-1004',
+    title: 'Kandy Heritage & Lake Walk',
+    location: 'Kandy, Sri Lanka',
+    traveler: 'Emma & James Wilson',
+    travelerNote: 'United Kingdom · 2 adults',
+    travelerAbout: 'Interested in culture, local food, and gentle walks. This is their first visit to Kandy.',
+    budget: 12000,
+    date: 'Nov 20, 2026',
+    dateLong: 'Fri, Nov 20, 2026',
+    travelers: 2,
+    duration: '1 Full Day (8 Hours)',
+    message: 'Looking forward to meeting you! Is the hotel entrance the best place to meet?',
+    status: 'accepted',
+    image: '/image/kandy.jpeg',
+    itinerary: [
+      { time: '08:30', title: 'Welcome & lakeside walk', text: 'Meet Emma and James, then take a relaxed walk around Kandy Lake.' },
+      { time: '10:00', title: 'Temple of the Sacred Tooth Relic', text: 'Discover the temple’s history and local traditions. Modest clothing required.' },
+      { time: '12:30', title: 'Local lunch & market visit', text: 'Explore Sri Lankan flavors and browse the city’s colorful market.' },
+      { time: '14:30', title: 'Royal Botanical Gardens', text: 'Easy afternoon visit in Peradeniya, return to Kandy by 4:30 PM.' },
     ],
   },
 ];
 
-const guideTabs = [
-  { id: 'upcoming', label: 'Upcoming trips', count: '2' },
-  { id: 'completed', label: 'Past completed', count: '12' },
-  { id: 'chat', label: 'Live guide chat', count: '2' },
-];
+const statusLabels = {
+  pending: 'Pending decision',
+  accepted: 'Confirmed',
+  declined: 'Declined',
+};
 
-function GuideTripRow({ trip, completed, onMessage }) {
+const formatMoney = (amount) => `LKR ${amount.toLocaleString('en-US')}`;
+
+function GuideStatus({ status }) {
   return (
-    <article className="guide-trip-row">
-      <img className="guide-trip-row__image" src={trip.image} alt="" />
-      <div className="guide-trip-row__details">
-        <div className="guide-trip-row__eyebrow">
-          <span className="guide-trip-row__id">{trip.id}</span>
-          <span className={`guide-trip-status${completed ? ' guide-trip-status--complete' : trip.status === 'Confirmed' ? ' guide-trip-status--confirmed' : ' guide-trip-status--pending'}`}>
-            <span aria-hidden="true" />{trip.status}
-          </span>
-        </div>
-        <h3>{trip.destination}</h3>
-        <p className="guide-trip-row__location">{trip.location}</p>
-        <div className="guide-trip-row__facts">
-          <span><span aria-hidden="true">▦</span>{trip.date}</span>
-          <span><span aria-hidden="true">◷</span>{trip.time}</span>
-          <span><span aria-hidden="true">♧</span>{trip.travelers}</span>
-        </div>
-      </div>
-      <div className="guide-trip-row__traveler">
-        <span className="guide-avatar-initials">{trip.initials}</span>
-        <div><span>Traveler</span><strong>{trip.traveler}</strong></div>
-      </div>
-      <div className="guide-trip-row__amount">
-        <span>{completed ? 'Earned' : 'Trip total'}</span>
-        <strong>{trip.amount}</strong>
-        {completed && <span className="guide-trip-row__rating">★ {trip.rating} review</span>}
-      </div>
-      <div className="guide-trip-row__actions">
-        {completed ? (
-          <span className="guide-completed-label">Trip complete</span>
-        ) : (
-          <>
-            <button className="guide-quiet-button" type="button" onClick={() => onMessage(trip)}>
-              Message
-            </button>
-            <button className="guide-primary-button" type="button" onClick={() => onMessage(trip)}>
-              View details
-            </button>
-          </>
-        )}
-      </div>
-    </article>
+    <span className={`gd-status gd-status--${status}`}>
+      <span aria-hidden="true" /> {statusLabels[status]}
+    </span>
   );
 }
 
 function GuideDashboard() {
-  const [activeTab, setActiveTab] = useState('upcoming');
-  const [selectedContactId, setSelectedContactId] = useState('emma');
-  const [contacts, setContacts] = useState(initialContacts);
-  const [draft, setDraft] = useState('');
-  const [contactQuery, setContactQuery] = useState('');
-  const [isAvailable, setIsAvailable] = useState(true);
-  const [notice, setNotice] = useState('');
+  const [requests, setRequests] = useState(initialRequests);
+  const [activeTab, setActiveTab] = useState('pending');
+  const [counterId, setCounterId] = useState(null);
+  const [counterValue, setCounterValue] = useState('');
+  const [messagedIds, setMessagedIds] = useState([]);
 
-  const selectedContact = contacts.find((contact) => contact.id === selectedContactId) || contacts[0];
-  const visibleContacts = contacts.filter((contact) =>
-    `${contact.name} ${contact.trip}`.toLowerCase().includes(contactQuery.trim().toLowerCase()),
-  );
+  const pending = requests.filter((request) => request.status === 'pending');
+  const accepted = requests.filter((request) => request.status === 'accepted');
 
-  const openChat = (trip) => {
-    const contact = contacts.find((item) => item.name === trip.traveler);
-    if (contact) {
-      setSelectedContactId(contact.id);
-    } else {
-      setNotice(`A conversation with ${trip.traveler} will appear here when they message you.`);
-      window.setTimeout(() => setNotice(''), 3500);
-    }
-    setActiveTab('chat');
+  const tabs = [
+    { id: 'pending', label: 'Pending Requests', icon: '◷', count: pending.length },
+    { id: 'accepted', label: 'Accepted Trips', icon: '✓', count: accepted.length },
+    { id: 'all', label: 'All Requests', icon: '≡', count: requests.length },
+  ];
+
+  const updateStatus = (id, status) => {
+    setRequests((current) => current.map((request) => (request.id === id ? { ...request, status } : request)));
+    setCounterId(null);
   };
 
-  const sendMessage = (event) => {
-    event.preventDefault();
-    const message = draft.trim();
-    if (!message) return;
+  const sendCounter = (id) => {
+    const amount = Number(counterValue);
+    if (!amount || amount <= 0) return;
+    setRequests((current) => current.map((request) => (request.id === id ? { ...request, budget: amount } : request)));
+    setCounterId(null);
+    setCounterValue('');
+  };
 
-    setContacts((currentContacts) => currentContacts.map((contact) => (
-      contact.id === selectedContactId
-        ? { ...contact, messages: [...contact.messages, { from: 'guide', text: message, time: 'Now' }], time: 'Now' }
-        : contact
-    )));
-    setDraft('');
+  const openCounter = (id) => {
+    setCounterId(id);
+    setCounterValue('');
+  };
+
+  const messageTraveler = (id) => {
+    setMessagedIds((current) => (current.includes(id) ? current : [...current, id]));
   };
 
   return (
-    <main className="guide-dashboard">
-      <div className="guide-dashboard__layout">
-        <aside className="guide-sidebar" aria-label="Guide account">
-          <div className="guide-sidebar__profile">
-            <div className="guide-sidebar__cover" />
-            <img
-              className="guide-sidebar__photo"
-              src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=180&q=85"
-              alt=""
-            />
-            <h2>Nuwan Jayawardena</h2>
-            <p>Local guide · Kandy</p>
-            <div className="guide-sidebar__rating"><span>★</span> 4.9 <span>·</span> 28 reviews</div>
-            <span className="guide-verified"><span aria-hidden="true">✓</span> Approved guide</span>
-          </div>
-
-          <div className="guide-sidebar__availability">
-            <div><strong>Availability</strong><span>{isAvailable ? 'Accepting new trips' : 'Not accepting trips'}</span></div>
-            <button
-              className={`guide-toggle${isAvailable ? ' is-on' : ''}`}
-              type="button"
-              role="switch"
-              aria-checked={isAvailable}
-              aria-label="Toggle guide availability"
-              onClick={() => setIsAvailable((available) => !available)}
-            ><span /></button>
-          </div>
-
-          <div className="guide-sidebar__up-next">
-            <p className="guide-sidebar__label">Next trip</p>
-            <div className="guide-sidebar__next-date"><strong>18</strong><span>OCT<br />SUN</span></div>
-            <strong className="guide-sidebar__next-title">Kandy Heritage Walk</strong>
-            <span className="guide-sidebar__next-time">9:00 AM · Emma Wilson</span>
-            <button type="button" onClick={() => setActiveTab('upcoming')}>See trip details <span aria-hidden="true">→</span></button>
-          </div>
-
-          <div className="guide-sidebar__help">
-            <span aria-hidden="true">?</span>
-            <div><strong>Need a hand?</strong><p>Our guide support team is here for you.</p></div>
-          </div>
-        </aside>
-
-        <section className="guide-workspace">
-          <header className="guide-welcome">
-            <div>
-              <p className="guide-eyebrow">Guide workspace</p>
-              <h1>Welcome back, Nuwan<span>.</span></h1>
-              <p>Keep your trips, travelers, and conversations moving.</p>
+    <>
+      <GuideHeader />
+      <main className="gd-dashboard">
+        <div className="gd-dashboard__inner">
+          <section className="gd-profile" aria-label="Guide profile">
+            <div className="gd-profile__top">
+              <img className="gd-profile__photo" src={guide.photo} alt={guide.name} />
+              <div className="gd-profile__info">
+                <h1>
+                  {guide.name}
+                  <span className="gd-verified"><span aria-hidden="true">✓</span> Verified Guide</span>
+                </h1>
+                <p className="gd-profile__title">{guide.title}</p>
+                <p className="gd-profile__bio">{guide.bio}</p>
+              </div>
+              <div className="gd-fee">
+                <span>Standard Daily Fee</span>
+                <p><strong>{formatMoney(guide.dailyFee)}</strong> / day</p>
+                <small><span aria-hidden="true" /> Available for Instant Booking</small>
+              </div>
             </div>
-            <div className="guide-welcome__destination">
-              <img src="https://images.unsplash.com/photo-1588598198321-9735fd5c9e0b?auto=format&fit=crop&w=280&q=80" alt="Kandy lake and temple" />
-              <span><strong>Kandy, Sri Lanka</strong><small>Your home base</small></span>
+            <div className="gd-profile__bottom">
+              <div className="gd-detail"><span>Base location</span><strong>{guide.baseLocation}</strong></div>
+              <div className="gd-detail"><span>Experience</span><strong>{guide.experience}</strong></div>
+              <div className="gd-detail"><span>Contact phone</span><strong>{guide.phone}</strong></div>
+              <div className="gd-detail"><span>License no.</span><strong>{guide.license}</strong></div>
+              <button className="gd-button" type="button"><span aria-hidden="true">✎</span> Edit Profile &amp; Details</button>
             </div>
-          </header>
-
-          <section className="guide-metrics" aria-label="Guide performance">
-            <div><span className="guide-metric__icon guide-metric__icon--teal" aria-hidden="true">↗</span><span>This month<strong>LKR 84,500</strong></span><small>+12% vs last month</small></div>
-            <div><span className="guide-metric__icon guide-metric__icon--gold" aria-hidden="true">★</span><span>Average rating<strong>4.9 / 5.0</strong></span><small>From 28 reviews</small></div>
-            <div><span className="guide-metric__icon guide-metric__icon--blue" aria-hidden="true">♧</span><span>Trips completed<strong>12 trips</strong></span><small>Since joining</small></div>
           </section>
 
-          <div className="guide-tabs" role="tablist" aria-label="Guide dashboard views">
-            {guideTabs.map((tab) => (
+          <div className="gd-tabs" role="tablist" aria-label="Guide dashboard sections">
+            {tabs.map((tab) => (
               <button
-                className={`guide-tab${activeTab === tab.id ? ' is-active' : ''}`}
-                id={`guide-tab-${tab.id}`}
                 key={tab.id}
+                id={`gd-tab-${tab.id}`}
+                className={`gd-tab${activeTab === tab.id ? ' is-active' : ''}`}
                 type="button"
                 role="tab"
                 aria-selected={activeTab === tab.id}
-                aria-controls={`guide-panel-${tab.id}`}
-                onClick={() => setActiveTab(tab.id)}
+                aria-controls={`gd-panel-${tab.id}`}
+                onClick={() => {
+                  setActiveTab(tab.id);
+                  setCounterId(null);
+                }}
               >
+                <span aria-hidden="true">{tab.icon}</span>
                 {tab.label}
-                <span className="guide-tab__count">{tab.count}</span>
+                <span className="gd-tab__count">{tab.count}</span>
               </button>
             ))}
           </div>
 
-          {activeTab === 'upcoming' && (
-            <section className="guide-panel" id="guide-panel-upcoming" role="tabpanel" aria-labelledby="guide-tab-upcoming">
-              <div className="guide-panel__heading">
-                <div><p className="guide-eyebrow">The next chapter</p><h2>Upcoming trips</h2></div>
-                <button className="guide-filter-button" type="button" onClick={() => setNotice('Showing all upcoming trips.')}>All trips <span aria-hidden="true">⌄</span></button>
-              </div>
-              {notice && <p className="guide-notice" role="status">{notice}</p>}
-              <div className="guide-trip-list">
-                {guideTrips.map((trip) => <GuideTripRow key={trip.id} trip={trip} onMessage={openChat} />)}
-              </div>
-              <div className="guide-tip"><span aria-hidden="true">✦</span><p><strong>A little preparation goes a long way.</strong> Send your travelers a quick note before the trip to make meeting up easy.</p><button type="button" onClick={() => setActiveTab('chat')}>Open messages <span aria-hidden="true">→</span></button></div>
-            </section>
-          )}
-
-          {activeTab === 'completed' && (
-            <section className="guide-panel" id="guide-panel-completed" role="tabpanel" aria-labelledby="guide-tab-completed">
-              <div className="guide-panel__heading">
-                <div><p className="guide-eyebrow">Good memories, well earned</p><h2>Past completed trips</h2></div>
-                <span className="guide-completed-total">12 completed</span>
-              </div>
-              <div className="guide-trip-list">
-                {completedTrips.map((trip) => <GuideTripRow key={trip.id} trip={trip} completed onMessage={openChat} />)}
-              </div>
-              <p className="guide-history-note">Your trip history and traveler reviews are kept here for easy reference.</p>
-            </section>
-          )}
-
-          {activeTab === 'chat' && (
-            <section className="guide-panel guide-chat-panel" id="guide-panel-chat" role="tabpanel" aria-labelledby="guide-tab-chat">
-              <div className="guide-panel__heading guide-chat-heading">
-                <div><p className="guide-eyebrow">Keep the conversation going</p><h2>Live guide chat</h2></div>
-                <label className="guide-chat-search">
-                  <span aria-hidden="true">⌕</span>
-                  <span className="guide-visually-hidden">Search conversations</span>
-                  <input value={contactQuery} onChange={(event) => setContactQuery(event.target.value)} placeholder="Search conversations" />
-                </label>
-              </div>
-              {notice && <p className="guide-notice" role="status">{notice}</p>}
-              <div className="guide-chat">
-                <div className="guide-chat__contacts" aria-label="Conversations">
-                  {visibleContacts.map((contact) => (
-                    <button
-                      className={`guide-contact${selectedContactId === contact.id ? ' is-active' : ''}`}
-                      key={contact.id}
-                      type="button"
-                      aria-pressed={selectedContactId === contact.id}
-                      onClick={() => setSelectedContactId(contact.id)}
-                    >
-                      <span className="guide-avatar-initials">{contact.initials}</span>
-                      <span className="guide-contact__text"><strong>{contact.name}</strong><small>{contact.trip}</small><span>{contact.messages.at(-1)?.text}</span></span>
-                      <span className="guide-contact__meta"><small>{contact.time}</small>{contact.unread > 0 && <b>{contact.unread}</b>}</span>
-                    </button>
-                  ))}
-                  {visibleContacts.length === 0 && <p className="guide-chat__empty">No conversations found.</p>}
-                </div>
-
-                <div className="guide-conversation">
-                  <div className="guide-conversation__header">
-                    <span className="guide-avatar-initials">{selectedContact.initials}</span>
-                    <div><strong>{selectedContact.name}</strong><span>{selectedContact.trip}</span></div>
-                    <span className="guide-conversation__online"><span /> Trip confirmed</span>
-                  </div>
-                  <div className="guide-conversation__messages" aria-live="polite">
-                    <p className="guide-chat-date">Today</p>
-                    {selectedContact.messages.map((message, index) => (
-                      <div className={`guide-message guide-message--${message.from}`} key={`${selectedContact.id}-${index}`}>
-                        <p>{message.text}</p><time>{message.time}</time>
+          {activeTab === 'pending' && (
+            <section className="gd-panel" id="gd-panel-pending" role="tabpanel" aria-labelledby="gd-tab-pending">
+              {pending.length === 0 && <p className="gd-empty">No pending requests right now.</p>}
+              <div className="gd-request-list">
+                {pending.map((request) => (
+                  <article className="gd-request" key={request.id}>
+                    <div className="gd-request__media">
+                    <img src={request.image} alt={request.title} />
+                    <span className="gd-chip">{request.location}</span>
+                    </div>
+                    <div className="gd-request__body">
+                      <div className="gd-request__top">
+                        <div>
+                          <h3>{request.title}</h3>
+                          <p className="gd-muted">
+                            Requested by {request.traveler}
+                            {request.travelerNote ? ` · ${request.travelerNote}` : ''}
+                          </p>
+                        </div>
+                       <div className="gd-budget">
+                          <span>Offered budget</span>
+                          <strong>{formatMoney(request.budget)}</strong>
+                        </div>
                       </div>
-                    ))}
-                  </div>
-                  <form className="guide-message-form" onSubmit={sendMessage}>
-                    <input
-                      value={draft}
-                      onChange={(event) => setDraft(event.target.value)}
-                      placeholder={`Message ${selectedContact.name.split(' ')[0]}...`}
-                      aria-label={`Message ${selectedContact.name}`}
-                    />
-                    <button type="submit" aria-label="Send message" disabled={!draft.trim()}><span aria-hidden="true">↑</span></button>
-                  </form>
-                  <p className="guide-chat-safety">Keep your trip details and payments on VentureVista.</p>
-                </div>
+
+                      <div className="gd-facts">
+                        <span><span aria-hidden="true">▦</span>{request.dateLong}</span>
+                        <span><span aria-hidden="true">♧</span>{request.travelers} Traveler{request.travelers > 1 ? 's' : ''}</span>
+                        <span><span aria-hidden="true">◷</span>{request.duration}</span>
+                      </div>
+
+                      <p className="gd-request__message">“{request.message}”</p>
+
+                      <div className="gd-request__footer">
+                        <GuideStatus status={request.status} />
+                        {counterId === request.id ? (
+                          <div className="gd-counter">
+                            <input
+                              type="number"
+                              min="1"
+                              placeholder="Your offer (LKR)"
+                              aria-label="Counter offer amount"
+                              value={counterValue}
+                              onChange={(event) => setCounterValue(event.target.value)}
+                            />
+                            <button className="gd-button gd-button--primary" type="button" onClick={() => sendCounter(request.id)}>
+                              Send offer
+                            </button>
+                            <button className="gd-button" type="button" onClick={() => setCounterId(null)}>Cancel</button>
+                          </div>
+                        ) : (
+                          <div className="gd-actions">
+                            <button className="gd-button" type="button" onClick={() => updateStatus(request.id, 'declined')}>Decline</button>
+                            <button className="gd-button" type="button" onClick={() => openCounter(request.id)}>Counter Offer</button>
+                            <button className="gd-button gd-button--primary" type="button" onClick={() => updateStatus(request.id, 'accepted')}>
+                              <span aria-hidden="true">✓</span> Accept Booking
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </article>
+                ))}
               </div>
             </section>
           )}
-        </section>
+
+          {activeTab === 'accepted' && (
+            <section className="gd-panel" id="gd-panel-accepted" role="tabpanel" aria-labelledby="gd-tab-accepted">
+              {accepted.length === 0 && <p className="gd-empty">No accepted trips yet.</p>}
+              <div className="gd-request-list">
+                {accepted.map((trip) => (
+                  <article className="gd-trip" key={trip.id}>
+                    <div className="gd-trip__top">
+                      <img src={trip.image} alt={trip.title} />
+                      <div className="gd-trip__info">
+                        <GuideStatus status="accepted" />
+                        <h3>{trip.title}</h3>
+                        <p className="gd-muted"><span aria-hidden="true">⌖</span> {trip.location}</p>
+                        <div className="gd-facts gd-facts--plain">
+                          <span><span aria-hidden="true">▦</span>{trip.dateLong}</span>
+                          <span><span aria-hidden="true">♧</span>{trip.travelers} Travelers</span>
+                          <span><span aria-hidden="true">◷</span>{trip.duration}</span>
+                        </div>
+                        <p className="gd-muted">Agreed guide fee: <strong>{formatMoney(trip.budget)}</strong></p>
+                      </div>
+                    </div>
+
+                  <div className="gd-trip__bottom">
+                    <div className="gd-itinerary">
+                      <h4>Itinerary overview</h4>
+                      {(trip.itinerary || []).map((stop) => (
+                        <div className="gd-stop" key={stop.time}>
+                          <time>{stop.time}</time>
+                          <div>
+                            <strong>{stop.title}</strong>
+                            <p>{stop.text}</p>
+                          </div>
+                        </div>
+                      ))}
+                      {!trip.itinerary && <p className="gd-muted">No itinerary added yet.</p>}
+                    </div>
+
+                    <aside className="gd-travelers" aria-label="Your travelers">
+                      <h4>Your travelers</h4>
+                      <strong>{trip.traveler}</strong>
+                      {trip.travelerNote && <p>{trip.travelerNote}</p>}
+                      {trip.travelerAbout && <p>{trip.travelerAbout}</p>}
+                      <blockquote>“{trip.message}”</blockquote>
+                      <button
+                        className="gd-button gd-button--primary"
+                        type="button"
+                        onClick={() => messageTraveler(trip.id)}
+                      >
+                        {messagedIds.includes(trip.id) ? '✓ Message sent' : 'Message Traveler'}
+                      </button>
+                    </aside>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {activeTab === 'all' && (
+          <section className="gd-panel" id="gd-panel-all" role="tabpanel" aria-labelledby="gd-tab-all">
+            <div className="gd-table-wrap">
+              <table className="gd-table">
+                <thead>
+                  <tr>
+                    <th>Tour / booking</th>
+                    <th>Traveler</th>
+                    <th>Trip date</th>
+                    <th>Guide fee</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {requests.map((request) => (
+                    <tr key={request.id}>
+                      <td>
+                        <div className="gd-table__tour">
+                          <img src={request.image} alt="" />
+                          <div>
+                            <strong>{request.title}</strong>
+                            <span>{request.location.split(',')[0]} · #{request.id}</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <strong>{request.traveler}</strong>
+                        <span>{request.travelers} traveler{request.travelers > 1 ? 's' : ''}</span>
+                      </td>
+                      <td>
+                        <strong>{request.date}</strong>
+                        <span>{request.duration}</span>
+                      </td>
+                      <td><strong>{formatMoney(request.budget)}</strong></td>
+                      <td><GuideStatus status={request.status} /></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <p className="gd-table__note">Showing all {requests.length} bookings</p>
+            </div>
+          </section>
+        )}
       </div>
     </main>
+    </>
   );
 }
 
