@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Login from './pages/Login';
@@ -9,6 +9,7 @@ import GuideSelect from './pages/guide-select';
 import TravelerDashboard from './pages/TravelerDashboard';
 import GuideDashboard from './pages/GuideDashboard';
 import Permission from './pages/Permission';
+import { getCurrentUser, logout } from './api/auth';
 import './styles/App.css';
 
 const featureCards = [
@@ -149,6 +150,22 @@ function App() {
   const [selectedRole, setSelectedRole] = useState(null);
   const [destinationSearch, setDestinationSearch] = useState('');
   const [tripDetails, setTripDetails] = useState({});
+  const [currentUser, setCurrentUser] = useState(null);
+  const [authMessage, setAuthMessage] = useState('');
+
+  useEffect(() => {
+    let isMounted = true;
+    getCurrentUser()
+      .then(({ user }) => {
+        if (!isMounted) return;
+        setCurrentUser(user);
+        setActivePage(user.role === 'guide' ? 'guide-dashboard' : 'dashboard');
+      })
+      .catch(() => {})
+      .finally(() => {
+        isMounted = false;
+      });
+  }, []);
 
   const handleStartPlanning = () => {
     setActivePage('planner');
@@ -164,7 +181,25 @@ function App() {
   };
 
   const handleAuthClick = () => {
+    setAuthMessage('');
     setActivePage('login');
+  };
+
+  const handleLoginSuccess = (user) => {
+    setCurrentUser(user);
+    setAuthMessage('');
+    setActivePage(user.role === 'guide' ? 'guide-dashboard' : 'dashboard');
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      setAuthMessage('');
+      setCurrentUser(null);
+      setActivePage('landing');
+    } catch (error) {
+      setAuthMessage(error.message);
+    }
   };
 
   const handleRoleSelect = (role) => {
@@ -186,6 +221,9 @@ function App() {
     <div className="app-main">
       <Header
         onAuthClick={handleAuthClick}
+        currentUser={currentUser}
+        onLogout={handleLogout}
+        authMessage={authMessage}
         onSearch={handleDestinationSearch}
         onDashboardClick={() => setActivePage('dashboard')}
         isDashboard={activePage === 'dashboard'}
@@ -198,7 +236,7 @@ function App() {
         {activePage === 'landing' && (
           <LandingView onStartPlanning={handleStartPlanning} destinationSearch={destinationSearch} />
         )}
-        {activePage === 'login' && <Login onRoleSelect={handleRoleSelect} />}
+        {activePage === 'login' && <Login onRoleSelect={handleRoleSelect} onLoginSuccess={handleLoginSuccess} />}
         {activePage === 'registration' && <Home role={selectedRole} onBack={handleBackToLogin} />}
         {activePage === 'planner' && <TravelHome onStartTrip={handleStartTrip} />}
         {activePage === 'itinerary' && (
@@ -213,9 +251,9 @@ function App() {
           <GuideSelect tripDetails={tripDetails} onBack={() => setActivePage('itinerary')} />
         )}
         {activePage === 'dashboard' && (
-          <TravelerDashboard onPlanTrip={() => setActivePage('planner')} />
+          <TravelerDashboard currentUser={currentUser} onPlanTrip={() => setActivePage('planner')} />
         )}
-        {activePage === 'guide-dashboard' && <GuideDashboard />}
+        {activePage === 'guide-dashboard' && <GuideDashboard currentUser={currentUser} />}
         {activePage === 'permission' && (
           <Permission onCancel={() => setActivePage('landing')} />
         )}

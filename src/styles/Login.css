@@ -121,6 +121,19 @@
   margin-top: 6px;
 }
 
+.btn-login:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+.login-error {
+  margin: 0;
+  color: #b42318;
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: left;
+}
+
 .role-selection-section {
   margin-top: 24px;
   padding-top: 20px;

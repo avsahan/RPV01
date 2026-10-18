@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import '../styles/Header.css';
 import VLogo from '../assets/VLogo.png';
 
-const Header = ({ onAuthClick, onSearch, onDashboardClick, isDashboard, onGuideDashboardClick, isGuideDashboard, onPermissionClick, isPermission }) => {
+const Header = ({ onAuthClick, onSearch, onDashboardClick, isDashboard, onGuideDashboardClick, isGuideDashboard, onPermissionClick, isPermission, currentUser, onLogout, authMessage }) => {
   const [destination, setDestination] = useState('');
 
   const handleSearch = (event) => {
@@ -57,10 +57,20 @@ const Header = ({ onAuthClick, onSearch, onDashboardClick, isDashboard, onGuideD
             />
           </form>
 
-          <button type="button" className="login-btn" onClick={onAuthClick}>Log in</button>
-          <button type="button" className="signup-btn" onClick={onAuthClick}>Sign up</button>
+          {currentUser ? (
+            <>
+              <span className="header-user-name" title={currentUser.email}>{currentUser.fullName}</span>
+              <button type="button" className="login-btn" onClick={onLogout}>Log out</button>
+            </>
+          ) : (
+            <>
+              <button type="button" className="login-btn" onClick={onAuthClick}>Log in</button>
+              <button type="button" className="signup-btn" onClick={onAuthClick}>Sign up</button>
+            </>
+          )}
         </div>
       </div>
+      {authMessage && <p className="header-auth-message" role="alert">{authMessage}</p>}
     </header>
   );
 };

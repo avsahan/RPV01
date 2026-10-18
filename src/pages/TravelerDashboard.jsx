@@ -95,7 +95,7 @@ const tabs = [
   { id: 'bookings', label: 'Bookings', count: '03' },
 ];
 
-function TravelerDashboard({ onPlanTrip }) {
+function TravelerDashboard({ currentUser, onPlanTrip }) {
   const [activeTab, setActiveTab] = useState('overview');
   const [selectedTripId, setSelectedTripId] = useState('kandy');
   const [selectedDay, setSelectedDay] = useState(0);
@@ -119,7 +119,7 @@ function TravelerDashboard({ onPlanTrip }) {
         <section className="traveler-welcome" aria-labelledby="traveler-welcome-title">
           <div className="traveler-welcome__copy">
             <p className="traveler-eyebrow">Your travel space</p>
-            <h1 id="traveler-welcome-title">Good morning, Nuwan<span>.</span></h1>
+            <h1 id="traveler-welcome-title">Welcome, {currentUser?.fullName || 'Traveler'}<span>.</span></h1>
             <p>Every detail of your next journey, right where you need it.</p>
           </div>
           <div className="traveler-profile" aria-label="Traveler profile">
@@ -128,8 +128,8 @@ function TravelerDashboard({ onPlanTrip }) {
               alt=""
             />
             <div>
-              <strong>Nuwan Jayawardena</strong>
-              <span>Traveler account</span>
+              <strong>{currentUser?.fullName || 'Traveler'}</strong>
+              <span>{currentUser?.email || 'Traveler account'}</span>
             </div>
             <span className="traveler-profile__menu" aria-hidden="true">⌄</span>
           </div>

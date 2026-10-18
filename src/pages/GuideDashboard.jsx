@@ -312,6 +312,7 @@ function UpcomingTripCard({ trip, onMessage, onItinerary }) {
   );
 }
 
+<<<<<<< HEAD
 function CompletedTripCard({ trip, onView, onBookAgain }) {
   return (
     <article className="rl-trip-card rl-trip-card--completed">
@@ -355,6 +356,9 @@ function CompletedTripCard({ trip, onView, onBookAgain }) {
 /* ---------- Main component ---------- */
 
 function TravelerDashboard() {
+=======
+function GuideDashboard({ currentUser }) {
+>>>>>>> 608859118ca8270630fd4df5ba0497f03dbbabfb
   const [activeTab, setActiveTab] = useState('upcoming');
   const [contacts, setContacts] = useState(initialContacts);
   const [selectedContactId, setSelectedContactId] = useState('nimal');
@@ -433,9 +437,30 @@ function TravelerDashboard() {
   };
 
   return (
+<<<<<<< HEAD
     <div className="rl-page">
       <div className="rl-shell">
         <Navbar />
+=======
+    <main className="guide-dashboard">
+      <div className="guide-dashboard__layout">
+        <aside className="guide-sidebar" aria-label="Guide account">
+          <div className="guide-sidebar__profile">
+            <div className="guide-sidebar__cover" />
+            <img
+              className="guide-sidebar__photo"
+              src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=180&q=85"
+              alt=""
+            />
+            <h2>{currentUser?.fullName || 'Local guide'}</h2>
+            <p>Local guide{currentUser?.baseLocation ? ` · ${currentUser.baseLocation}` : ''}</p>
+            <div className="guide-sidebar__rating"><span>★</span> 4.9 <span>·</span> 28 reviews</div>
+            <span className="guide-verified">
+              <span aria-hidden="true">✓</span>
+              {currentUser?.verificationStatus === 'approved' ? 'Approved guide' : 'Pending verification'}
+            </span>
+          </div>
+>>>>>>> 608859118ca8270630fd4df5ba0497f03dbbabfb
 
         <main className="rl-main">
           <section className="rl-hero">
