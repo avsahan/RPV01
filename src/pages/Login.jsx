@@ -1,10 +1,28 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { login } from '../api/auth';
 import '../styles/Login.css';
 import VLogo from '../assets/VLogo.png';
 
-const Login = ({ onRoleSelect }) => {
+const Login = ({ onRoleSelect, onLoginSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError('');
+    setIsSubmitting(true);
+
+    try {
+      const response = await login({ email, password });
+      await onLoginSuccess(response.user);
+    } catch (loginError) {
+      setError(loginError.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="login-card">
@@ -13,27 +31,14 @@ const Login = ({ onRoleSelect }) => {
         <h2>Log in to view this page</h2>
       </div>
 
-      <div className="social-buttons">
-        <button className="btn-social btn-facebook">
-          <span>Log in with Facebook</span>
-        </button>
-        <button className="btn-social btn-google">
-          <span>Log in with Google</span>
-        </button>
-        <button className="btn-social btn-apple">
-          <span>Log in with Apple</span>
-        </button>
-      </div>
-
-      <div className="divider">
-        <span>or</span>
-      </div>
-
-      <form className="login-form" onSubmit={(e) => e.preventDefault()}>
+      <form className="login-form" onSubmit={handleSubmit}>
         <input
           type="email"
           className="input-field"
           placeholder="Email address"
+          autoComplete="email"
+          aria-label="Email address"
+          required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -41,26 +46,33 @@ const Login = ({ onRoleSelect }) => {
           type="password"
           className="input-field"
           placeholder="Password"
+          autoComplete="current-password"
+          aria-label="Password"
+          required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <a href="#forgot" className="forgot-link">Forgot password?</a>
+        {error && <p className="login-error" role="alert">{error}</p>}
 
-        <button type="submit" className="btn-login">Log in</button>
+        <button type="submit" className="btn-login" disabled={isSubmitting}>
+          {isSubmitting ? 'Signing in…' : 'Log in'}
+        </button>
       </form>
 
       <div className="role-selection-section">
         <p className="signup-label">New to VentureVista? Choose your account type:</p>
         <div className="role-buttons">
-          <button 
-            className="btn-role btn-traveler" 
+          <button
+            type="button"
+            className="btn-role btn-traveler"
             onClick={() => onRoleSelect('traveler')}
           >
             Sign Up as Traveler
           </button>
-          <button 
-            className="btn-role btn-guide" 
+          <button
+            type="button"
+            className="btn-role btn-guide"
             onClick={() => onRoleSelect('guide')}
           >
             Sign Up as Local Guide

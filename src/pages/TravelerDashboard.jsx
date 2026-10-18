@@ -1,373 +1,475 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { getBookings, getTrips, respondToCounterOffer } from '../api/auth';
+import BookingChat from '../components/BookingChat';
 import '../styles/TravelerDashboard.css';
 
-const trips = [
-  {
-    id: 'kandy',
-    destination: 'Kandy, Sri Lanka',
-    title: 'Kandy Heritage & Lake Walks',
-    dates: '18 - 21 October 2026',
-    days: 4,
-    status: 'upcoming',
-    image: 'https://images.unsplash.com/photo-1588598198321-9735fd5c9e0b?auto=format&fit=crop&w=1200&q=85',
-    imageAlt: 'Temple beside a lake in Sri Lanka',
-  },
-  {
-    id: 'ella',
-    destination: 'Ella, Sri Lanka',
-    title: 'Highland Trails & Tea Country',
-    dates: '06 - 10 December 2026',
-    days: 5,
-    status: 'planning',
-    image: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1200&q=85',
-    imageAlt: 'Mountain ridge above a green valley',
-  },
-];
-
-const itinerary = {
-  kandy: [
-    [
-      { time: '08:30', title: 'Breakfast at the hotel', place: 'Lakeview Boutique Hotel', type: 'stay' },
-      { time: '10:00', title: 'Temple of the Sacred Tooth Relic', place: 'Sri Dalada Maligawa', type: 'visit' },
-      { time: '12:30', title: 'Lunch with a local family', place: 'Kandy city', type: 'food' },
-      { time: '15:00', title: 'Walk around Kandy Lake', place: 'Lakeside promenade', type: 'walk' },
-    ],
-    [
-      { time: '09:00', title: 'Botanical garden visit', place: 'Peradeniya', type: 'visit' },
-      { time: '12:00', title: 'Garden-side lunch', place: 'Peradeniya village', type: 'food' },
-      { time: '14:30', title: 'Kandyan craft workshop', place: 'Kandy', type: 'visit' },
-    ],
-    [
-      { time: '08:00', title: 'Scenic train to the highlands', place: 'Kandy Railway Station', type: 'travel' },
-      { time: '11:30', title: 'Tea estate visit', place: 'Ramboda', type: 'visit' },
-      { time: '16:00', title: 'Check in and unwind', place: 'Hill Country Lodge', type: 'stay' },
-    ],
-  ],
-  ella: [
-    [
-      { time: '09:00', title: 'Arrive and settle in', place: 'Ella town', type: 'stay' },
-      { time: '15:30', title: 'Little Adam’s Peak sunset walk', place: 'Ella', type: 'walk' },
-    ],
-    [
-      { time: '08:00', title: 'Nine Arch Bridge trail', place: 'Demodara', type: 'walk' },
-      { time: '12:00', title: 'Lunch in the village', place: 'Ella town', type: 'food' },
-      { time: '14:00', title: 'Tea factory tour', place: 'Uva Highlands', type: 'visit' },
-    ],
-  ],
-};
-
-const bookings = [
-  {
-    id: 'VV-1048',
-    type: 'Stay',
-    title: 'Lakeview Boutique Hotel',
-    detail: 'Kandy · 3 nights · 1 room',
-    date: '18 Oct 2026',
-    amount: 'LKR 48,000',
-    status: 'Confirmed',
-    image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=240&q=80',
-  },
-  {
-    id: 'VV-1052',
-    type: 'Local guide',
-    title: 'Kandy Heritage & Lake Walks',
-    detail: 'Nuwan Jayawardena · Private tour',
-    date: '19 Oct 2026',
-    amount: 'LKR 12,000',
-    status: 'Confirmed',
-    image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=240&q=80',
-  },
-  {
-    id: 'VV-1061',
-    type: 'Rail',
-    title: 'Kandy to Ella scenic train',
-    detail: 'Reserved seats · 2 travelers',
-    date: '20 Oct 2026',
-    amount: 'LKR 6,400',
-    status: 'Pending',
-    image: 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?auto=format&fit=crop&w=240&q=80',
-  },
-];
-
 const tabs = [
-  { id: 'overview', label: 'My trips', count: '02' },
-  { id: 'itinerary', label: 'Itinerary' },
-  { id: 'bookings', label: 'Bookings', count: '03' },
+  { id: 'upcoming', label: 'Upcoming Trips', icon: '▦' },
+  { id: 'completed', label: 'Past Completed Trips', icon: '✓' },
+  { id: 'chat', label: 'Live Guide Chat & Communication', icon: '▢' },
 ];
 
-function TravelerDashboard({ onPlanTrip }) {
-  const [activeTab, setActiveTab] = useState('overview');
-  const [selectedTripId, setSelectedTripId] = useState('kandy');
-  const [selectedDay, setSelectedDay] = useState(0);
-  const [bookingFilter, setBookingFilter] = useState('All');
+/* ---------- Small components ---------- */
 
-  const selectedTrip = trips.find((trip) => trip.id === selectedTripId) || trips[0];
-  const tripDays = itinerary[selectedTrip.id] || [];
-  const visibleBookings = bookingFilter === 'All'
-    ? bookings
-    : bookings.filter((booking) => booking.status === bookingFilter);
+function ProfileCard({ profile, onChange, onSave, saved }) {
+  const fields = [
+    { key: 'name', label: 'Full name', type: 'text' },
+    { key: 'country', label: 'Country', type: 'select' },
+    { key: 'email', label: 'Email address', type: 'email' },
+    { key: 'phone', label: 'Phone number', type: 'tel' },
+    { key: 'passport', label: 'Passport number', type: 'text' },
+  ];
 
-  const openItinerary = (tripId) => {
-    setSelectedTripId(tripId);
-    setSelectedDay(0);
-    setActiveTab('itinerary');
+  return (
+    <aside className="rl-profile" aria-label="My profile">
+      <div className="rl-profile__header">
+        <h2>My profile</h2>
+      </div>
+
+      <div className="rl-profile__identity">
+        <div className="rl-profile__photo-wrap">
+          <img
+            className="rl-profile__photo"
+            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=85"
+            alt={profile.name}
+          />
+          <button className="rl-profile__camera" type="button" aria-label="Change photo">◉</button>
+        </div>
+        <h3>{profile.name}</h3>
+        <p>Curious traveler · Member since 2025</p>
+      </div>
+
+      <form
+        className="rl-profile__form"
+        onSubmit={(event) => {
+          event.preventDefault();
+          onSave();
+        }}
+      >
+        {fields.map((field) => (
+          <label className="rl-field" key={field.key}>
+            <span className="rl-field__label">{field.label}</span>
+            <span className="rl-field__control">
+              {field.type === 'select' ? (
+                <>
+                  <select value={profile.country} onChange={(e) => onChange('country', e.target.value)}>
+                    {!['United Kingdom', 'United States', 'Australia', 'Germany', 'India'].includes(profile.country) && (
+                      <option value={profile.country}>{profile.country || 'Select country'}</option>
+                    )}
+                    <option>United Kingdom</option>
+                    <option>United States</option>
+                    <option>Australia</option>
+                    <option>Germany</option>
+                    <option>India</option>
+                  </select>
+                  <span className="rl-field__icon" aria-hidden="true">⌄</span>
+                </>
+              ) : (
+                <>
+                  <input
+                    type={field.type}
+                    value={profile[field.key]}
+                    onChange={(e) => onChange(field.key, e.target.value)}
+                  />
+                  <span className="rl-field__icon" aria-hidden="true">✎</span>
+                </>
+              )}
+            </span>
+          </label>
+        ))}
+
+        <div className="rl-prefs">
+          <div className="rl-prefs__header">
+            <strong>Travel preferences</strong>
+            <button className="rl-icon-button rl-icon-button--accent" type="button" aria-label="Edit preferences">✎</button>
+          </div>
+          <div className="rl-prefs__chips">
+            {profile.travelInterests.map((chip) => (
+              <span className="rl-chip" key={chip}>{chip}</span>
+            ))}
+          </div>
+          <p className="rl-prefs__text">
+            {profile.travelInterests.length
+              ? profile.travelInterests.join(' · ')
+              : 'No travel preferences added yet.'}
+          </p>
+        </div>
+
+        <button className="rl-button rl-button--primary rl-button--block" type="submit">
+          {saved ? 'Changes saved ✓' : 'Save profile changes'}
+        </button>
+        <p className="rl-profile__secure">
+          <span aria-hidden="true">⛨</span> Your personal details stay private and secure.
+        </p>
+      </form>
+    </aside>
+  );
+}
+
+function UpcomingTripCard({ trip, onMessage, onItinerary, onRespondCounterOffer }) {
+  return (
+    <article className="rl-trip-card">
+      <div className="rl-trip-card__main">
+        <div className="rl-trip-card__media">
+          <img src={trip.image} alt="" />
+          <span className="rl-trip-card__badge">{trip.duration.replace(' · ', ' · ')}</span>
+        </div>
+
+        <div className="rl-trip-card__body">
+          <div className="rl-trip-card__top">
+            <span className="rl-eyebrow">{trip.region}</span>
+            <span className={`rl-status rl-status--${trip.status}`}>
+              <span aria-hidden="true">{trip.status === 'confirmed' ? '✓' : '◷'}</span>
+              {trip.statusLabel}
+            </span>
+          </div>
+
+          <h3>{trip.title}</h3>
+          <p className="rl-trip-card__meta">
+            <span aria-hidden="true">▦</span> {trip.dates} <span aria-hidden="true">·</span> {trip.id}
+          </p>
+
+          <ol className="rl-trip-card__stops">
+            {trip.stops.map((stop, index) => (
+              <li key={stop}>
+                <b>{String(index + 1).padStart(2, '0')}</b> {stop}
+              </li>
+            ))}
+          </ol>
+
+          <div className="rl-trip-card__footer">
+            <div className="rl-guide-mini">
+              <span className="rl-avatar rl-avatar--sm">{trip.guideInitials}</span>
+              <span>
+                <small>Your local guide</small>
+                <strong>{trip.guide}</strong>
+              </span>
+            </div>
+            <div className="rl-trip-card__actions">
+              {trip.bookingStatus === 'countered' && (
+                <>
+                  <button className="rl-button rl-button--outline" type="button" onClick={() => onRespondCounterOffer(trip.bookingId, 'declined')}>Decline offer</button>
+                  <button className="rl-button rl-button--primary" type="button" onClick={() => onRespondCounterOffer(trip.bookingId, 'accepted')}>Accept offer</button>
+                </>
+              )}
+              <button className="rl-button rl-button--outline" type="button" onClick={() => onMessage(trip)}>
+                <span aria-hidden="true">💬︎</span> Message
+              </button>
+              <button className="rl-button rl-button--primary" type="button" onClick={() => onItinerary(trip)}>
+                View itinerary
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="rl-trip-card__note">
+        <span aria-hidden="true">{trip.noteIcon}</span> {trip.note}
+      </div>
+    </article>
+  );
+}
+
+function CompletedTripCard({ trip, onView, onBookAgain }) {
+  return (
+    <article className="rl-trip-card rl-trip-card--completed">
+      <div className="rl-trip-card__main">
+        <div className="rl-trip-card__media rl-trip-card__media--small">
+          <img src={trip.image} alt="" />
+        </div>
+
+        <div className="rl-trip-card__body">
+          <div className="rl-trip-card__top">
+            <span className="rl-eyebrow">{trip.region}</span>
+            <span className="rl-status rl-status--completed">
+              <span aria-hidden="true">✓</span> Completed
+            </span>
+          </div>
+
+          <h3>{trip.title}</h3>
+          <p className="rl-trip-card__meta">
+            {trip.dates} <span aria-hidden="true">·</span> {trip.duration.replace(' · ', ' · ')}
+          </p>
+
+          <div className="rl-trip-card__footer">
+            <p className="rl-with-guide">
+              <span aria-hidden="true">☺</span> With {trip.guide}
+            </p>
+            <div className="rl-trip-card__actions">
+              <button className="rl-button rl-button--outline" type="button" onClick={() => onView(trip)}>
+                View trip
+              </button>
+              <button className="rl-button rl-button--primary" type="button" onClick={() => onBookAgain(trip)}>
+                <span aria-hidden="true">↻</span> Book again
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+/* ---------- Main component ---------- */
+
+function TravelerDashboard({ currentUser, onPlanTrip }) {
+  const [activeTab, setActiveTab] = useState('upcoming');
+  const [trips, setTrips] = useState([]);
+  const [bookings, setBookings] = useState([]);
+  const [selectedBookingId, setSelectedBookingId] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
+  const [notice, setNotice] = useState('');
+  const [saved, setSaved] = useState(false);
+  const [profile, setProfile] = useState(() => ({
+    name: currentUser?.fullName || '',
+    country: currentUser?.country || '',
+    email: currentUser?.email || '',
+    phone: currentUser?.telephoneNumber || '',
+    passport: '',
+    travelInterests: currentUser?.travelInterests || [],
+  }));
+
+  useEffect(() => {
+    let isActive = true;
+    Promise.all([getTrips(), getBookings()])
+      .then(([tripResponse, bookingResponse]) => {
+        if (!isActive) return;
+        setTrips(tripResponse.trips);
+        setBookings(bookingResponse.bookings.filter((booking) => Number(booking.travelerId) === Number(currentUser?.id)));
+      })
+      .catch((error) => {
+        if (isActive) setLoadError(error.message);
+      })
+      .finally(() => {
+        if (isActive) setIsLoading(false);
+      });
+    return () => { isActive = false; };
+  }, [currentUser?.id]);
+
+  const tripCards = trips.map((trip) => {
+    const booking = bookings.find((item) => Number(item.tripId) === Number(trip.id));
+    const activities = Array.isArray(trip.activities) ? trip.activities : [];
+    const dates = [trip.startDate, trip.endDate].filter(Boolean).join(' – ') || 'Dates not set';
+    const guideName = booking?.guide || 'Guide not selected';
+    const guideInitials = guideName.split(/\s+/).map((part) => part[0]).slice(0, 2).join('').toUpperCase();
+    return {
+      ...trip,
+      region: trip.destination,
+      title: trip.destination,
+      dates,
+      duration: activities.length ? `${activities.length} planned activities` : 'Trip plan',
+      stops: activities.slice(0, 3).map((activity) => activity.title),
+      guide: guideName,
+      guideInitials,
+      contactId: booking?.id,
+      bookingId: booking?.id,
+      bookingStatus: booking?.status,
+      status: trip.status === 'completed' ? 'completed' : booking?.status === 'accepted' ? 'confirmed' : 'pending',
+      statusLabel: trip.status === 'completed'
+        ? 'Completed'
+        : booking?.status === 'accepted'
+        ? 'Confirmed'
+        : booking?.status === 'countered'
+          ? 'Counter offer received'
+          : booking
+            ? 'Awaiting guide response'
+            : 'Planning',
+      note: booking?.message || 'Your trip plan is saved. Add a guide request when ready.',
+      noteIcon: booking ? '◷' : '⌖',
+      image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80',
+    };
+  });
+  const upcomingTrips = tripCards.filter((trip) => trip.status !== 'completed');
+  const completedTrips = tripCards.filter((trip) => trip.status === 'completed');
+  const chatBookings = bookings.filter((booking) => ['accepted', 'countered'].includes(booking.status));
+  const selectedBooking = chatBookings.find((booking) => Number(booking.id) === Number(selectedBookingId)) || chatBookings[0];
+  const dashboardTabs = tabs.map((tab) => ({
+    ...tab,
+    count: tab.id === 'upcoming' ? upcomingTrips.length : tab.id === 'completed' ? completedTrips.length : chatBookings.length,
+  }));
+
+  const showNotice = (text) => {
+    setNotice(text);
+    window.setTimeout(() => setNotice(''), 3500);
+  };
+
+  const updateProfile = (key, value) => {
+    setProfile((current) => ({ ...current, [key]: value }));
+    setSaved(false);
+  };
+
+  const saveProfile = () => {
+    setSaved(true);
+    showNotice('Your profile changes have been saved.');
+    window.setTimeout(() => setSaved(false), 2500);
+  };
+
+  const openChat = (trip) => {
+    if (trip.contactId) setSelectedBookingId(trip.contactId);
+    setActiveTab('chat');
+  };
+
+  const respondToOffer = async (bookingId, status) => {
+    try {
+      await respondToCounterOffer(bookingId, status);
+      const { bookings: latestBookings } = await getBookings();
+      setBookings(latestBookings.filter((booking) => Number(booking.travelerId) === Number(currentUser?.id)));
+      showNotice(status === 'accepted' ? 'Guide offer accepted.' : 'Guide offer declined.');
+    } catch (error) {
+      showNotice(error.message);
+    }
   };
 
   return (
-    <main className="traveler-dashboard">
-      <div className="traveler-dashboard__inner">
-        <section className="traveler-welcome" aria-labelledby="traveler-welcome-title">
-          <div className="traveler-welcome__copy">
-            <p className="traveler-eyebrow">Your travel space</p>
-            <h1 id="traveler-welcome-title">Good morning, Nuwan<span>.</span></h1>
-            <p>Every detail of your next journey, right where you need it.</p>
-          </div>
-          <div className="traveler-profile" aria-label="Traveler profile">
-            <img
-              src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=160&q=85"
-              alt=""
-            />
+    <div className="rl-page">
+      <div className="rl-shell">
+        <main className="rl-main">
+          <section className="rl-hero">
             <div>
-              <strong>Nuwan Jayawardena</strong>
-              <span>Traveler account</span>
+              <p className="rl-eyebrow rl-eyebrow--accent">Your Sri Lanka, your way</p>
+              <h1>Welcome back, {currentUser?.fullName || 'traveler'}.</h1>
+              <p className="rl-hero__sub">
+                A little planning. A lot to look forward to. Your next chapter starts here.
+              </p>
             </div>
-            <span className="traveler-profile__menu" aria-hidden="true">⌄</span>
-          </div>
-        </section>
-
-        <section className="traveler-summary" aria-label="Travel summary">
-          <div className="traveler-summary__item">
-            <span className="traveler-summary__icon traveler-summary__icon--blue" aria-hidden="true">↗</span>
-            <div><strong>2</strong><span>Trips planned</span></div>
-          </div>
-          <div className="traveler-summary__item">
-            <span className="traveler-summary__icon traveler-summary__icon--green" aria-hidden="true">▦</span>
-            <div><strong>3</strong><span>Confirmed bookings</span></div>
-          </div>
-          <div className="traveler-summary__item">
-            <span className="traveler-summary__icon traveler-summary__icon--gold" aria-hidden="true">◎</span>
-            <div><strong>18 days</strong><span>Until your next trip</span></div>
-          </div>
-          <button className="traveler-summary__action" type="button" onClick={onPlanTrip}>
-            <span aria-hidden="true">+</span> Plan a trip
-          </button>
-        </section>
-
-        <div className="traveler-tabs" role="tablist" aria-label="Traveler dashboard sections">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              id={`traveler-tab-${tab.id}`}
-              className={`traveler-tab${activeTab === tab.id ? ' is-active' : ''}`}
-              type="button"
-              role="tab"
-              aria-selected={activeTab === tab.id}
-              aria-controls={`traveler-panel-${tab.id}`}
-              onClick={() => setActiveTab(tab.id)}
-            >
-              {tab.label}
-              {tab.count && <span className="traveler-tab__count">{tab.count}</span>}
-            </button>
-          ))}
-        </div>
-
-        {activeTab === 'overview' && (
-          <section
-            className="traveler-panel"
-            id="traveler-panel-overview"
-            role="tabpanel"
-            aria-labelledby="traveler-tab-overview"
-          >
-            <div className="traveler-section-heading">
-              <div>
-                <p className="traveler-eyebrow">Your plans at a glance</p>
-                <h2>Upcoming trips</h2>
-              </div>
-              <button type="button" className="traveler-text-button" onClick={() => setActiveTab('bookings')}>
-                View bookings <span aria-hidden="true">→</span>
-              </button>
-            </div>
-
-            <div className="traveler-trip-list">
-              {trips.map((trip) => (
-                <article className="traveler-trip" key={trip.id}>
-                  <img className="traveler-trip__image" src={trip.image} alt={trip.imageAlt} />
-                  <div className="traveler-trip__content">
-                    <div className="traveler-trip__topline">
-                      <span className={`traveler-status traveler-status--${trip.status}`}>
-                        <span aria-hidden="true" /> {trip.status === 'upcoming' ? 'Upcoming' : 'Planning'}
-                      </span>
-                      <span className="traveler-trip__destination">{trip.destination}</span>
-                    </div>
-                    <h3>{trip.title}</h3>
-                    <div className="traveler-trip__facts">
-                      <span><span aria-hidden="true">▦</span>{trip.dates}</span>
-                      <span><span aria-hidden="true">◷</span>{trip.days} days</span>
-                      <span><span aria-hidden="true">♧</span>2 travelers</span>
-                    </div>
-                    <div className="traveler-trip__footer">
-                      <span className="traveler-trip__progress-label">
-                        {trip.status === 'upcoming' ? 'Trip details' : 'Planning progress'}
-                      </span>
-                      {trip.status === 'planning' && (
-                        <span className="traveler-progress" aria-label="Planning progress 45 percent">
-                          <span />
-                        </span>
-                      )}
-                      <button type="button" onClick={() => openItinerary(trip.id)}>
-                        {trip.status === 'upcoming' ? 'Open itinerary' : 'Continue planning'}
-                        <span aria-hidden="true">→</span>
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              ))}
+            <div className="rl-hero__banner">
+              <img
+                src="https://images.unsplash.com/photo-1588598198321-9735fd5c9e0b?auto=format&fit=crop&w=400&q=80"
+                alt=""
+              />
+              <span>
+                <span aria-hidden="true">⌖</span> Slow days, south coast
+              </span>
             </div>
           </section>
-        )}
 
-        {activeTab === 'itinerary' && (
-          <section
-            className="traveler-panel"
-            id="traveler-panel-itinerary"
-            role="tabpanel"
-            aria-labelledby="traveler-tab-itinerary"
-          >
-            <div className="traveler-section-heading traveler-itinerary-heading">
-              <div>
-                <p className="traveler-eyebrow">Make room for the unexpected</p>
-                <h2>{selectedTrip.title}</h2>
-                <p className="traveler-section-subtitle">{selectedTrip.destination} <span>·</span> {selectedTrip.dates}</p>
-              </div>
-              <label className="traveler-trip-select">
-                <span className="traveler-visually-hidden">Choose a trip</span>
-                <select
-                  value={selectedTrip.id}
-                  onChange={(event) => {
-                    setSelectedTripId(event.target.value);
-                    setSelectedDay(0);
-                  }}
-                >
-                  {trips.map((trip) => <option key={trip.id} value={trip.id}>{trip.destination}</option>)}
-                </select>
-              </label>
-            </div>
+          <div className="rl-layout">
+            <ProfileCard
+              profile={profile}
+              onChange={updateProfile}
+              onSave={saveProfile}
+              saved={saved}
+            />
 
-            <div className="traveler-itinerary-layout">
-              <div className="traveler-itinerary-main">
-                <div className="traveler-day-tabs" role="tablist" aria-label="Itinerary days">
-                  {tripDays.map((day, index) => (
-                    <button
-                      className={`traveler-day-tab${selectedDay === index ? ' is-active' : ''}`}
-                      key={`${selectedTrip.id}-day-${index}`}
-                      type="button"
-                      role="tab"
-                      aria-selected={selectedDay === index}
-                      onClick={() => setSelectedDay(index)}
-                    >
-                      <span>DAY {index + 1}</span>
-                      <strong>{18 + index} OCT</strong>
-                    </button>
-                  ))}
-                </div>
-                <div className="traveler-itinerary-list">
-                  {(tripDays[selectedDay] || []).map((item) => (
-                    <article className="traveler-stop" key={`${item.time}-${item.title}`}>
-                      <time>{item.time}</time>
-                      <span className={`traveler-stop__marker traveler-stop__marker--${item.type}`} aria-hidden="true">
-                        {item.type === 'food' ? '⌁' : item.type === 'travel' ? '↗' : item.type === 'stay' ? '⌂' : '◎'}
-                      </span>
-                      <div className="traveler-stop__details">
-                        <h3>{item.title}</h3>
-                        <p>{item.place}</p>
-                      </div>
-                      <button type="button" className="traveler-stop__more" aria-label={`More about ${item.title}`}>
-                        ···
-                      </button>
-                    </article>
-                  ))}
-                </div>
-                <button type="button" className="traveler-add-stop" onClick={() => setSelectedDay((day) => (day + 1) % tripDays.length)}>
-                  <span aria-hidden="true">+</span> Explore the next day
-                </button>
-              </div>
-
-              <aside className="traveler-itinerary-aside" aria-label="Trip details">
-                <img
-                  className="traveler-map-image"
-                  src={selectedTrip.image}
-                  alt={`${selectedTrip.destination} landscape`}
-                />
-                <div className="traveler-aside-block">
-                  <p className="traveler-eyebrow">Your local guide</p>
-                  <div className="traveler-guide-mini">
-                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=120&q=80" alt="" />
-                    <div><strong>Nuwan Jayawardena</strong><span>Local guide · Kandy</span></div>
-                  </div>
-                </div>
-                <div className="traveler-aside-block traveler-budget">
-                  <div><span>Trip budget</span><strong>LKR 84,500</strong></div>
-                  <div className="traveler-budget__bar"><span /></div>
-                  <p>LKR 32,000 spent <span>·</span> LKR 52,500 left</p>
-                </div>
-              </aside>
-            </div>
-          </section>
-        )}
-
-        {activeTab === 'bookings' && (
-          <section
-            className="traveler-panel"
-            id="traveler-panel-bookings"
-            role="tabpanel"
-            aria-labelledby="traveler-tab-bookings"
-          >
-            <div className="traveler-section-heading traveler-booking-heading">
-              <div>
-                <p className="traveler-eyebrow">Everything in one place</p>
-                <h2>Your bookings</h2>
-              </div>
-              <div className="traveler-booking-filters" role="group" aria-label="Filter bookings by status">
-                {['All', 'Confirmed', 'Pending'].map((filter) => (
+            <section className="rl-content">
+              <div className="rl-tabs" role="tablist" aria-label="Dashboard views">
+                    {dashboardTabs.map((tab) => (
                   <button
-                    className={bookingFilter === filter ? 'is-active' : ''}
-                    key={filter}
+                    key={tab.id}
+                    id={`rl-tab-${tab.id}`}
+                    className={`rl-tab${activeTab === tab.id ? ' is-active' : ''}`}
                     type="button"
-                    aria-pressed={bookingFilter === filter}
-                    onClick={() => setBookingFilter(filter)}
+                    role="tab"
+                    aria-selected={activeTab === tab.id}
+                    aria-controls={`rl-panel-${tab.id}`}
+                    onClick={() => setActiveTab(tab.id)}
                   >
-                    {filter}
+                    <span aria-hidden="true">{tab.icon}</span>
+                    {tab.label}
+                    <span className="rl-tab__count">{tab.count}</span>
                   </button>
                 ))}
               </div>
-            </div>
 
-            <div className="traveler-booking-list">
-              {visibleBookings.map((booking) => (
-                <article className="traveler-booking" key={booking.id}>
-                  <img src={booking.image} alt="" />
-                  <div className="traveler-booking__main">
-                    <span className="traveler-booking__type">{booking.type} <span>·</span> {booking.id}</span>
-                    <h3>{booking.title}</h3>
-                    <p>{booking.detail}</p>
+              {notice && (
+                <p className="rl-notice" role="status">{notice}</p>
+              )}
+              {loadError && <p className="rl-notice" role="alert">{loadError}</p>}
+              {isLoading && <p className="rl-notice" role="status">Loading your trips…</p>}
+
+              {/* ---------- Upcoming ---------- */}
+              {activeTab === 'upcoming' && (
+                <section
+                  className="rl-panel"
+                  id="rl-panel-upcoming"
+                  role="tabpanel"
+                  aria-labelledby="rl-tab-upcoming"
+                >
+                  <div className="rl-panel__heading">
+                    <h2>Your next adventures</h2>
+                    <button
+                      className="rl-button rl-button--outline"
+                      type="button"
+                      onClick={onPlanTrip}
+                    >
+                      <span aria-hidden="true">+</span> Plan a new trip
+                    </button>
                   </div>
-                  <div className="traveler-booking__date"><span>Date</span><strong>{booking.date}</strong></div>
-                  <div className="traveler-booking__amount"><span>Total</span><strong>{booking.amount}</strong></div>
-                  <span className={`traveler-booking__status traveler-booking__status--${booking.status.toLowerCase()}`}>
-                    <span aria-hidden="true" />{booking.status}
-                  </span>
-                  <button type="button" className="traveler-booking__view" onClick={() => openItinerary('kandy')}>
-                    View <span aria-hidden="true">→</span>
-                  </button>
-                </article>
-              ))}
-              {visibleBookings.length === 0 && <p className="traveler-booking-empty">No bookings in this category yet.</p>}
-            </div>
-            <p className="traveler-booking-note">Booking updates are sent to your account email.</p>
-          </section>
-        )}
+
+                  <div className="rl-trip-list">
+                    {upcomingTrips.map((trip) => (
+                      <UpcomingTripCard
+                        key={trip.id}
+                        trip={trip}
+                        onMessage={openChat}
+                        onItinerary={(t) => showNotice(`Opening the itinerary for ${t.title}…`)}
+                        onRespondCounterOffer={respondToOffer}
+                      />
+                    ))}
+                    {!isLoading && upcomingTrips.length === 0 && (
+                      <p className="rl-chat__empty">You haven’t planned a trip yet. Start a plan to see it here.</p>
+                    )}
+                  </div>
+                </section>
+              )}
+
+              {/* ---------- Completed ---------- */}
+              {activeTab === 'completed' && (
+                <section
+                  className="rl-panel"
+                  id="rl-panel-completed"
+                  role="tabpanel"
+                  aria-labelledby="rl-tab-completed"
+                >
+                  <div className="rl-trip-list">
+                    {completedTrips.map((trip) => (
+                      <CompletedTripCard
+                        key={trip.id}
+                        trip={trip}
+                        onView={(t) => showNotice(`Opening ${t.title}…`)}
+                        onBookAgain={(t) => showNotice(`Let's plan another trip like ${t.title}.`)}
+                      />
+                    ))}
+                    {!isLoading && completedTrips.length === 0 && (
+                      <p className="rl-chat__empty">Completed trips will appear here.</p>
+                    )}
+                  </div>
+                </section>
+              )}
+
+              {/* ---------- Chat ---------- */}
+              {activeTab === 'chat' && (
+                <section
+                  className="rl-panel rl-chat"
+                  id="rl-panel-chat"
+                  role="tabpanel"
+                  aria-labelledby="rl-tab-chat"
+                >
+                  <aside className="rl-chat__sidebar" aria-label="Your booking conversations">
+                    <div className="rl-chat__sidebar-head"><h3>Booking chats</h3><span className="rl-pill">{chatBookings.length}</span></div>
+                    <div className="rl-contact-list">
+                      {chatBookings.map((booking) => (
+                        <button className={`rl-contact${Number(selectedBooking?.id) === Number(booking.id) ? ' is-active' : ''}`} key={booking.id} type="button" onClick={() => setSelectedBookingId(booking.id)}>
+                          <span className="rl-avatar rl-avatar--sm">{booking.guide.split(/\s+/).map((part) => part[0]).slice(0, 2).join('').toUpperCase()}</span>
+                          <span className="rl-contact__text"><strong>{booking.guide}</strong><small>{booking.title}</small><span>{booking.status}</span></span>
+                        </button>
+                      ))}
+                    </div>
+                    {chatBookings.length === 0 && <p className="rl-chat__empty">Accepted bookings and counteroffers will appear here.</p>}
+                  </aside>
+                  <div className="rl-conversation">
+                    {selectedBooking
+                      ? <BookingChat key={selectedBooking.id} bookingId={selectedBooking.id} currentUser={currentUser} otherName={selectedBooking.guide} />
+                      : <p className="rl-chat__empty">There are no booking conversations yet.</p>}
+                  </div>
+                </section>
+              )}
+            </section>
+          </div>
+        </main>
       </div>
-    </main>
+    </div>
   );
 }
 

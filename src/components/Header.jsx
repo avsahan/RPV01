@@ -1,25 +1,17 @@
-import React, { useState } from 'react';
 import '../styles/Header.css';
 import VLogo from '../assets/VLogo.png';
 
-const Header = ({ onAuthClick, onSearch, onDashboardClick, isDashboard, onGuideDashboardClick, isGuideDashboard, onPermissionClick, isPermission }) => {
-  const [destination, setDestination] = useState('');
-
-  const handleSearch = (event) => {
-    event.preventDefault();
-    onSearch(destination.trim());
-  };
-
+const Header = ({ onAuthClick, onHomeClick, onHotelsClick, onDashboardClick, isDashboard, onGuideDashboardClick, isGuideDashboard, onPermissionClick, isPermission, currentUser, onLogout, authMessage }) => {
   return (
     <header className="app-header">
       <div className="header-shell">
         <div className="brand-group">
-          <a className="brand-block" href="#home" aria-label="VentureVista home">
+          <a className="brand-block" href="#home" onClick={(event) => { event.preventDefault(); onHomeClick(); }} aria-label="VentureVista home">
             <img src={VLogo} alt="VentureVista" className="header-logo" />
           </a>
 
           <nav className="main-nav" aria-label="Main navigation">
-            <a href="#home" className="nav-link active">Home</a>
+            <a href="#home" className="nav-link" onClick={(event) => { event.preventDefault(); onHomeClick(); }}>Home</a>
             <button
               type="button"
               className={`nav-link nav-dashboard-link${isPermission ? ' active' : ''}`}
@@ -27,7 +19,7 @@ const Header = ({ onAuthClick, onSearch, onDashboardClick, isDashboard, onGuideD
             >
               Permission
             </button>
-            <a href="#hotels" className="nav-link">Hotels</a>
+            <a href="#hotels" className="nav-link" onClick={(event) => { event.preventDefault(); onHotelsClick(); }}>Hotels</a>
             <button
               type="button"
               className={`nav-link nav-dashboard-link${isDashboard ? ' active' : ''}`}
@@ -46,21 +38,22 @@ const Header = ({ onAuthClick, onSearch, onDashboardClick, isDashboard, onGuideD
         </div>
 
         <div className="header-actions">
-          <form className="search-box" role="search" onSubmit={handleSearch}>
-            <span className="search-icon" aria-hidden="true" />
-            <input
-              type="search"
-              aria-label="Explore by destination"
-              placeholder="Explore by destination"
-              value={destination}
-              onChange={(event) => setDestination(event.target.value)}
-            />
-          </form>
-
-          <button type="button" className="login-btn" onClick={onAuthClick}>Log in</button>
-          <button type="button" className="signup-btn" onClick={onAuthClick}>Sign up</button>
+          {currentUser ? (
+            <>
+              <span className="header-user-name" title={currentUser.email}>{currentUser.fullName}</span>
+              <button type="button" className="logout-btn" onClick={onLogout}>
+                <span aria-hidden="true">↪</span> Log out
+              </button>
+            </>
+          ) : (
+            <>
+              <button type="button" className="login-btn" onClick={onAuthClick}>Log in</button>
+              <button type="button" className="signup-btn" onClick={onAuthClick}>Sign up</button>
+            </>
+          )}
         </div>
       </div>
+      {authMessage && <p className="header-auth-message" role="alert">{authMessage}</p>}
     </header>
   );
 };

@@ -78,66 +78,9 @@
   flex-shrink: 0;
 }
 
-.search-box {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: clamp(230px, 22vw, 300px);
-  height: 44px;
-  border: 1px solid #dce3eb;
-  border-radius: 9px;
-  background: #ffffff;
-  padding: 0 14px;
-  transition: border-color 160ms ease, box-shadow 160ms ease;
-}
-
-.search-box:focus-within {
-  border-color: #4288c7;
-  box-shadow: 0 0 0 3px rgba(20, 98, 166, 0.12);
-}
-
-.search-icon {
-  position: relative;
-  width: 15px;
-  height: 15px;
-  flex: 0 0 15px;
-  border: 2px solid #8091a8;
-  border-radius: 50%;
-}
-
-.search-icon::after {
-  position: absolute;
-  right: -5px;
-  bottom: -3px;
-  width: 6px;
-  height: 2px;
-  background: #8091a8;
-  border-radius: 2px;
-  content: '';
-  transform: rotate(45deg);
-}
-
-.search-box input {
-  width: 100%;
-  min-width: 0;
-  border: none;
-  outline: none;
-  background: transparent;
-  font: inherit;
-  font-size: 0.95rem;
-  color: #1f2937;
-}
-
-.search-box input::-webkit-search-cancel-button {
-  cursor: pointer;
-}
-
-.search-box input::placeholder {
-  color: #69788d;
-}
-
 .login-btn,
-.signup-btn {
+.signup-btn,
+.logout-btn {
   min-height: 44px;
   border: 1px solid transparent;
   border-radius: 8px;
@@ -147,6 +90,23 @@
   font-weight: 650;
   white-space: nowrap;
   transition: background-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.header-user-name {
+  max-width: 180px;
+  overflow: hidden;
+  color: #344054;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.header-auth-message {
+  max-width: 1800px;
+  margin: 8px auto 0;
+  color: #b42318;
+  font-size: 13px;
 }
 
 .login-btn {
@@ -159,6 +119,20 @@
   background: #0758a6;
   color: #ffffff;
   padding: 0 22px;
+}
+
+.logout-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f7f8f6;
+  color: #42534a;
+  padding: 0 14px;
+}
+
+.logout-btn:hover {
+  background: #eaf0eb;
+  color: #245e51;
 }
 
 .login-btn:hover {
@@ -174,6 +148,7 @@
 
 .login-btn:focus-visible,
 .signup-btn:focus-visible,
+.logout-btn:focus-visible,
 .nav-link:focus-visible,
 .brand-block:focus-visible {
   outline: 3px solid rgba(20, 98, 166, 0.35);
@@ -195,10 +170,6 @@
     justify-content: flex-end;
   }
 
-  .search-box {
-    flex: 1 1 auto;
-    max-width: 420px;
-  }
 }
 
 @media (max-width: 560px) {
@@ -231,25 +202,22 @@
   }
 
   .header-actions {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto auto;
+    display: flex;
+    width: auto;
+    justify-content: flex-end;
     gap: 8px;
   }
 
-  .search-box {
-    width: auto;
-    height: 42px;
-    padding: 0 10px;
-  }
-
-  .search-box input {
-    font-size: 0.84rem;
-  }
-
   .login-btn,
-  .signup-btn {
+  .signup-btn,
+  .logout-btn {
     min-height: 42px;
     font-size: 0.84rem;
+  }
+
+  .header-user-name {
+    max-width: 100px;
+    font-size: 0.78rem;
   }
 
   .login-btn {
@@ -263,10 +231,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .nav-link,
-  .search-box,
   .login-btn,
   .signup-btn {
     transition: none;
   }
-}
 }

@@ -2,290 +2,281 @@ import { useState } from 'react';
 import '../styles/AddDate.css';
 
 const starterActivities = [
-	{ id: 1, day: 0, time: '07:30', title: 'Sunrise walk to Little Adam\'s Peak', category: 'Hiking', cost: 2500, done: false },
-	{ id: 2, day: 0, time: '10:30', title: 'Nine Arches Bridge viewpoint', category: 'Sightseeing', cost: 1800, done: false },
-	{ id: 3, day: 0, time: '12:30', title: 'Lunch at a local cafe', category: 'Food', cost: 3200, done: false },
-	{ id: 4, day: 1, time: '08:00', title: 'Ella Rock guided hike', category: 'Hiking', cost: 6500, done: false },
-	{ id: 5, day: 1, time: '13:00', title: 'Ravana Falls and picnic stop', category: 'Sightseeing', cost: 2800, done: false },
-	{ id: 6, day: 2, time: '09:00', title: 'Tea factory and plantation tour', category: 'Culture', cost: 5500, done: false },
-	{ id: 7, day: 2, time: '15:30', title: 'Scenic train to Haputale', category: 'Transport', cost: 4200, done: false },
+    { id: 1, day: 0, time: '08:00', duration: '2 hours', title: "Little Adam's peak trail", desc: 'Meet Nuwan for a gentle ridge walk through tea fields. Take in the valley views before the midday warmth.', location: "Little Adam's Peak, Ella", tag: 'Free entry', cost: 0 },
+    { id: 2, day: 0, time: '10:30', duration: '90 min', title: 'Tea estate tour & tasting', desc: 'Follow the journey from leaf to cup, explore the tea-making process and enjoy a guided tasting of local blends.', location: 'Tea estate, Ella', tag: '2 travelers', cost: 2000 },
+    { id: 3, day: 0, time: '14:30', duration: '90 min', title: 'Local craft workshop', desc: 'Slow down with a hands-on session led by a local maker. Create a small keepsake inspired by the hill country.', location: 'Ella town', tag: '2 travelers', cost: 1000 },
 ];
 
-const categoryNames = ['Hiking', 'Sightseeing', 'Food', 'Transport', 'Culture', 'Stay', 'Other'];
+const initialExpenses = [
+  { name: 'Tour guide', detail: '1 day × LKR 12,000', amount: 12000, icon: '👤' },
+  { name: 'Hotel', detail: '2 nights × LKR 9,000', amount: 18000, icon: '🏨' },
+  { name: 'Travel vehicle', detail: '3 days × LKR 3,000', amount: 9000, icon: '🚗' },
+  { name: 'Activities', detail: '3,000 + 2,000 + 1,000', amount: 6000, icon: '⛰️' },
+  { name: 'Meals', detail: '3 days × LKR 2,000', amount: 6000, icon: '🍽️' },
+];
 
-const formatDate = (date) => {
-	if (!date) return '';
-	return new Intl.DateTimeFormat('en', { month: 'short', day: 'numeric' }).format(new Date(`${date}T00:00:00`));
-};
+function AddDate({ tripDetails = {}, onBack, onHome, onContinue, onSaveTrip }) {
+  const [activeDay, setActiveDay] = useState(0);
+  const [activities, setActivities] = useState(starterActivities);
+  const [budget, setBudget] = useState(60000);
+  const [showActivityForm, setShowActivityForm] = useState(false);
+  const destination = tripDetails.destination?.trim() || 'Ella';
+  const tripDateRange = [tripDetails.startDate, tripDetails.endDate]
+    .filter(Boolean)
+    .map((date) => new Intl.DateTimeFormat('en', { month: 'short', day: 'numeric' }).format(new Date(`${date}T00:00:00`)))
+    .join(' – ');
+  const [saveMessage, setSaveMessage] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
-const formatMoney = (amount) => `LKR ${amount.toLocaleString('en-LK')}`;
+  const days = [
+    { label: 'Day 1 · GUIDED', date: 'Thu, Nov 12', cost: 'LKR 3,000 activities' },
+    { label: 'Day 2 · SELF-GUIDED', date: 'Fri, Nov 13', cost: 'LKR 2,000 activities' },
+    { label: 'Day 3 · SELF-GUIDED', date: 'Sat, Nov 14', cost: 'LKR 1,000 activities' },
+  ];
 
-function ActivityForm({ onAdd, onCancel }) {
-	const handleSubmit = (event) => {
-		event.preventDefault();
-		const values = new FormData(event.currentTarget);
-		onAdd({
-			title: values.get('title').trim(),
-			time: values.get('time'),
-			category: values.get('category'),
-			cost: Number(values.get('cost')) || 0,
-		});
-		event.currentTarget.reset();
-	};
+  const currentDayActivities = activities.filter((act) => act.day === activeDay);
+  const daySubtotal = currentDayActivities.reduce((sum, act) => sum + act.cost, 0);
 
-	return (
-		<form className="itinerary-add-form" onSubmit={handleSubmit}>
-			<div className="itinerary-add-form__heading">
-				<h3>Add an activity</h3>
-				<button type="button" className="itinerary-icon-button" onClick={onCancel} aria-label="Close form">×</button>
-			</div>
-			<div className="itinerary-add-form__fields">
-				<label>
-					Activity
-					<input name="title" required maxLength="80" placeholder="e.g. Visit a local tea estate" />
-				</label>
-				<label>
-					Time
-					<input name="time" type="time" defaultValue="10:00" required />
-				</label>
-				<label>
-					Category
-					<select name="category" defaultValue="Sightseeing">
-						{categoryNames.map((category) => <option key={category}>{category}</option>)}
-					</select>
-				</label>
-				<label>
-					Estimated cost (LKR)
-					<input name="cost" type="number" min="0" step="100" defaultValue="0" />
-				</label>
-			</div>
-			<div className="itinerary-add-form__actions">
-				<button type="button" className="itinerary-button itinerary-button--quiet" onClick={onCancel}>Cancel</button>
-				<button type="submit" className="itinerary-button itinerary-button--primary">Add activity</button>
-			</div>
-		</form>
-	);
-}
+  const addActivity = (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    setActivities((current) => [...current, {
+      id: Date.now(),
+      day: activeDay,
+      time: formData.get('time'),
+      duration: formData.get('duration'),
+      title: formData.get('title').trim(),
+      desc: formData.get('description').trim(),
+      location: formData.get('location').trim() || destination,
+      tag: 'Personal plan',
+      cost: Number(formData.get('cost')) || 0,
+    }]);
+    setShowActivityForm(false);
+  };
 
-function ActivityRow({ activity, onToggle, onRemove }) {
-	return (
-		<article className={`itinerary-activity${activity.done ? ' itinerary-activity--done' : ''}`}>
-			<time className="itinerary-activity__time">{activity.time}</time>
-			<button
-				type="button"
-				className="itinerary-activity__check"
-				aria-label={`${activity.done ? 'Mark as not done' : 'Mark as done'}: ${activity.title}`}
-				aria-pressed={activity.done}
-				onClick={onToggle}
-			>
-				{activity.done ? '✓' : ''}
-			</button>
-			<div className="itinerary-activity__main">
-				<h3>{activity.title}</h3>
-				<span>{activity.category}</span>
-			</div>
-			<strong className="itinerary-activity__cost">{formatMoney(activity.cost)}</strong>
-			<button type="button" className="itinerary-icon-button itinerary-activity__remove" onClick={onRemove} aria-label={`Remove ${activity.title}`}>
-				×
-			</button>
-		</article>
-	);
-}
+  const saveTrip = async () => {
+    if (!onSaveTrip) return true;
+    setIsSaving(true);
+    setSaveMessage('');
+    try {
+      await onSaveTrip({
+        destination,
+        startDate: tripDetails.startDate || null,
+        endDate: tripDetails.endDate || null,
+        visibility: tripDetails.visibility || 'friends',
+        budget,
+        activities,
+      });
+      setSaveMessage('Trip saved');
+      return true;
+    } catch (error) {
+      setSaveMessage(error.message);
+      return false;
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
-function BudgetPanel({ activities, budget, onBudgetChange }) {
-	const total = activities.reduce((sum, activity) => sum + activity.cost, 0);
-	const progress = budget > 0 ? Math.min((total / budget) * 100, 100) : 0;
-	const categoryTotals = categoryNames
-		.map((category) => ({
-			category,
-			amount: activities.filter((activity) => activity.category === category).reduce((sum, activity) => sum + activity.cost, 0),
-		}))
-		.filter((item) => item.amount > 0);
+  const continueToGuides = async () => {
+    if (await saveTrip()) onContinue();
+  };
 
-	return (
-		<aside className="itinerary-budget" aria-labelledby="budget-title">
-			<div className="itinerary-budget__heading">
-				<div>
-					<p className="itinerary-eyebrow">Trip overview</p>
-					<h2 id="budget-title">Live budget</h2>
-				</div>
-				<span className="itinerary-budget__currency">LKR</span>
-			</div>
+  
+  const totalEstimatedCost = initialExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+  const budgetUsedPercent = Math.min(Math.round((totalEstimatedCost / budget) * 100), 100);
+  const roomToSpare = budget - totalEstimatedCost;
 
-			<div className="itinerary-budget__total">
-				<span>Planned spend</span>
-				<strong>{formatMoney(total)}</strong>
-			</div>
+  return (
+    <section className="itinerary-page">
+      <button type="button" className="itinerary-btn-quiet" onClick={onBack}>← Back to trip details</button>
+      <header className="itinerary-trip-header">
+        <div className="itinerary-header-left">
+          <h1>Your {destination} escape, thoughtfully planned.</h1>
+          <p className="itinerary-trip-header__meta">
+            <span>📍 {destination}</span>
+            <span>📅 {tripDateRange || 'Choose your travel dates'}</span>
+          </p>
+          {saveMessage && <p className="itinerary-save-message" role="status">{saveMessage}</p>}
+        </div>
+        <button type="button" className="itinerary-button itinerary-button--primary" onClick={saveTrip} disabled={isSaving}>
+          {isSaving ? 'Saving…' : 'Save trip'}
+        </button>
+        <img
+          className="itinerary-trip-header__image"
+          src="https://d1ynolcus8dvgv.cloudfront.net/2019/01/nine-arch-2-5.jpg"
+          alt="Ella train landscape"
+        />
+      </header>
 
-			<label className="itinerary-budget__limit">
-				<span>Trip budget</span>
-				<span className="itinerary-budget__limit-input">
-					<span>LKR</span>
-					<input
-						aria-label="Trip budget in Sri Lankan rupees"
-						type="number"
-						min="0"
-						step="1000"
-						value={budget}
-						onChange={(event) => onBudgetChange(Number(event.target.value))}
-					/>
-					<span className="itinerary-budget__edit" aria-hidden="true">Edit</span>
-				</span>
-			</label>
+    
+      <div className="itinerary-layout">
+    
+        <section className="itinerary-schedule">
+          <div className="itinerary-section-heading">
+            <div>
+              <h2>Day-by-Day Activity Planner</h2>
+            </div>
+            <button type="button" className="itinerary-button itinerary-button--primary" onClick={() => setShowActivityForm((visible) => !visible)}>
+              {showActivityForm ? 'Cancel activity' : '+ Add Activity'}
+            </button>
+          </div>
 
-			<div className="itinerary-budget__progress" role="progressbar" aria-label="Budget used" aria-valuenow={Math.round(progress)} aria-valuemin="0" aria-valuemax="100">
-				<span style={{ width: `${progress}%` }} />
-			</div>
-			<p className="itinerary-budget__remaining">
-				{budget > total ? `${formatMoney(budget - total)} left` : `${formatMoney(total - budget)} over budget`}
-			</p>
+        
+          <div className="itinerary-day-tabs">
+            {days.map((day, index) => (
+              <button
+                key={index}
+                className={`itinerary-day-tab ${activeDay === index ? 'is-active' : ''}`}
+                onClick={() => setActiveDay(index)}
+              >
+                <span className="itinerary-day-label">{day.label}</span>
+                <strong className="itinerary-day-date">{day.date}</strong>
+                <small className="itinerary-day-cost">{day.cost}</small>
+              </button>
+            ))}
+          </div>
 
-			<div className="itinerary-budget__breakdown">
-				<h3>By category</h3>
-				{categoryTotals.length ? categoryTotals.map(({ category, amount }) => (
-					<div className="itinerary-budget__category" key={category}>
-						<span>{category}</span>
-						<strong>{formatMoney(amount)}</strong>
-					</div>
-				)) : <p className="itinerary-budget__empty">Add activities to see your breakdown.</p>}
-			</div>
+          <div className="itinerary-section-subheading">
+            <div>
+              <h3>Trails, tea & local stories</h3>
+              <p className="itinerary-subtext">Thursday, November 12 · 3 activities · With Nuwan</p>
+            </div>
+            <span className="itinerary-day-tag">DAY 1 OF 3</span>
+          </div>
 
-			<div className="itinerary-budget__footnote">
-				<strong>One trip, one clear plan.</strong>
-				<span>Costs update as you build your itinerary.</span>
-			</div>
-		</aside>
-	);
-}
+          <button type="button" className="itinerary-add-day-btn" onClick={() => setShowActivityForm(true)}>
+            + Add Activity to Day {activeDay + 1}
+          </button>
 
-function AddDate({ tripDetails = {}, onBack, onHome, onContinue }) {
-	const [activeDay, setActiveDay] = useState(0);
-	const [activities, setActivities] = useState(starterActivities);
-	const [budget, setBudget] = useState(60000);
-	const [showActivityForm, setShowActivityForm] = useState(false);
-	const destination = tripDetails.destination?.trim() || 'Ella';
-	const dateRange = [formatDate(tripDetails.startDate), formatDate(tripDetails.endDate)].filter(Boolean).join(' - ');
-	const days = [
-		{ label: 'Day 1', title: 'Little Adam\'s Peak and Nine Arches', date: dateRange.split(' - ')[0] },
-		{ label: 'Day 2', title: 'Ella Rock and Ravana Falls', date: '' },
-		{ label: 'Day 3', title: 'Tea country and the scenic train', date: dateRange.split(' - ')[1] },
-	];
-	const dayActivities = activities.filter((activity) => activity.day === activeDay).sort((a, b) => a.time.localeCompare(b.time));
-	const dayTotal = dayActivities.reduce((sum, activity) => sum + activity.cost, 0);
+          {showActivityForm && (
+            <form className="itinerary-add-activity-form" onSubmit={addActivity}>
+              <label>Activity<input name="title" maxLength="100" placeholder="Activity name" required /></label>
+              <label>Time<input name="time" type="time" defaultValue="16:00" required /></label>
+              <label>Duration<input name="duration" placeholder="1 hour" maxLength="30" required /></label>
+              <label>Estimated cost (LKR)<input name="cost" type="number" min="0" step="100" defaultValue="0" /></label>
+              <label className="itinerary-add-activity-form__wide">Location<input name="location" placeholder={destination} maxLength="150" /></label>
+              <label className="itinerary-add-activity-form__wide">Notes<textarea name="description" rows="2" maxLength="300" placeholder="What would you like to do?" /></label>
+              <div className="itinerary-add-activity-form__actions">
+                <button type="button" className="itinerary-btn-quiet" onClick={() => setShowActivityForm(false)}>Cancel</button>
+                <button type="submit" className="itinerary-btn-primary">Add activity</button>
+              </div>
+            </form>
+          )}
 
-	const addActivity = (activity) => {
-		setActivities((current) => [...current, { ...activity, day: activeDay, id: Date.now(), done: false }]);
-		setShowActivityForm(false);
-	};
+        
+          <div className="itinerary-activity-list">
+            {currentDayActivities.map((act) => (
+              <article key={act.id} className="itinerary-activity-card">
+                <div className="itinerary-activity-time">
+                  <strong>{act.time}</strong>
+                  <span>{act.duration}</span>
+                </div>
+                <div className="itinerary-activity-body">
+                  <div className="itinerary-activity-title-row">
+                    <h4>{act.title}</h4>
+                    <button className="itinerary-more-btn">•••</button>
+                  </div>
+                  <p className="itinerary-activity-desc">{act.desc}</p>
+                  <div className="itinerary-activity-footer">
+                    <span className="itinerary-location">📍 {act.location}</span>
+                    <div className="itinerary-cost-tag">
+                      <strong>LKR {act.cost.toLocaleString()}</strong>
+                      {act.tag && <span>{act.tag}</span>}
+                    </div>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
 
-	const updateActivity = (id, updates) => {
-		setActivities((current) => current.map((activity) => activity.id === id ? { ...activity, ...updates } : activity));
-	};
+        
+          <div className="itinerary-day-subtotal-box">
+            <div>
+              <strong>Day {activeDay + 1} activity subtotal</strong>
+              <p>For both travelers · Guide, stay, vehicle and meals are budgeted separately.</p>
+            </div>
+            <span className="itinerary-subtotal-amount">LKR {daySubtotal.toLocaleString()}</span>
+          </div>
+        </section>
 
-	return (
-		<section className="itinerary-page">
-			<div className="itinerary-container">
-				<div className="itinerary-topbar">
-					<button type="button" className="itinerary-back" onClick={onBack}>Back to trip details</button>
-					<div className="itinerary-topbar__actions">
-						<button type="button" className="itinerary-button itinerary-button--quiet">Share plan</button>
-						<button type="button" className="itinerary-button itinerary-button--primary">Save trip</button>
-					</div>
-				</div>
+        
+        <aside className="itinerary-budget-sidebar">
+          <div className="itinerary-budget-card">
+            <div className="itinerary-budget-header">
+              <h3>🧮 Live Budget Calculator</h3>
+              <p>Whole trip · 3 days · 2 travelers</p>
+            </div>
 
-				<header className="itinerary-trip-header">
-					<div>
-					<p className="itinerary-eyebrow">Your travel itinerary</p>
-					<h1>Your {destination} escape, thoughtfully planned.</h1>
-					<p className="itinerary-trip-header__meta">
-						<span>{dateRange || '3 days'}</span>
-						<span>3 days</span>
-						<span>Friends trip</span>
-					</p>
-				</div>
-				<img
-					className="itinerary-trip-header__image"
-					src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=720&q=85"
-					alt={`${destination} mountain landscape`}
-				/>
-				</header>
+            <div className="itinerary-budget-input-group">
+              <label>Your trip budget <small>LKR - Sri Lankan rupee</small></label>
+              <div className="itinerary-budget-field">
+                <span>LKR</span>
+                <input
+                  type="number"
+                  value={budget}
+                  onChange={(e) => setBudget(Number(e.target.value))}
+                />
+                
+                <button className="btn-step" onClick={() => setBudget(b => Math.max(0, b - 5000))}>-</button>
+                <button className="btn-step" onClick={() => setBudget(b => b + 5000)}>+</button>
+              </div>
+            </div>
 
-				<div className="itinerary-layout">
-					<section className="itinerary-schedule" aria-labelledby="schedule-title">
-						<div className="itinerary-section-heading">
-							<div>
-								<p className="itinerary-eyebrow">Make every day count</p>
-								<h2 id="schedule-title">Day-by-day activity planner</h2>
-							</div>
-							<button type="button" className="itinerary-button itinerary-button--primary itinerary-add-button" onClick={() => setShowActivityForm((visible) => !visible)}>
-								<span aria-hidden="true">+</span> Add activity
-							</button>
-						</div>
+            <div className="itinerary-budget-progress-block">
+              <div className="itinerary-progress-text">
+                <span>Budget used</span>
+                <strong>{budgetUsedPercent}%</strong>
+              </div>
+              <div className="itinerary-progress-bar">
+                <div className="itinerary-progress-fill" style={{ width: `${budgetUsedPercent}%` }}></div>
+              </div>
+              <div className="itinerary-spare-text">
+                <span>Room to spare</span>
+                <strong>LKR {roomToSpare.toLocaleString()}</strong>
+              </div>
+            </div>
 
-						<div className="itinerary-day-tabs" role="tablist" aria-label="Trip days">
-							{days.map((day, index) => (
-								<button
-									key={day.label}
-									id={`day-tab-${index}`}
-									className={activeDay === index ? 'is-active' : ''}
-									role="tab"
-									aria-selected={activeDay === index}
-									aria-controls="day-panel"
-									tabIndex={activeDay === index ? 0 : -1}
-									onClick={() => setActiveDay(index)}
-								>
-									<span>{day.label}</span>
-									<strong>{day.date || day.title}</strong>
-								</button>
-							))}
-						</div>
+            
+            <div className="itinerary-expenses-list">
+              <h5>ESTIMATED EXPENSES <span>LKR</span></h5>
+              {initialExpenses.map((exp, i) => (
+                <div key={i} className="itinerary-expense-row">
+                  <span className="exp-icon">{exp.icon}</span>
+                  <div className="exp-info">
+                    <strong>{exp.name}</strong>
+                    <small>{exp.detail}</small>
+                  </div>
+                  <strong className="exp-amount">{exp.amount.toLocaleString()}</strong>
+                </div>
+              ))}
+            </div>
 
-						<div id="day-panel" className="itinerary-day-panel" role="tabpanel" aria-labelledby={`day-tab-${activeDay}`}>
-							<div className="itinerary-day-summary">
-								<div>
-									<h3>{days[activeDay].title}</h3>
-									<p>{dayActivities.length} planned {dayActivities.length === 1 ? 'activity' : 'activities'}</p>
-								</div>
-								<strong>{formatMoney(dayTotal)}</strong>
-							</div>
+            
+            <div className="itinerary-total-footer-card">
+              <div className="total-top">
+                <span>Total estimated cost</span>
+                <strong>LKR {totalEstimatedCost.toLocaleString()}</strong>
+              </div>
+              <div className="total-bottom">
+                <small>For both travelers - Entire trip</small>
+                <small>LKR {(totalEstimatedCost / 2).toLocaleString()} / person</small>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
 
-							{showActivityForm && <ActivityForm onAdd={addActivity} onCancel={() => setShowActivityForm(false)} />}
-
-							<div className="itinerary-activity-list">
-								{dayActivities.map((activity) => (
-									<ActivityRow
-										key={activity.id}
-										activity={activity}
-										onToggle={() => updateActivity(activity.id, { done: !activity.done })}
-										onRemove={() => setActivities((current) => current.filter((item) => item.id !== activity.id))}
-									/>
-								))}
-								{dayActivities.length === 0 && !showActivityForm && (
-									<p className="itinerary-empty-day">Nothing planned for this day yet. Add an activity to get started.</p>
-								)}
-							</div>
-						</div>
-
-						<div className="itinerary-day-total">
-							<span>Estimated spend for {days[activeDay].label.toLowerCase()}</span>
-							<strong>{formatMoney(dayTotal)}</strong>
-						</div>
-					</section>
-
-					<BudgetPanel activities={activities} budget={budget} onBudgetChange={setBudget} />
-				</div>
-
-				<div className="itinerary-bottom-actions">
-					<button type="button" className="itinerary-button itinerary-button--quiet" onClick={onHome}>
-						<span aria-hidden="true">←</span> Back to Home Page
-					</button>
-					<button type="button" className="itinerary-button itinerary-button--primary" onClick={onContinue}>
-						Continue / Find the Guides <span aria-hidden="true">→</span>
-					</button>
-				</div>
-			</div>
-		</section>
-	);
+      
+      <footer className="itinerary-bottom-bar">
+        <button type="button" className="itinerary-btn-quiet" onClick={onHome}>
+          ← Back to Home Page
+        </button>
+        <button type="button" className="itinerary-btn-primary" onClick={continueToGuides} disabled={isSaving}>
+          Continue / Find the Guides →
+        </button>
+      </footer>
+    </section>
+  );
 }
 
 export default AddDate;
