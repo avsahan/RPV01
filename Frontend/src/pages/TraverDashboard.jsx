@@ -1,5 +1,3 @@
-import GuideRequest from "../components/GuideRequest"
-
 function TraverDashboard() {
     return(
         <main className="traveler-dashboard">
@@ -8,7 +6,6 @@ function TraverDashboard() {
                 <h1 id="traveler-welcome-title">Good morning, Name<span>.</span></h1>
                 <p>Every detail of your next journey, right where you need it.</p>
             </div>
-           <GuideRequest />
         </main>
     );
 }

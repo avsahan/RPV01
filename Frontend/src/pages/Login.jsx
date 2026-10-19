@@ -2,16 +2,13 @@ import { useState } from "react";
 import VLogo from "../assets/VLogo.png"
 import "../styles/Login.css"
 
-function Login( { onSignTraveler, onSignGuide } ) {
+function Login( { onSignTraveler, onSignGuide, onLoginSuccess } ) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const handleLogin = async (e) => {
-        console.log("hello");
         e.preventDefault();
          try {
-            console.log(email);
-            console.log(password);
              const response = await fetch("http://localhost:5000/api/login", {
                 method: "POST",
                 headers: {
@@ -29,6 +26,7 @@ function Login( { onSignTraveler, onSignGuide } ) {
                 }
 
                 alert("Login successful! Welcome " + data.user.name);
+                onLoginSuccess(data.user);
 
   } catch (error) {
     console.error("Login error:", error);

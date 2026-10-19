@@ -3,12 +3,24 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import TravelerSignup from "./pages/TravelerSignup"
-import GuideSignup from "./pages/GuideSignup"
+import GuideSignup from "./pages/GuideSignup";
+import TraverDashboard from "./pages/TraverDashboard";
 import "./styles/global.css";
 
 function App() {
   const [activePage, setActivePage] = useState('home');
   const [isLogged, setLogged] = useState(false);
+  const [user, setUser] = useState(null);
+
+  const handleLoginSuccess = (loggedInUser) => {
+  setUser(loggedInUser);
+
+  if (loggedInUser.role === "traveler") {
+    setActivePage("traveler-dashboard");
+  } else if (loggedInUser.role === "guide") {
+    setActivePage("guide-dashboard");
+  }
+};
 
   const navigateToLoginSection = () => {
     setActivePage('login');
@@ -31,9 +43,10 @@ function App() {
       <Navbar onLoginSection={navigateToLoginSection} isLoggedIn={isLogged}/>
       <main className="content-body">
         {activePage === 'home' && <Home onLoginSection={navigateToLoginSection}/>}
-        {activePage === 'login' && <Login onSignTraveler={navigateToSignTravelerSection} onSignGuide={navigateToGuideSection}/>}
+        {activePage === 'login' && <Login onSignTraveler={navigateToSignTravelerSection} onSignGuide={navigateToGuideSection} onLoginSuccess={handleLoginSuccess}/>}
         {activePage === 'sign-traveler' && <TravelerSignup /> }
         {activePage === 'sign-guide' && <GuideSignup /> }
+        {activePage === 'traveler-dashboard'  && user?.role === 'traveler' && <TraverDashboard />}
       </main>
     </div>
   );
