@@ -14,6 +14,7 @@ function TravelerSignup() {
     headers: {
       "Content-Type": "application/json"
     },
+    credentials: "include",
     body: JSON.stringify({
       name: name,
       phone: phone,

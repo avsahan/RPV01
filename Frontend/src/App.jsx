@@ -1,34 +1,42 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from './pages/Home.jsx'
-import Login from './pages/Login.jsx'
-import TravelerSignup from './pages/TravelerSignup.jsx'
-import GuideSignup from './pages/GuideSignup.jsx'
-import TraverHomePage from "./pages/TraverHomePage.jsx";
-import TraverPlannerPage from "./pages/TraverPlannerPage.jsx";
-import GuiderSelection from "./pages/GuiderSelection.jsx";
-import TraverDashboard from "./pages/TraverDashboard.jsx";
-import GuideDashboard from "./pages/GuideDashboard.jsx";
-import './styles/global.css'
-
+import { useState } from "react";
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import TravelerSignup from "./pages/TravelerSignup"
+import GuideSignup from "./pages/GuideSignup"
+import "./styles/global.css";
 
 function App() {
+  const [activePage, setActivePage] = useState('home');
+  const [isLogged, setLogged] = useState(false);
+
+  const navigateToLoginSection = () => {
+    setActivePage('login');
+    handleLogin();
+  }
+
+  const handleLogin = () => {
+    setLogged(true);
+  }
+
+  const navigateToSignTravelerSection = () => {
+    setActivePage('sign-traveler');
+  }
+
+  const navigateToGuideSection = () => {
+    setActivePage('sign-guide');
+  }
   return (
-    <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/Login" element={<Login />} />
-          <Route path="/Login/travelerSignup" element={<TravelerSignup />} />
-          <Route path="/Login/guideSignup" element={<GuideSignup />} />
-          <Route path="/Login/TravelHomePage" element={<TraverHomePage />} />
-          <Route path="/Login/TravelHomePage/TraverPlannerPage" element={<TraverPlannerPage />} />
-          <Route path="/Login/TravelHomePage/TraverPlannerPage/GudiderSelection" element={<GuiderSelection />} />
-          <Route path="/Login/TraverDashboard" element={<TraverDashboard />} />
-          <Route path="/Login/GuideDashboard" element={<GuideDashboard />} />
-        </Routes>
-      </BrowserRouter>
-    </>
-    );
+    <div className="app-main">
+      <Navbar onLoginSection={navigateToLoginSection} isLoggedIn={isLogged}/>
+      <main className="content-body">
+        {activePage === 'home' && <Home onLoginSection={navigateToLoginSection}/>}
+        {activePage === 'login' && <Login onSignTraveler={navigateToSignTravelerSection} onSignGuide={navigateToGuideSection}/>}
+        {activePage === 'sign-traveler' && <TravelerSignup /> }
+        {activePage === 'sign-guide' && <GuideSignup /> }
+      </main>
+    </div>
+  );
 }
 
 export default App;

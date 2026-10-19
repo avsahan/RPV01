@@ -1,13 +1,40 @@
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import VLogo from "../assets/VLogo.png"
 import "../styles/Login.css"
 
-function Login() { 
-    const navigate = useNavigate();
-    function navigateTraverHomePage() {
-        navigate("/Login/TravelHomePage")
-    }
+function Login( { onSignTraveler, onSignGuide } ) {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleLogin = async (e) => {
+        console.log("hello");
+        e.preventDefault();
+         try {
+            console.log(email);
+            console.log(password);
+             const response = await fetch("http://localhost:5000/api/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                alert(data.message);
+                return;
+                }
+
+                alert("Login successful! Welcome " + data.user.name);
+
+  } catch (error) {
+    console.error("Login error:", error);
+    alert("Cannot connect to the server.");
+  }
+};
 
     return (
         <div className="loginPage">
@@ -16,47 +43,23 @@ function Login() {
                     <img src={VLogo} alt="Logo" className="brandlogoimage" />
                 </a>
 
-                {/* <h2>Log in to view this page</h2>
-
-                <div className="social-login">
-                    <button className="btn-social btn-facebook">
-                        <i className="fa-brands fa-facebook-f"></i>
-                        <span>Log in with Facebook</span>
-                    </button>
-                    <button className="btn-social btn-google">
-                        <i className="fa-brands fa-google"></i>
-                        <span>Log in with Google</span>
-                    </button>
-                    <button className="btn-social btn-apple">
-                        <i className="fa-brands fa-apple"></i>
-                        <span>Log in with Apple</span>
-                    </button>
-                </div>
-
-                <div className="divider">
-                    <span>or</span>
-                </div> */}
-
-                <form id="loginForm" className="login-form">
+                <form id="loginForm" className="login-form" onSubmit={handleLogin}>
                     <div className="input-group">
-                        <input type="email" id="email" name="email" placeholder="Email" required/>
+                        <input type="email" id="email" value={email} placeholder="Email" required onChange={(e) => setEmail(e.target.value)}/>
                     </div>
                     <div className="input-group password-group">
-                        <input type="password" id="password" placeholder="Password" required/>
-                        {/* <i className="fa-regular fa-eye-slash toggle-password" id="togglePassword"></i> */}
+                        <input type="password" id="password" placeholder="Password" value={password} required onChange={(e) => setPassword(e.target.value)}/>
                     </div>
-                </form>
-                {/* <div className="forgot-password">
-                    <a href="#">Forgot password</a>
-                </div> */}
 
-                <button id="loginButton" className="btn-submit" onClick={navigateTraverHomePage}>Log in</button>
+                    <button type="submit" id="loginButton" className="btn-submit">Log in</button>
+
+                </form>
         
                 <div className="role-selection-section">
                     <p className="signup-label">New to VentureVista? Choose your account type:</p>
                     <div className="role-buttons">
-                        <Link to="/Login/travelerSignup" className="btn-role btn-traveler">Sign Up as Traveler</Link>
-                        <Link to="/Login/guideSignup" className="btn-role btn-guide">Sign Up as Local Guide</Link>
+                        <button className="btn-role btn-traveler" onClick={onSignTraveler}>Sign Up as Traveler</button>
+                        <button className="btn-role btn-guide" onClick={onSignGuide}>Sign Up as Local Guide</button>
                     </div>
                 </div>
             </div>
