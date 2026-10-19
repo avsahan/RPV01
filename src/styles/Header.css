@@ -126,13 +126,13 @@
   align-items: center;
   gap: 6px;
   background: #f7f8f6;
-  color: #42534a;
+  color: #344054;
   padding: 0 14px;
 }
 
 .logout-btn:hover {
-  background: #eaf0eb;
-  color: #245e51;
+  background: #eef6ff;
+  color: #0758a6;
 }
 
 .login-btn:hover {

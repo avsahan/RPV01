@@ -68,7 +68,7 @@ body {
 
 .primary-button,
 .secondary-button {
-  background: #0a4d8f;
+  background: #0758a6;
   color: #fff;
   padding: 0.9rem 1.5rem;
   font-size: 0.88rem;
@@ -127,7 +127,7 @@ body {
   place-items: center;
   border-radius: 12px;
   background: rgba(14, 101, 181, 0.08);
-  color: #0a4d8f;
+  color: #0758a6;
   font-size: 1.2rem;
   margin-bottom: 0.8rem;
 }
@@ -169,7 +169,7 @@ body {
 }
 
 .review-rating {
-  color: #17679d;
+  color: #0758a6;
   letter-spacing: 0.14em;
   font-size: 0.7rem;
 }
@@ -258,10 +258,10 @@ body {
   display: grid;
   place-items: center;
   border-radius: 10px;
-  background: linear-gradient(135deg, #0a4d8f, #2e7ed8);
+  background: linear-gradient(135deg, #0758a6, #2e7ed8);
   color: white;
   font-weight: 800;
-  box-shadow: 0 8px 18px rgba(10, 77, 143, 0.2);
+  box-shadow: 0 8px 18px rgba(7, 88, 166, 0.2);
 }
 
 .brand-block p,

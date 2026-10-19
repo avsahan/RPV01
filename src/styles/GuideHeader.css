@@ -29,11 +29,11 @@
   border: 0;
   border-radius: 50%;
   background: transparent;
-  color: #e0a43a;
+  color: #0758a6;
   cursor: pointer;
 }
 
-.gd-header__bell:hover { background: #f5f2ee; }
+.gd-header__bell:hover { background: #eef6ff; }
 
 .gd-header__avatar {
   display: grid;
@@ -41,8 +41,8 @@
   height: 36px;
   place-items: center;
   border-radius: 50%;
-  background: #dcefe3;
-  color: #25683f;
+  background: #e8f1ff;
+  color: #0758a6;
   font-size: 0.78rem;
   font-weight: 700;
 }
@@ -62,10 +62,10 @@
   cursor: pointer;
 }
 
-.gd-header__logout:hover { background: #edf4ef; }
+.gd-header__logout:hover { background: #eef6ff; }
 
 .gd-header__bell:focus-visible {
-  outline: 3px solid rgba(224, 83, 61, 0.3);
+  outline: 3px solid rgba(7, 88, 166, 0.3);
   outline-offset: 2px;
 }
 
@@ -75,6 +75,6 @@
 }
 
 .gd-header__logout:focus-visible {
-  outline: 3px solid rgba(45, 120, 95, 0.25);
+  outline: 3px solid rgba(7, 88, 166, 0.25);
   outline-offset: 2px;
 }
