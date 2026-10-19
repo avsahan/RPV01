@@ -1,21 +1,9 @@
 import NavBar from "../components/Navbar";
 import "../styles/GuideDashboard.css"
-import TravelerRequest from "../components/TravlerRequest";
 import Footer from "../components/Footer";
+import TravelerRequest from "../components/TravelerRequest"
 
 function GuideDashboard() {
-    const traveler = {
-  id: 1,
-  name: "Amaya Perera",
-  email: "amaya.perera@gmail.com",
-  phone: "0771234567",
-  location: "Colombo, Sri Lanka",
-  image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600",
-  status: "Active",
-  onViewDetails: () => {
-    console.log("View traveler details");
-  }
-};
     return (
         <>
             <NavBar />
@@ -44,7 +32,7 @@ function GuideDashboard() {
                 <div className="gd-detail"><span>License no.</span><strong>guide.license</strong></div>
                 </div>
             </section>
-            <TravelerRequest traveler={traveler} />
+            <TravelerRequest />
             <Footer />
             </div>
         </main>
