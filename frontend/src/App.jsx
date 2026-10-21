@@ -13,7 +13,7 @@ import { createBooking, createTrip, getCurrentUser, logout, updateTrip } from '.
 import './styles/App.css';
 
 const featureCards = [
-  { icon: '✈', title: 'Pl flights', text: 'Add flight plans and organize travel details in a few clicks.' },
+  { icon: '✈', title: 'Plan flights', text: 'Add flight plans and organize travel details in a few clicks.' },
   { icon: '📍', title: 'Create guides', text: 'Build custom itineraries and save your favorite stops along the way.' },
   { icon: '🧳', title: 'Travel essentials', text: 'Keep bookings, documents, and reminders all in one place.' },
   { icon: '🗺', title: 'Discover routes', text: 'Map scenic drives, train rides, and local experiences with ease.' },

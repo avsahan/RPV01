@@ -3,8 +3,8 @@
   position: sticky;
   top: 0;
   z-index: 20;
-  background: rgba(255, 255, 255, 0.97);
-  border-bottom: 1px solid #e7ebf0;
+  background: rgba(240, 246, 255, 0.97);
+  border-bottom: 1px solid #cce0ff;
   padding: 12px clamp(20px, 3.2vw, 56px);
   backdrop-filter: blur(12px);
 }
@@ -51,7 +51,7 @@
 
 .nav-link {
   text-decoration: none;
-  color: #172033;
+  color: #0a1a3c;
   font-size: 1rem;
   font-weight: 500;
   line-height: 1.2;
@@ -68,7 +68,7 @@
 
 .nav-link:hover,
 .nav-link.active {
-  color: #0758a6;
+  color: #0057c2;
 }
 
 .header-actions {
@@ -95,7 +95,7 @@
 .header-user-name {
   max-width: 180px;
   overflow: hidden;
-  color: #344054;
+  color: #0a1a3c;
   font-size: 0.9rem;
   font-weight: 600;
   text-overflow: ellipsis;
@@ -111,12 +111,12 @@
 
 .login-btn {
   background: transparent;
-  color: #111827;
+  color: #0a1a3c;
   padding: 0 12px;
 }
 
 .signup-btn {
-  background: #0758a6;
+  background: #0057c2;
   color: #ffffff;
   padding: 0 22px;
 }
@@ -125,24 +125,24 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: #f7f8f6;
-  color: #42534a;
+  background: #e8f0fe;
+  color: #0a1a3c;
   padding: 0 14px;
 }
 
 .logout-btn:hover {
-  background: #eaf0eb;
-  color: #245e51;
+  background: #dbeafe;
+  color: #003d8a;
 }
 
 .login-btn:hover {
-  color: #0758a6;
-  background: #f2f7fc;
+  color: #0057c2;
+  background: #e8f0fe;
 }
 
 .signup-btn:hover {
-  background: #064985;
-  box-shadow: 0 5px 14px rgba(7, 88, 166, 0.2);
+  background: #003d8a;
+  box-shadow: 0 5px 14px rgba(0, 87, 194, 0.25);
   transform: translateY(-1px);
 }
 
@@ -151,7 +151,7 @@
 .logout-btn:focus-visible,
 .nav-link:focus-visible,
 .brand-block:focus-visible {
-  outline: 3px solid rgba(20, 98, 166, 0.35);
+  outline: 3px solid rgba(0, 87, 194, 0.35);
   outline-offset: 3px;
 }
 

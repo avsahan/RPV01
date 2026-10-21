@@ -1,8 +1,8 @@
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  background-color: #f7fafc;
-  color: #2d3748;
+  background-color: #f0f6ff;
+  color: #0a1a3c;
 }
 .log{
   width: 100%;
@@ -41,7 +41,7 @@ body {
   line-height: 1.1;
   letter-spacing: -0.06em;
   font-weight: 800;
-  color: #0f172a;
+  color: #001f5b;
 }
 
 .hero-section p {
@@ -49,7 +49,7 @@ body {
   margin: 1.1rem auto 0;
   font-size: 1.02rem;
   line-height: 1.7;
-  color: #51607a;
+  color: #3a5a8a;
 }
 
 .primary-button,
@@ -68,12 +68,12 @@ body {
 
 .primary-button,
 .secondary-button {
-  background: #0a4d8f;
+  background: #0057c2;
   color: #fff;
   padding: 0.9rem 1.5rem;
   font-size: 0.88rem;
   font-weight: 700;
-  box-shadow: 0 12px 22px rgba(10, 77, 143, 0.22);
+  box-shadow: 0 12px 22px rgba(0, 87, 194, 0.25);
 }
 
 .primary-button:hover,
@@ -81,6 +81,11 @@ body {
 .download-buttons button:hover,
 .adventure-copy button:hover {
   transform: translateY(-1px);
+}
+
+.primary-button:hover,
+.secondary-button:hover {
+  background: #003d8a;
 }
 
 .feature-section,
@@ -96,7 +101,7 @@ body {
   margin: 0 0 1.8rem;
   font-size: clamp(1.8rem, 2vw, 2.2rem);
   letter-spacing: -0.04em;
-  color: #0e1727;
+  color: #001449;
 }
 
 .feature-grid {
@@ -114,10 +119,10 @@ body {
   justify-content: flex-start;
   min-height: 180px;
   padding: 1.1rem 1rem 1rem;
-  background: rgba(255, 255, 255, 0.28);
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.80);
+  border: 1px solid rgba(0, 87, 194, 0.12);
   border-radius: 18px;
-  box-shadow: 0 6px 18px rgba(148, 163, 184, 0.08);
+  box-shadow: 0 6px 18px rgba(0, 87, 194, 0.07);
 }
 
 .feature-icon {
@@ -126,8 +131,8 @@ body {
   display: grid;
   place-items: center;
   border-radius: 12px;
-  background: rgba(14, 101, 181, 0.08);
-  color: #0a4d8f;
+  background: rgba(0, 87, 194, 0.1);
+  color: #0057c2;
   font-size: 1.2rem;
   margin-bottom: 0.8rem;
 }
@@ -135,14 +140,14 @@ body {
 .feature-card h3 {
   margin: 0 0 0.55rem;
   font-size: 1rem;
-  color: #111827;
+  color: #001449;
 }
 
 .feature-card p {
   margin: 0;
   font-size: 0.75rem;
   line-height: 1.6;
-  color: #526277;
+  color: #3a5a8a;
 }
 
 .secondary-button {
@@ -162,14 +167,14 @@ body {
   flex-direction: column;
   gap: 0.7rem;
   padding: 1rem 0.9rem 1.2rem;
-  background: rgba(255, 255, 255, 0.3);
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(0, 87, 194, 0.1);
   border-radius: 16px;
   text-align: left;
 }
 
 .review-rating {
-  color: #17679d;
+  color: #0057c2;
   letter-spacing: 0.14em;
   font-size: 0.7rem;
 }
@@ -178,12 +183,12 @@ body {
   margin: 0;
   font-size: 0.75rem;
   line-height: 1.7;
-  color: #58657a;
+  color: #3a5a8a;
 }
 
 .review-card strong {
   font-size: 0.8rem;
-  color: #122033;
+  color: #001449;
 }
 
 .adventure-grid {
@@ -199,7 +204,7 @@ body {
   overflow: hidden;
   border-radius: 18px;
   background: #fff;
-  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 8px 22px rgba(0, 87, 194, 0.10);
   min-height: 210px;
 }
 
@@ -214,7 +219,7 @@ body {
   position: absolute;
   inset: auto 0 0 0;
   padding: 0.9rem 0.9rem 1rem;
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0) 0%, rgba(15, 23, 42, 0.72) 100%);
+  background: linear-gradient(180deg, rgba(0, 20, 73, 0) 0%, rgba(0, 20, 73, 0.75) 100%);
   color: #fff;
   text-align: left;
 }
@@ -229,14 +234,14 @@ body {
   padding: 0.5rem 0.8rem;
   background: rgba(255, 255, 255, 0.18);
   color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.30);
 }
 
 .site-footer {
   max-width: 1180px;
   margin: 0 auto;
   padding: 2.5rem 1.2rem 2.1rem;
-  border-top: 1px solid rgba(15, 23, 42, 0.1);
+  border-top: 1px solid rgba(0, 87, 194, 0.12);
 }
 
 .footer-top {
@@ -258,17 +263,17 @@ body {
   display: grid;
   place-items: center;
   border-radius: 10px;
-  background: linear-gradient(135deg, #0a4d8f, #2e7ed8);
+  background: linear-gradient(135deg, #0057c2, #4492e8);
   color: white;
   font-weight: 800;
-  box-shadow: 0 8px 18px rgba(10, 77, 143, 0.2);
+  box-shadow: 0 8px 18px rgba(0, 87, 194, 0.25);
 }
 
 .brand-block p,
 .footer-column ul,
 .footer-bottom,
 .legal-links a {
-  color: #5d697b;
+  color: #3a5a8a;
 }
 
 .brand-block p {
@@ -282,7 +287,7 @@ body {
 .newsletter h4 {
   margin: 0 0 0.9rem;
   font-size: 0.96rem;
-  color: #111827;
+  color: #001449;
 }
 
 .footer-column ul {
@@ -314,7 +319,7 @@ body {
 .download-buttons button {
   min-width: 150px;
   padding: 0.75rem 1rem;
-  background: #0758a6;
+  background: #0057c2;
   color: #fff;
   font-size: 0.8rem;
   font-weight: 600;
@@ -327,7 +332,7 @@ body {
   gap: 1rem;
   margin-top: 1.8rem;
   padding-top: 1rem;
-  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  border-top: 1px solid rgba(0, 87, 194, 0.1);
   font-size: 0.78rem;
 }
 

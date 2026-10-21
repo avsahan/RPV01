@@ -1,6 +1,9 @@
 const API_BASE = (import.meta.env.VITE_API_URL || '/api/v1').replace(/\/$/, '');
 
 async function requestApi(path, options = {}) {
+
+  console.log("API_BASE", API_BASE, "path", path)
+
   const response = await fetch(`${API_BASE}${path}`, {
     ...options,
     credentials: 'include',
@@ -46,3 +49,13 @@ export const updateBooking = (bookingId, data) => requestApi(`/bookings/${bookin
 export const respondToCounterOffer = (bookingId, status) => requestApi(`/bookings/${bookingId}/respond`, { method: 'PATCH', body: JSON.stringify({ status }) });
 export const getBookingMessages = (bookingId) => requestApi(`/bookings/${bookingId}/messages`);
 export const sendBookingMessage = (bookingId, body) => requestApi(`/bookings/${bookingId}/messages`, { method: 'POST', body: JSON.stringify({ body }) });
+
+// Permission request API
+export const submitPermissionRequest = (data) => requestApi('/permissions', { method: 'POST', body: JSON.stringify(data) });
+export const getPermissions = (params = {}) => {
+  const qs = new URLSearchParams(Object.fromEntries(Object.entries(params).filter(([, v]) => v != null))).toString();
+  return requestApi(`/permissions${qs ? `?${qs}` : ''}`);
+};
+export const getPermissionStats = () => requestApi('/permissions/stats');
+export const reviewPermission = (id, data) => requestApi(`/permissions/${id}/review`, { method: 'PATCH', body: JSON.stringify(data) });
+
