@@ -14,8 +14,24 @@ function GuideSignup() {
   const [bio, setBio] = useState("");
 
 
-  const registration = () => {
-
+  const registration = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("http://localhost:5000/api/loginGuide",{
+         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ name, phone, email, password, location, year, fee, licence, bio }),
+      });
+      const data = await response.json();
+        alert("Login successful! Welcome " + data.user.name);
+      // onLoginSuccess(data.user);
+      } catch (error) {
+      console.error("Login error:", error);
+      alert("Cannot connect to the server.");
+    }
   }
   
   return (

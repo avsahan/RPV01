@@ -44,7 +44,7 @@ function App() {
       <main className="content-body">
         {activePage === 'home' && <Home onLoginSection={navigateToLoginSection}/>}
         {activePage === 'login' && <Login onSignTraveler={navigateToSignTravelerSection} onSignGuide={navigateToGuideSection} onLoginSuccess={handleLoginSuccess}/>}
-        {activePage === 'sign-traveler' && <TravelerSignup /> }
+        {activePage === 'sign-traveler' && <TravelerSignup backToLogin={navigateToLoginSection}/> }
         {activePage === 'sign-guide' && <GuideSignup /> }
         {activePage === 'traveler-dashboard'  && user?.role === 'traveler' && <TraverDashboard />}
       </main>
