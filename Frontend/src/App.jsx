@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import TravelerSignup from "./pages/TravelerSignup"
 import GuideSignup from "./pages/GuideSignup";
 import TraverDashboard from "./pages/TraverDashboard";
+import GuideDashboard from "./pages/GuideDashboard";
 import "./styles/global.css";
 
 function App() {
@@ -45,8 +46,9 @@ function App() {
         {activePage === 'home' && <Home onLoginSection={navigateToLoginSection}/>}
         {activePage === 'login' && <Login onSignTraveler={navigateToSignTravelerSection} onSignGuide={navigateToGuideSection} onLoginSuccess={handleLoginSuccess}/>}
         {activePage === 'sign-traveler' && <TravelerSignup backToLogin={navigateToLoginSection}/> }
-        {activePage === 'sign-guide' && <GuideSignup /> }
+        {activePage === 'sign-guide' && <GuideSignup backToLogin={navigateToLoginSection} /> }
         {activePage === 'traveler-dashboard'  && user?.role === 'traveler' && <TraverDashboard />}
+        {activePage === 'guide-dashboard'  && user?.role === 'guide' && <GuideDashboard />}
       </main>
     </div>
   );

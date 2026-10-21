@@ -2,7 +2,7 @@ import { useState } from "react";
 import ProfilePic from "../assets/ProfilePic.avif";
 import "../styles/GuideSignup.css";
 
-function GuideSignup() {
+function GuideSignup( { backToLogin } ) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -23,11 +23,10 @@ function GuideSignup() {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({ name, phone, email, password, location, year, fee, licence, bio }),
+        body: JSON.stringify({ name, phone, email, password, location, year, fee, licence, bio, role: "guide" }),
       });
       const data = await response.json();
         alert("Login successful! Welcome " + data.user.name);
-      // onLoginSuccess(data.user);
       } catch (error) {
       console.error("Login error:", error);
       alert("Cannot connect to the server.");
@@ -115,7 +114,7 @@ function GuideSignup() {
               ></textarea>
             </div>
 
-            <button type="submit" className="btn-submit">
+            <button type="submit" className="btn-submit" onClick={backToLogin}>
               Register as Verified Guide
             </button>
           </form>

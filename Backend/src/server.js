@@ -6,7 +6,7 @@ const session = require("express-session");
 const app = express();
 
 app.use(cors({
-  origin: "http://localhost:5174",
+  origin: "http://localhost:5173",
   credentials: true
 }));
 
@@ -76,7 +76,7 @@ app.post("/api/register", (req, res) => {
 
 app.post("/api/login", (req, res) => {
   const { email, password } = req.body;
-
+  console.log("hello");
   try {
     const user = db.prepare(`
       SELECT id, name, email, password, role
@@ -84,21 +84,18 @@ app.post("/api/login", (req, res) => {
       WHERE email = ?
     `).get(email);
 
-    // Check whether the user exists
     if (!user) {
       return res.status(401).json({
         message: "Invalid email or password"
       });
     }
 
-    // Check whether the password is correct
     if (user.password !== password) {
       return res.status(401).json({
         message: "Invalid email or password"
       });
     }
 
-    // Create the session after successful login
     req.session.user = {
       id: user.id,
       name: user.name,
@@ -121,7 +118,7 @@ app.post("/api/login", (req, res) => {
 });
 
 app.post("/api/loginGuide", (req, res) => {
-  const { name, phone, email, password, location, year, fee, licence, bio } = req.body;
+  const { name, phone, email, password, location, year, fee, licence, bio, role } = req.body;
 
   try {
     const existingUser = db.prepare(
@@ -145,7 +142,6 @@ app.post("/api/loginGuide", (req, res) => {
         id: result.lastInsertRowid,
         name,
         email,
-        preference,
         role
       }
     });
