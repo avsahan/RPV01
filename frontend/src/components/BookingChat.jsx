@@ -15,15 +15,15 @@ function BookingChat({ bookingId, currentUser, otherName }) {
     let isActive = true;
     const socket = openBookingSocket();
     const appendMessage = (message) => {
-      if (Number(message.bookingId) !== Number(bookingId)) return;
+      if (!message || Number(message.bookingId) !== Number(bookingId)) return;
       setMessages((current) => current.some((item) => item.id === message.id)
         ? current
         : [...current, message]);
     };
 
     getBookingMessages(bookingId)
-      .then(({ messages: loadedMessages }) => {
-        if (isActive) setMessages(loadedMessages);
+      .then(({ messages: loadedMessages } = {}) => {
+        if (isActive) setMessages(Array.isArray(loadedMessages) ? loadedMessages : []);
       })
       .catch((loadError) => {
         if (isActive) setError(loadError.message);

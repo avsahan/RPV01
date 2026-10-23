@@ -84,15 +84,14 @@ function App() {
   useEffect(() => {
     let isMounted = true;
     getCurrentUser()
-      .then(({ user }) => {
+      .then(({ user } = {}) => {
         if (!isMounted) return;
+        if (!user) return;
         setCurrentUser(user);
         setActivePage(user.role === 'guide' ? 'guide-dashboard' : 'dashboard');
       })
       .catch(() => {})
-      .finally(() => {
-        isMounted = false;
-      });
+    return () => { isMounted = false; };
   }, []);
 
   const handleStartPlanning = () => {

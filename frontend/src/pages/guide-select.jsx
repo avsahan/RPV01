@@ -42,8 +42,8 @@ function GuideSelect({ tripDetails = {}, onBack, onRequestGuide }) {
   useEffect(() => {
     let isMounted = true;
     getGuides()
-      .then(({ guides: registeredGuides }) => {
-        if (isMounted) setGuides(registeredGuides);
+      .then(({ guides: registeredGuides } = {}) => {
+        if (isMounted) setGuides(Array.isArray(registeredGuides) ? registeredGuides : []);
       })
       .catch((error) => {
         if (isMounted) setGuideLoadError(error.message);

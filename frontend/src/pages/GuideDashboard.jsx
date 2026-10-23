@@ -95,7 +95,7 @@ function GuideDashboard({ currentUser }) {
 
   useEffect(() => {
     getBookings()
-      .then(({ bookings }) => setRequests(bookings.filter((booking) => Number(booking.guideId) === Number(currentUser?.id))))
+      .then(({ bookings } = {}) => setRequests((Array.isArray(bookings) ? bookings : []).filter((booking) => Number(booking.guideId) === Number(currentUser?.id))))
       .catch((error) => setLoadError(error.message));
   }, [currentUser?.id]);
 
@@ -294,7 +294,7 @@ function GuideDashboard({ currentUser }) {
                     <div className="gd-trip__bottom">
                       <div className="gd-itinerary">
                         <h4>Itinerary overview</h4>
-                        {(trip.itinerary || []).map((stop) => (
+                        {(Array.isArray(trip.itinerary) ? trip.itinerary : []).map((stop) => (
                           <div className="gd-stop" key={stop.time}>
                             <time>{stop.time}</time>
                             <div>

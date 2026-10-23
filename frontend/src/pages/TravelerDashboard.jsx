@@ -84,7 +84,7 @@ function ProfileCard({ profile, onChange, onSave, saved }) {
             <button className="rl-icon-button rl-icon-button--accent" type="button" aria-label="Edit preferences"></button>
           </div>
           <div className="rl-prefs__chips">
-            {profile.travelInterests.map((chip) => (
+            {(Array.isArray(profile.travelInterests) ? profile.travelInterests : []).map((chip) => (
               <span className="rl-chip" key={chip}>{chip}</span>
             ))}
           </div>
@@ -227,7 +227,7 @@ function TravelerDashboard({ currentUser, onPlanTrip }) {
     email: currentUser?.email || '',
     phone: currentUser?.telephoneNumber || '',
     passport: '',
-    travelInterests: currentUser?.travelInterests || [],
+    travelInterests: Array.isArray(currentUser?.travelInterests) ? currentUser.travelInterests : [],
   }));
 
   useEffect(() => {
@@ -235,8 +235,9 @@ function TravelerDashboard({ currentUser, onPlanTrip }) {
     Promise.all([getTrips(), getBookings()])
       .then(([tripResponse, bookingResponse]) => {
         if (!isActive) return;
-        setTrips(tripResponse.trips);
-        setBookings(bookingResponse.bookings.filter((booking) => Number(booking.travelerId) === Number(currentUser?.id)));
+        setTrips(Array.isArray(tripResponse?.trips) ? tripResponse.trips : []);
+        const bookingList = Array.isArray(bookingResponse?.bookings) ? bookingResponse.bookings : [];
+        setBookings(bookingList.filter((booking) => Number(booking.travelerId) === Number(currentUser?.id)));
       })
       .catch((error) => {
         if (isActive) setLoadError(error.message);
@@ -314,7 +315,7 @@ function TravelerDashboard({ currentUser, onPlanTrip }) {
     try {
       await respondToCounterOffer(bookingId, status);
       const { bookings: latestBookings } = await getBookings();
-      setBookings(latestBookings.filter((booking) => Number(booking.travelerId) === Number(currentUser?.id)));
+      setBookings((Array.isArray(latestBookings) ? latestBookings : []).filter((booking) => Number(booking.travelerId) === Number(currentUser?.id)));
       showNotice(status === 'accepted' ? 'Guide offer accepted.' : 'Guide offer declined.');
     } catch (error) {
       showNotice(error.message);
