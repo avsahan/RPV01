@@ -75,10 +75,22 @@ const featureCards = [
 
 
 const adventures = [
- { image: 'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?auto=format&fit=crop&w=900&q=80' },
- { image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80' },
- { image: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=900&q=80' },
- { image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80' },
+  { 
+    title: 'Ella Nine Arch Bridge', 
+    image: 'https://images.pexels.com/photos/12147639/pexels-photo-12147639.jpeg?auto=compress&cs=tinysrgb&w=800' 
+  },
+  { 
+    title: 'Sigiriya Rock Fortress', 
+    image: 'https://images.pexels.com/photos/18619138/pexels-photo-18619138.jpeg?auto=compress&cs=tinysrgb&w=800' 
+  },
+  { 
+    title: 'Kandy Temple', 
+    image: 'https://images.pexels.com/photos/33404364/pexels-photo-33404364.jpeg?auto=compress&cs=tinysrgb&w=800' 
+  },
+  { 
+    title: 'Mirissa Beach', 
+    image: 'https://images.pexels.com/photos/330260/pexels-photo-330260.jpeg?auto=compress&cs=tinysrgb&w=800' 
+  },
 ];
 
 
