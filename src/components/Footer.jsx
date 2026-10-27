@@ -2,16 +2,16 @@ import '../styles/Footer.css';
 
 const footerColumns = [
   {
-    heading: 'Travel',
-    links: ['Discover', 'Plan trips', 'Popular guides', 'Itineraries'],
+    heading: 'Explore',
+    links: ['Discover Places', 'Find a Guide', 'Find Hotels', 'Find Transport'],
   },
   {
-    heading: 'Company',
-    links: ['About', 'Careers', 'Press', 'Support'],
+    heading: 'Travel Planning',
+    links: ['Plan Your Trip', 'My Trips', 'My Bookings', 'Permission Requests'],
   },
   {
-    heading: 'Resources',
-    links: ['Blog', 'Travel tips', 'Community', 'FAQs'],
+    heading: 'Support',
+    links: ['About VentureVista', 'Contact Us', 'Help Center', 'FAQs'],
   },
 ];
 
