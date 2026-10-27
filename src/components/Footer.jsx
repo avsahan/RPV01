@@ -3,28 +3,42 @@ import '../styles/Footer.css';
 const footerColumns = [
   {
     heading: 'Explore',
-    links: ['Discover Places', 'Find a Guide', 'Find Hotels', 'Find Transport'],
+    links: [
+      'Discover Destinations',
+      'Plan Your Trip',
+      'Local Guides',
+      'My Trips',
+    ],
   },
   {
-    heading: 'Travel Planning',
-    links: ['Plan Your Trip', 'My Trips', 'My Bookings', 'Permission Requests'],
+    heading: 'Travelers',
+    links: [
+      'Create Account',
+      'Find a Guide',
+      'My Bookings',
+      'Travel Planning',
+    ],
   },
   {
-    heading: 'Support',
-    links: ['About VentureVista', 'Contact Us', 'Help Center', 'FAQs'],
+    heading: 'Local Guides',
+    links: [
+      'Become a Guide',
+      'Manage Bookings',
+      'Guide Dashboard',
+      'Contact Support',
+    ],
   },
 ];
 
 const Footer = () => {
   return (
-    
     <footer className="site-footer">
       <div className="footer-top">
         <div className="brand-block">
           <div className="footer-logo">V</div>
+
           <p>
-            Plan every step of your journey with
-            clarity and confidence.
+            Discover Sri Lanka, plan your trips, and connect with local guides.
           </p>
         </div>
 
@@ -43,29 +57,25 @@ const Footer = () => {
         ))}
 
         <div className="newsletter">
-          <h4>Get the app</h4>
+          <h4>Plan Your Next Adventure</h4>
 
-          <div className="download-buttons">
-            <button type="button">
-              App Store
-            </button>
-
-            <button type="button">
-              Google Play
-            </button>
-          </div>
+          <p>
+            Explore destinations and make your next
+            journey unforgettable with VentureVista.
+          </p>
         </div>
       </div>
 
       <div className="footer-bottom">
         <span>
-          © 2026 Velo. All rights reserved.
+          © {new Date().getFullYear()} VentureVista.
+          All rights reserved.
         </span>
 
         <div className="legal-links">
-          <a href="#">Privacy</a>
-          <a href="#">Terms</a>
-          <a href="#">Cookie</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms &amp; Conditions</a>
+          <a href="#">Cookie Policy</a>
         </div>
       </div>
     </footer>
