@@ -75,25 +75,33 @@ const featureCards = [
 ;
 
 
-
-
 const adventures = [
-  { 
-    title: 'Ella Nine Arch Bridge', 
-    image: 'https://images.pexels.com/photos/12147639/pexels-photo-12147639.jpeg?auto=compress&cs=tinysrgb&w=800' 
+
+  {
+    title: 'Ella',
+    location: 'Badulla District, Sri Lanka',
+    category: 'Mountains & Nature',
+    description:
+      'Discover scenic train rides, green hills, waterfalls and hidden mountain spots.',
+    image: '/image/ella.jpg',
   },
-  { 
-    title: 'Sigiriya Rock Fortress', 
-    image: 'https://images.pexels.com/photos/18619138/pexels-photo-18619138.jpeg?auto=compress&cs=tinysrgb&w=800' 
+  {
+    title: 'Sigiriya',
+    location: 'Central Province, Sri Lanka',
+    category: 'History & Culture',
+    description:
+      'Explore the famous rock fortress, ancient history and beautiful surrounding landscapes.',
+    image: '/image/Sigiriya1.jpg',
   },
-  { 
-    title: 'Kandy Temple', 
-    image: 'https://images.pexels.com/photos/33404364/pexels-photo-33404364.jpeg?auto=compress&cs=tinysrgb&w=800' 
+  {
+    title: 'Galle',
+    location: 'Southern Province, Sri Lanka',
+    category: 'Coast & Heritage',
+    description:
+      'Enjoy coastal scenery, historic streets, local food and the charm of Galle Fort.',
+    image: '/image/galle.jpg',
+
   },
-  { 
-    title: 'Mirissa Beach', 
-    image: 'https://images.pexels.com/photos/330260/pexels-photo-330260.jpeg?auto=compress&cs=tinysrgb&w=800' 
-  }
 ];
 
 
