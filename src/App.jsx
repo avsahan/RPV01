@@ -110,9 +110,9 @@ function LandingView({ onStartPlanning, onOpenPermissions, onExploreDestination,
     <>
       <main className="home-page" id="home">
         <section className="hero-section">
-          <h1>One app for all your travel planning needs</h1>
+          <h2>One app for all your travel planning needs</h2>
           <p>
-            Create detailed itineraries, explore user-shared guides, and manage your bookings seamlessly — all in one place.
+            Create the detailed itineraries, explore user-shared guides, and manage your bookings seamlessly — all in one place.
           </p>
           <button className="primary-button" onClick={onStartPlanning}>Start planning</button>
         </section>
@@ -155,7 +155,7 @@ function LandingView({ onStartPlanning, onOpenPermissions, onExploreDestination,
 
 
           <button className="secondary-button" onClick={onStartPlanning}>
-            Start planning your trip
+            Start planning adventure
           </button>
         </section>
 
