@@ -5,7 +5,7 @@ const footerColumns = [
     heading: 'Explore',
     links: [
       'Discover Destinations',
-      'Plan Your Trip',
+      'Plan Your New Trip',
       'Local Guides',
       'My Trips',
     ],
