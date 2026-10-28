@@ -60,7 +60,7 @@ const Footer = () => {
           <h4>Plan Your Next Adventure</h4>
 
           <p>
-            Explore destinations and make your next
+            Explore the destinations and make your next
             journey unforgettable with VentureVista.
           </p>
         </div>
