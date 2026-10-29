@@ -548,3 +548,370 @@
     grid-template-columns: 1fr 1.35fr;
   }
 }
+
+
+
+@media (max-width: 768px) {
+  .guide-page {
+    min-height: 100vh;
+    padding: 16px 16px 28px;
+  }
+
+  .guide-page__container {
+    width: 100%;
+  }
+
+  /* Top navigation */
+  .guide-page__topbar {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .guide-back {
+    min-height: 40px;
+    font-size: 0.9rem;
+  }
+
+  .guide-trip-label {
+    font-size: 0.75rem;
+    text-align: right;
+  }
+
+  /* Page heading */
+  .guide-page__heading {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 20px 0 24px;
+  }
+
+  .guide-page__heading h1 {
+    font-size: clamp(1.8rem, 7vw, 2.4rem);
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+  }
+
+  .guide-page__heading > div > p:last-child {
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .guide-page__destination-image {
+    width: 100%;
+    height: 190px;
+    border-radius: 12px;
+    object-fit: cover;
+  }
+
+  /* Results heading */
+  .guide-results {
+    padding-top: 20px;
+  }
+
+  .guide-results__heading {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+
+  .guide-results__heading h2 {
+    font-size: 1.3rem;
+  }
+
+  .guide-filters {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(110px, 0.8fr);
+    gap: 10px;
+    width: 100%;
+  }
+
+  .guide-search {
+    width: 100%;
+    min-width: 0;
+    height: 44px;
+    padding: 0 12px;
+    border-radius: 9px;
+  }
+
+  .guide-search input {
+    min-width: 0;
+    font-size: 0.85rem;
+  }
+
+  .guide-filters select {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    height: 44px;
+    padding: 0 8px;
+    border-radius: 9px;
+    font-size: 0.8rem;
+  }
+
+  .guide-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .guide-card {
+    border-radius: 12px;
+  }
+
+  .guide-card__photo-wrap {
+    height: 155px;
+  }
+
+  .guide-card__body {
+    padding: 12px;
+  }
+
+  .guide-card__name-row {
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .guide-card__name-row h3 {
+    font-size: 0.9rem;
+    overflow-wrap: anywhere;
+  }
+
+  .guide-card__rating {
+    font-size: 0.68rem;
+  }
+
+  .guide-card__description {
+    min-height: 0;
+    font-size: 0.76rem;
+    line-height: 1.6;
+  }
+
+  .guide-card__footer {
+    gap: 10px;
+  }
+
+  .guide-card__actions {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .guide-button {
+    min-height: 40px;
+    padding: 8px 10px;
+    font-size: 0.78rem;
+  }
+
+  /* Footer */
+  .guide-page__footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 24px;
+    line-height: 1.6;
+  }
+
+  .guide-dialog-backdrop {
+    padding: 14px;
+    align-items: center;
+  }
+
+  .guide-dialog {
+    grid-template-columns: 1fr;
+    width: 100%;
+    max-width: 480px;
+    max-height: calc(100dvh - 28px);
+    overflow-y: auto;
+    border-radius: 14px;
+  }
+
+  .guide-dialog > img {
+    width: 100%;
+    height: 210px;
+    min-height: 0;
+    object-fit: cover;
+  }
+
+  .guide-dialog__content {
+    padding: 20px;
+  }
+
+  .guide-dialog__content h2 {
+    padding-right: 24px;
+    font-size: 1.3rem;
+  }
+
+  .guide-dialog__content > p:not(.guide-eyebrow, .guide-card__specialty) {
+    font-size: 0.86rem;
+    line-height: 1.7;
+  }
+
+  .guide-dialog__footer {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .guide-dialog__close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    width: 38px;
+    height: 38px;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .guide-page {
+    padding: 12px 12px 24px;
+  }
+
+  .guide-page__heading {
+    padding-top: 16px;
+  }
+
+  .guide-page__heading h1 {
+    font-size: 1.85rem;
+    letter-spacing: -0.035em;
+  }
+
+  .guide-page__destination-image {
+    height: 165px;
+  }
+
+  .guide-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .guide-search,
+  .guide-filters select {
+    height: 46px;
+  }
+
+  .guide-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .guide-card {
+    border-radius: 13px;
+  }
+
+  .guide-card__photo-wrap {
+    height: 205px;
+  }
+
+  .guide-card__body {
+    padding: 14px;
+  }
+
+  .guide-card__location {
+    font-size: 0.75rem;
+  }
+
+  .guide-card__name-row {
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .guide-card__name-row h3 {
+    font-size: 1rem;
+  }
+
+  .guide-card__rating {
+    white-space: nowrap;
+    font-size: 0.75rem;
+  }
+
+  .guide-card__specialty {
+    font-size: 0.75rem;
+  }
+
+  .guide-card__description {
+    font-size: 0.82rem;
+    line-height: 1.65;
+  }
+
+  .guide-card__footer {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .guide-card__actions {
+    grid-template-columns: 1fr 1.3fr;
+    width: 100%;
+  }
+
+  .guide-button {
+    min-height: 44px;
+    font-size: 0.8rem;
+  }
+
+  .guide-dialog > img {
+    height: 175px;
+  }
+
+  .guide-dialog__content {
+    padding: 16px;
+  }
+
+  .guide-dialog__footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+
+@media (max-width: 350px) {
+  .guide-page {
+    padding-right: 9px;
+    padding-left: 9px;
+  }
+
+  .guide-page__heading h1 {
+    font-size: 1.65rem;
+  }
+
+  .guide-card__photo-wrap {
+    height: 175px;
+  }
+
+  .guide-card__name-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .guide-card__footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .guide-card__actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (hover: none) {
+  .guide-card:hover {
+    border-color: #cce0ff;
+    box-shadow: 0 3px 10px rgba(0, 87, 194, 0.05);
+  }
+
+  .guide-card:hover .guide-card__photo {
+    transform: none;
+  }
+
+  .guide-button:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guide-card,
+  .guide-card__photo,
+  .guide-button {
+    transition: none;
+  }
+}
