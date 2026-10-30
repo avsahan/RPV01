@@ -110,7 +110,7 @@ function LandingView({ onStartPlanning, onOpenPermissions, onExploreDestination,
     <>
       <main className="home-page" id="home">
         <section className="hero-section">
-          <h2>One app for all your travel planning needs</h2>
+          <h1>One app for all your travel planning needs</h1>
           <p>
             Create the detailed itineraries, explore user-shared guides, and manage your bookings seamlessly — all in one place.
           </p>
@@ -240,6 +240,7 @@ function App() {
   const handleExploreDestination = (destinationName) => {
     setSelectedDestination(destinationName);
     setActivePage('destination');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
 

@@ -1,18 +1,15 @@
-
 import React from 'react';
 import '../styles/DestinationDetails.css';
-import { MapContainer, TileLayer, Marker, Popup, useMap, } from 'react-leaflet';
-import L from 'leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-
 
 const destinationData = {
     Ella: {
-        location: 'Badulla District, Sri Lanka',
+        location: 'Ella, Bandarawela, Sri Lanka',
         category: 'Mountains & Nature',
         coordinates: [6.8667, 81.0466],
         description:
-            'Discover green hills, scenic train journeys, waterfalls and beautiful mountain views in Ella.',
+            'Ravana Ella and Ravana water fall both are located in the same place but, Ravana falls can not be seen from the Main road because Ravana Falls is situated above the Ravana Ella. There is a cave called Ravana cave and it is Located near to this Ravana Falls. This Name "Ravana Ella" received from, after the great king Ravana. According to the legend after the kidnapping sitha, ravana king brought her to this place and hid her at the cave behind the waterfall.',
         image: '/image/ella.jpg',
         photos: [
             { image: '/image/Ella_mountain.jpg', title: 'Mountain views' },
@@ -22,20 +19,17 @@ const destinationData = {
         places: [
             {
                 name: 'Nine Arch Bridge',
-                description:
-                    'A famous railway bridge surrounded by green hills and forest.',
+                description: 'A famous railway bridge surrounded by green hills and forest.',
                 coordinates: [6.8768, 81.0608],
             },
             {
                 name: 'Little Adam’s Peak',
-                description:
-                    'A popular hike with scenic views of the surrounding mountains.',
+                description: 'A popular hike with scenic views of the surrounding mountains.',
                 coordinates: [6.8722, 81.0572],
             },
             {
                 name: 'Ravana Falls',
-                description:
-                    'A well-known waterfall near Ella, popular with visitors.',
+                description: 'A well-known waterfall near Ella, popular with visitors.',
                 coordinates: [6.8394, 81.0567],
             },
         ],
@@ -45,7 +39,6 @@ const destinationData = {
             'Check current train schedules before travelling.',
         ],
     },
-
     Sigiriya: {
         location: 'Central Province, Sri Lanka',
         category: 'History & Culture',
@@ -112,9 +105,7 @@ function FitMapToMarkers({ places }) {
 
     React.useEffect(() => {
         if (places.length === 0) return;
-
         const bounds = places.map((place) => place.coordinates);
-
         map.fitBounds(bounds, {
             padding: [40, 40],
             maxZoom: 14,
@@ -125,7 +116,7 @@ function FitMapToMarkers({ places }) {
 }
 
 function DestinationDetails({
-    destinationName,
+    destinationName = 'Ella',
     onBack,
     onStartPlanning,
 }) {
@@ -136,139 +127,103 @@ function DestinationDetails({
             <section className="destination-details">
                 <h1>Destination not found</h1>
                 <button type="button" onClick={onBack}>
-                    Back to destinations
+                    Back to destination
                 </button>
             </section>
         );
     }
 
     return (
-        <main className="destination-details">
-            <button
-                type="button"
-                className="destination-back"
-                onClick={onBack}
-            >
-                ← Back to destinations
-            </button>
+        <div className="destination-page-wrapper">
 
-            <section className="destination-hero">
+            <div className="destination-full-hero">
                 <img
-                    className="destination-cover"
+                    className="destination-full-cover"
                     src={destination.image}
                     alt={destinationName}
                 />
-
-                <div className="destination-hero-content">
-                    <span className="destination-category">
-                        {destination.category}
-                    </span>
-
-                    <h1>Discover {destinationName}</h1>
-
-                    <p className="destination-location">
-                        {destination.location}
-                    </p>
-
-                    <p>{destination.description}</p>
-
-                    <button
-                        type="button"
-                        className="destination-plan-button"
-                        onClick={onStartPlanning}
-                    >
-                        Start planning your trip →
-                    </button>
+                <div className="destination-full-hero-overlay">
+                    <div className="destination-full-hero-content">
+                        <h1>{destinationName}</h1>
+                        <div className="destination-location-badge">
+                            <span className="pin-icon">📍</span>
+                            <span>{destination.location}</span>
+                        </div>
+                    </div>
                 </div>
-            </section>
+            </div>
 
-            <section className="destination-content-section">
-                <h2>Explore {destinationName}</h2>
-
-                <p className="destination-section-intro">
-                    Discover places to visit and experiences to add to your journey.
-                </p>
-
-                <div className="destination-place-grid">
-                    {destination.places.map((place) => (
-                        <article className="destination-place-card" key={place.name}>
-                            <div className="destination-place-icon" aria-hidden="true">
-                                📍
-                            </div>
-
-                            <h3>{place.name}</h3>
-                            <p>{place.description}</p>
-                        </article>
-                    ))}
-                </div>
-            </section>
-
-            <section className="destination-map-section">
-                <h2>Explore the Area</h2>
-                <p>Explore the destination using the map below.</p>
-
-                <div className="destination-map">
-                    <MapContainer
-                        center={destination.coordinates}
-                        zoom={13}
-                        scrollWheelZoom={false}
-                        style={{ height: '400px', width: '100%' }}
-                    >
-                        <TileLayer
-                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        />
-
-                        <FitMapToMarkers places={destination.places} />
-
-                        {destination.places.map((place) => (
-                            <Marker position={place.coordinates} key={place.name}>
-                                <Popup>
-                                    <strong>{place.name}</strong>
-                                    <br />
-                                    {place.description}
-                                </Popup>
-                            </Marker>
-                        ))}
-                    </MapContainer>
-                </div>
-            </section>
-
-            {destination.photos.length > 0 && (
+            <main className="destination-details-container">
                 <section className="destination-content-section">
-                    <h2>Photo gallery</h2>
+                    <h2>Description</h2>
+                    <p className="destination-section-intro">
+                        {destination.description}
+                    </p>
+                </section>
 
-                    <div className="destination-gallery">
-                        {destination.photos.map((photo) => (
-                            <article className="destination-gallery-item" key={photo.image}>
-                                <img src={photo.image} alt={photo.title} loading="lazy" />
-                                <p>{photo.title}</p>
-                            </article>
-                        ))}
+                <section className="destination-map-section">
+                    <h2>Explore the Area</h2>
+                    <p>Explore the destination using the map below.</p>
+
+                    <div className="destination-map">
+                        <MapContainer
+                            center={destination.coordinates}
+                            zoom={13}
+                            scrollWheelZoom={false}
+                            style={{ height: '450px', width: '100%' }}
+                        >
+                            <TileLayer
+                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                            />
+                            <FitMapToMarkers places={destination.places} />
+
+                            {destination.places.map((place) => (
+                                <Marker position={place.coordinates} key={place.name}>
+                                    <Popup>
+                                        <strong>{place.name}</strong>
+                                        <br />
+                                        {place.description}
+                                    </Popup>
+                                </Marker>
+                            ))}
+                        </MapContainer>
                     </div>
                 </section>
-            )}
 
-            <section className="destination-content-section">
-                <h2>Local travel tips</h2>
+                {destination.photos.length > 0 && (
+                    <section className="destination-content-section">
+                        <h2>Photo gallery</h2>
+                        <div className="destination-gallery">
+                            {destination.photos.map((photo) => (
+                                <article className="destination-gallery-item" key={photo.image}>
+                                    <img src={photo.image} alt={photo.title} loading="lazy" />
+                                    <p>{photo.title}</p>
+                                </article>
+                            ))}
+                        </div>
+                    </section>
+                )}
 
-                <p className="destination-section-intro">
-                    A few practical things to consider before your visit.
-                </p>
+                <section className="destination-content-section">
+                    <h2>Local travel tips</h2>
+                    <p className="destination-section-intro">
+                        A few practical things to consider before your visit.
+                    </p>
+                    <ul className="destination-tips">
+                        {destination.tips.map((tip) => (
+                            <li key={tip}>{tip}</li>
+                        ))}
+                    </ul>
+                    <p className="destination-disclaimer">
+                        These are general travel suggestions, not live local reports.
+                        Check current conditions and official information before travelling.
+                    </p>
+                </section>
 
-                <ul className="destination-tips">
-                    {destination.tips.map((tip) => (
-                        <li key={tip}>{tip}</li>
-                    ))}
-                </ul>
-
-                <p className="destination-disclaimer">
-                    These are general travel suggestions, not live local reports.
-                    Check current conditions and official information before travelling.
-                </p>
-            </section>
-
-        </main>
+                
+            </main>
+        </div>
     );
 }
 
