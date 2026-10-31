@@ -48,7 +48,7 @@ const featureCards = [
     number: '04',
     category: 'SMARTER PLANNING',
     title: 'Know the Cost Before You Go',
-    text: 'Explore estimated costs for transport, stays, food and activities to plan within your budget.',
+    text: 'Plan your trip with confidence. Explore estimated costs for transportation, accommodation, food, and activities to make the most of your budget.',
     button: 'Explore trip costs',
     image: '/image/plan.jpg',
     action: 'planning',
