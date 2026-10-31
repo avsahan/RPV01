@@ -1,15 +1,18 @@
 .gd-dashboard {
-  min-height: 680px;
-  padding: 30px clamp(16px, 4vw, 64px) 72px;
+  min-height: calc(100vh - 64px);
+  min-height: calc(100dvh - 64px);
+  padding: clamp(14px, 2.4vh, 26px) clamp(14px, 3vw, 42px) 40px;
   background: #f0f6ff;
   color: #0a1a3c;
 }
 
 .gd-dashboard__inner {
-  width: min(100%, 1240px);
+  width: min(100%, 1440px);
   margin: 0 auto;
   display: grid;
-  gap: 24px;
+  grid-template-columns: minmax(220px, 260px) minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(12px, 1.6vw, 22px);
 }
 
 .gd-muted { margin: 0; color: #3a5a8a; font-size: 0.78rem; }
@@ -18,37 +21,39 @@
 
 /* ---------- Profile ---------- */
 .gd-profile {
-  padding: 20px 24px;
+  position: sticky;
+  top: 14px;
+  padding: clamp(12px, 1.4vw, 18px);
   border: 1px solid #cce0ff;
   border-radius: 12px;
   background: #fff;
 }
 
 .gd-profile__top {
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
-  padding-bottom: 18px;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding-bottom: 16px;
   border-bottom: 1px solid #dbeafe;
 }
 
 .gd-profile__photo {
-  width: 72px;
-  height: 84px;
-  flex: 0 0 72px;
-  border-radius: 10px;
+  width: 82px;
+  height: 82px;
+  border-radius: 50%;
   object-fit: cover;
 }
 
-.gd-profile__info { flex: 1; min-width: 0; }
+.gd-profile__info { min-width: 0; text-align: center; }
 
 .gd-profile__info h1 {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   margin: 0;
-  font-size: 1.3rem;
+  font-size: 1.05rem;
   line-height: 1.25;
   color: #001449;
 }
@@ -63,11 +68,12 @@
 }
 
 .gd-profile__title { margin: 6px 0 4px; color: #1e3a6e; font-size: 0.82rem; }
-.gd-profile__bio { margin: 0; color: #3a5a8a; font-size: 0.76rem; line-height: 1.6; }
+.gd-profile__bio { margin: 0; color: #3a5a8a; font-size: 0.76rem; line-height: 1.6; overflow-wrap: anywhere; }
 
 .gd-fee {
-  min-width: 210px;
-  padding: 12px 16px;
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
   border: 1px solid #cce0ff;
   border-radius: 10px;
   background: #f0f6ff;
@@ -80,12 +86,9 @@
 .gd-fee small span { width: 6px; height: 6px; border-radius: 50%; background: #0057c2; }
 
 .gd-profile__bottom {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding-top: 16px;
+  display: grid;
+  gap: 10px;
+  padding-top: 12px;
 }
 
 .gd-detail { display: grid; gap: 4px; }
@@ -170,7 +173,8 @@
 
 .gd-tab.is-active .gd-tab__count { background: #dbeafe; color: #0057c2; }
 
-.gd-panel { animation: gd-panel-enter 200ms ease both; }
+.gd-workspace { display: grid; min-width: 0; align-content: start; gap: 12px; }
+.gd-panel { min-width: 0; animation: gd-panel-enter 200ms ease both; }
 
 @keyframes gd-panel-enter {
   from { opacity: 0; transform: translateY(4px); }
@@ -276,6 +280,8 @@
 .gd-status--pending { background: #fef3c7; color: #92600a; }
 .gd-status--accepted { background: #dbeafe; color: #003d8a; }
 .gd-status--declined { background: #fee2e2; color: #991b1b; }
+.gd-status--cancellation_requested { background: #ffedd5; color: #9a3412; }
+.gd-status--cancelled { background: #f1f5f9; color: #475569; }
 
 /* ---------- Accepted trip ---------- */
 .gd-trip { overflow: hidden; border: 1px solid #cce0ff; border-radius: 12px; background: #fff; }
@@ -415,6 +421,46 @@
 
 .gd-pagination button:disabled { color: #93c5fd; cursor: default; }
 
+/* ---------- Booking conversations ---------- */
+.gd-conversations { display: grid; gap: 14px; }
+.gd-conversations__heading { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.gd-conversations__heading h2 { margin: 0; color: #001449; font-size: 1.05rem; }
+.gd-conversations__heading p { margin: 5px 0 0; color: #54709a; font-size: 0.76rem; }
+.gd-conversations__heading > span { flex: 0 0 auto; padding: 5px 10px; border: 1px solid #bfdbfe; border-radius: 999px; background: #eff6ff; color: #0057c2; font-size: 0.68rem; font-weight: 700; }
+
+.gd-chat-list {
+  display: grid;
+  gap: 10px;
+}
+
+.gd-chat-item {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #d6e5fa;
+  border-radius: 11px;
+  background: #fff;
+  box-shadow: 0 3px 12px rgba(15, 48, 96, 0.04);
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.gd-chat-item:hover { transform: translateY(-1px); border-color: #9dc2f2; box-shadow: 0 6px 16px rgba(15, 48, 96, 0.08); }
+.gd-chat-item.is-active { border-color: #76aaf0; background: #f8fbff; }
+.gd-chat-item__avatar { display: grid; width: 42px; height: 42px; flex: 0 0 42px; place-items: center; border: 2px solid #fff; border-radius: 50%; background: #dbeafe; box-shadow: 0 0 0 1px #bfdbfe; color: #0057c2; font-size: 0.76rem; font-weight: 750; }
+.gd-chat-item__details { display: grid; min-width: 0; flex: 1; gap: 4px; }
+.gd-chat-item__details strong,
+.gd-chat-item__details span,
+.gd-chat-item__details small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gd-chat-item__details strong { color: #001449; font-size: 0.82rem; }
+.gd-chat-item__details span { color: #3a5a8a; font-size: 0.72rem; }
+.gd-chat-item__details small { color: #8092ad; font-size: 0.64rem; }
+.gd-chat-item .gd-button { min-height: 36px; flex: 0 0 auto; padding: 0 12px; font-size: 0.7rem; }
+.gd-chat-item__button { white-space: nowrap; }
+.gd-chat-conversation { min-width: 0; }
+.gd-chat-conversation .booking-chat { min-height: 380px; height: min(55vh, 560px); box-shadow: 0 5px 20px rgba(15, 48, 96, 0.07); }
+
 /* ---------- Focus + motion ---------- */
 .gd-dashboard button:focus-visible,
 .gd-dashboard input:focus-visible {
@@ -423,13 +469,20 @@
 }
 
 @media (max-width: 820px) {
-  .gd-profile__top { flex-direction: column; }
-  .gd-fee { width: 100%; }
+  .gd-dashboard__inner { grid-template-columns: minmax(0, 1fr); }
+  .gd-profile { position: static; }
+  .gd-profile__top { grid-template-columns: 72px minmax(0, 1fr); justify-items: start; }
+  .gd-profile__photo { width: 72px; height: 72px; }
+  .gd-profile__info { text-align: left; }
+  .gd-profile__info h1 { justify-content: flex-start; }
+  .gd-profile__bottom { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .gd-profile__bottom > .gd-button { justify-self: start; }
+  .gd-fee { grid-column: 1 / -1; width: 100%; }
   .gd-trip__bottom { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 620px) {
-  .gd-dashboard { min-height: auto; padding: 22px 14px 48px; }
+  .gd-dashboard { min-height: calc(100vh - 56px); min-height: calc(100dvh - 56px); padding: 14px 12px 28px; }
   .gd-request { flex-direction: column; }
   .gd-request__media { width: 100%; flex-basis: auto; }
   .gd-request__media img { height: 170px; min-height: 170px; }
@@ -438,10 +491,16 @@
   .gd-trip__top { flex-direction: column; }
   .gd-trip__top img { width: 100%; flex-basis: auto; height: 170px; }
   .gd-tabs { gap: 20px; }
+  .gd-profile__bottom { grid-template-columns: 1fr; }
+  .gd-chat-item { flex-wrap: wrap; }
+  .gd-chat-item__details { flex-basis: calc(100% - 60px); }
+  .gd-chat-item__button { margin-left: 54px; }
+  .gd-chat-conversation .booking-chat { min-height: 340px; height: 60vh; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .gd-dashboard *,
   .gd-dashboard *::before,
   .gd-dashboard *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  .gd-chat-item { transition: none; }
 }
