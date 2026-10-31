@@ -276,6 +276,8 @@
 .gd-status--pending { background: #fef3c7; color: #92600a; }
 .gd-status--accepted { background: #dbeafe; color: #003d8a; }
 .gd-status--declined { background: #fee2e2; color: #991b1b; }
+.gd-status--cancellation_requested { background: #ffedd5; color: #9a3412; }
+.gd-status--cancelled { background: #f1f5f9; color: #475569; }
 
 /* ---------- Accepted trip ---------- */
 .gd-trip { overflow: hidden; border: 1px solid #cce0ff; border-radius: 12px; background: #fff; }
