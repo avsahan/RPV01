@@ -457,21 +457,35 @@ function GuideDashboard({ currentUser }) {
             <section className="gd-panel" id="gd-panel-chat" role="tabpanel" aria-labelledby="gd-tab-chat">
               {requests.filter((request) => request.status === 'accepted').length === 0
                 ? <p className="gd-empty">Accept a booking before messaging a traveler.</p>
-                : <div className="gd-chat-list">
-                  {requests.filter((request) => request.status === 'accepted').map((booking) => (
-                    <article className="gd-chat-item" key={booking.id}>
-                      <div><strong>{booking.traveler}</strong><span>{booking.title}</span></div>
-                      <button className="gd-button gd-button--primary" type="button" onClick={() => setChatBookingId(booking.id)}>Open chat</button>
-                    </article>
-                  ))}
-                  {chatBookingId && (
-                    <BookingChat
-                      key={chatBookingId}
-                      bookingId={chatBookingId}
-                      currentUser={currentUser}
-                      otherName={requests.find((booking) => booking.id === chatBookingId)?.traveler || 'Traveler'}
-                    />
-                  )}
+                : <div className="gd-chat-layout">
+                  <div className="gd-chat-list" aria-label="Accepted booking conversations">
+                    {requests.filter((request) => request.status === 'accepted').map((booking) => (
+                      <article className={`gd-chat-item${chatBookingId === booking.id ? ' is-active' : ''}`} key={booking.id}>
+                        <div className="gd-chat-item__details">
+                          <strong>{booking.traveler}</strong>
+                          <span>{booking.title}</span>
+                        </div>
+                        <button
+                          className="gd-button gd-button--primary"
+                          type="button"
+                          aria-pressed={chatBookingId === booking.id}
+                          onClick={() => setChatBookingId(booking.id)}
+                        >
+                          {chatBookingId === booking.id ? 'Chat open' : 'Open chat'}
+                        </button>
+                      </article>
+                    ))}
+                  </div>
+                  <div className="gd-chat-conversation">
+                    {chatBookingId ? (
+                      <BookingChat
+                        key={chatBookingId}
+                        bookingId={chatBookingId}
+                        currentUser={currentUser}
+                        otherName={requests.find((booking) => booking.id === chatBookingId)?.traveler || 'Traveler'}
+                      />
+                    ) : <p className="gd-empty">Choose a booking to open your conversation.</p>}
+                  </div>
                 </div>}
             </section>
           )}
